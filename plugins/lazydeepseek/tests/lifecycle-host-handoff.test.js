@@ -114,7 +114,7 @@ test('status renders receipt-verified DeepSeek Harness and DeepSeek Harness hand
   assert.equal(dsh.host_handoff.host_mutation, 'none');
   assert.equal(dsh.host_readiness.status, 'pending');
   assert.deepEqual(fallback.host_handoff.manual_mcp.connectors.map((item) => item.name), SERVERS);
-  assert.deepEqual(fallback.host_handoff.degraded.excludes, ['commands', 'agents', 'hooks']);
+  assert.deepEqual(fallback.host_handoff.degraded.excludes, ['commands', 'agents', 'presets', 'hooks']);
   for (const output of [dsh, fallback]) assert.equal(JSON.stringify(output).includes(privateFile), false);
   assert.equal(fs.readFileSync(privateFile, 'utf8'), '{"caller":"owned"}\n');
 });

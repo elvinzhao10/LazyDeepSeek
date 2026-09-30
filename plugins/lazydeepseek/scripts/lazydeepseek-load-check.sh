@@ -69,6 +69,7 @@ failed = False
 EXPECTED_SKILLS = 19
 EXPECTED_COMMANDS = 20
 EXPECTED_AGENTS = 13
+EXPECTED_PRESETS = 13
 EXPECTED_HOOK_EVENTS = (
     "SessionStart",
     "UserPromptSubmit",
@@ -292,6 +293,12 @@ if os.path.isdir(skills_dir):
 
 count_files("commands", os.path.join(root, "commands"), EXPECTED_COMMANDS, lambda _base, name: name.endswith(".md"))
 count_files("agents", os.path.join(root, "agents"), EXPECTED_AGENTS, lambda _base, name: name.endswith(".md"))
+count_files(
+    "presets",
+    os.path.join(root, "presets"),
+    EXPECTED_PRESETS,
+    lambda _base, name: name.startswith("lazydeepseek-") and name.endswith(".md"),
+)
 
 hooks = load_json(os.path.join(root, "hooks", "hooks.json"), "hooks configuration")
 if hooks is not None:

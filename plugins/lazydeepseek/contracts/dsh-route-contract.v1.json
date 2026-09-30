@@ -20,19 +20,20 @@
     "cordis.patch.yml": "26f25882ecfd13f010e1f2ab3dc40ebfb54d5ff1b1c4583f8189a263531f7231"
   },
   "payload": {
-    "method": "Deterministic inventory: walk each payload root (skills, commands, agents, hooks, mcp) recursively from the plugin root; reject symlinks and non-regular files; skip entries named .gitkeep, __pycache__ directories, and .pyc bytecode; include only regular files with st_nlink == 1. Record {path, sha256} per file with the POSIX path relative to plugins/lazydeepseek and sha256 over the file bytes. Append policy.files entries the same way. Sort records byte-wise (Buffer.compare) by path. file_count is the record count; inventory_sha256 is the SHA-256 of the UTF-8 JSON serialization of the sorted record array (JSON.stringify with default separators, no whitespace, insertion order = sorted path order).",
+    "method": "Deterministic inventory: walk each payload root (skills, commands, agents, presets, hooks, mcp) recursively from the plugin root; reject symlinks and non-regular files; skip entries named .gitkeep, __pycache__ directories, and .pyc bytecode; include only regular files with st_nlink == 1. Record {path, sha256} per file with the POSIX path relative to plugins/lazydeepseek and sha256 over the file bytes. Append policy.files entries the same way. Sort records byte-wise (Buffer.compare) by path. file_count is the record count; inventory_sha256 is the SHA-256 of the UTF-8 JSON serialization of the sorted record array (JSON.stringify with default separators, no whitespace, insertion order = sorted path order).",
     "roots": [
       "skills",
       "commands",
       "agents",
+      "presets",
       "hooks",
       "mcp"
     ],
     "files": [
       ".mcp.json"
     ],
-    "file_count": 74,
-    "inventory_sha256": "e033099f5a161f90285a26961bf8844e645e0bbdacdf094b97ae600be7c7d33a"
+    "file_count": 88,
+    "inventory_sha256": "9ccac90a59768f83edc3acaf8bbf76c39880c7198751eefb727c8f3d72cbcbb4"
   },
   "default_routes": {
     "dsh": "dsh-plugin-git-sha"
@@ -56,7 +57,7 @@
     "manual-skills-mcp-fallback": {
       "role": "recovery-only",
       "command_shape": "manual copy of the bundled skills dir plus hand-written dsh-mcp-client rows",
-      "notes": "Recovery-only route: excludes commands, agents, and hooks."
+      "notes": "Recovery-only route: excludes commands, agents, presets, and hooks."
     }
   },
   "fallback": {
@@ -64,6 +65,7 @@
     "excludes": [
       "commands",
       "agents",
+      "presets",
       "hooks"
     ],
     "scope": "Skills and individually configured MCP only; the documented manual fallback in docs/reference/host-routes.md."
