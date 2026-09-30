@@ -120,7 +120,11 @@ import sys
 response = json.loads(sys.argv[1])
 assert response["jsonrpc"] == "2.0"
 assert response["id"] == 16
-assert response["result"]["status"] == "ok"
+# tools/call results carry MCP content blocks (dsh 0.2.0-rc.2 contract).
+result = response["result"]
+assert isinstance(result, dict) and isinstance(result.get("content"), list), response
+payload = json.loads(result["content"][0]["text"])
+assert payload["status"] == "ok"
 assert '"mcp-boundary"' in open(sys.argv[2]).read()
 PYEOF
 then

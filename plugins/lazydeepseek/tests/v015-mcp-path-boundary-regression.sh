@@ -63,7 +63,22 @@ check_rejected() {
 
 check_contains() {
     local label="$1" needle="$2" output="$3"
-    if printf '%s' "$output" | grep -q "$needle"; then
+    # tools/call results carry MCP content blocks (dsh 0.2.0-rc.2 contract):
+    # match the needle against the raw reply OR the decoded content text.
+    if printf '%s' "$output" | grep -q "$needle" \
+        || printf '%s' "$output" | python3 -c '
+import json
+import sys
+
+try:
+    reply = json.loads(sys.stdin.read())
+    result = reply.get("result", {})
+    text = "".join(block.get("text", "") for block in result.get("content", []) if isinstance(block, dict))
+except Exception:
+    raise SystemExit(1)
+raise SystemExit(0 if sys.argv[1] in text else 1)
+' "$needle"
+    then
         PASS=$((PASS + 1))
         echo "PASS: $label"
     else

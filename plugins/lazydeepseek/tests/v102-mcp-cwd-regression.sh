@@ -141,7 +141,21 @@ run_output="$(
 {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"create_run","arguments":{"run_id":"cwd-proof","objective":"consumer context"}}}
 EOF
 )"
-if printf '%s\n' "$run_output" | grep -q '"run_id": "cwd-proof"' \
+# tools/call results carry MCP content blocks (dsh 0.2.0-rc.2 contract);
+# the payload rides JSON-escaped inside the text block.
+run_payload_ok="$(printf '%s\n' "$run_output" | python3 -c '
+import json
+import sys
+
+try:
+    reply = json.loads(sys.stdin.read())
+    result = reply.get("result", {})
+    text = "".join(block.get("text", "") for block in result.get("content", []) if isinstance(block, dict))
+except Exception:
+    raise SystemExit(1)
+raise SystemExit(0 if "\"run_id\": \"cwd-proof\"" in text else 1)
+' && echo yes || echo no)"
+if [ "$run_payload_ok" = "yes" ] \
     && [ -f "$PROJECT/.lazydeepseek/runs/cwd-proof/state.json" ] \
     && [ ! -e "$CALLER/.lazydeepseek/runs/cwd-proof/state.json" ]; then
     pass_case 'run-ledger writes state under explicit consumer CWD'

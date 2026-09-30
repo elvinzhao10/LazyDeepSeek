@@ -77,6 +77,21 @@ print(json.dumps({"jsonrpc": "2.0", "id": json.loads(sys.argv[1]), "result": jso
 PYEOF
 }
 
+# tools/call results MUST carry MCP content blocks (observed live on dsh
+# 0.2.0-rc.2, M4 acceptance): a raw object renders no model-visible content and
+# a raw top-level array breaks the client ("Error: Request timed out"). The
+# python-backed servers (docs/context-graph/code-intel) already use this shape.
+reply_tool() {
+  [ "$NOTIFICATION" = 1 ] && return 0
+  python3 - "$ID_JSON" "$1" <<'PYTOOLEOF'
+import json
+import sys
+
+value = json.loads(sys.argv[2])
+print(json.dumps({"jsonrpc": "2.0", "id": json.loads(sys.argv[1]), "result": {"content": [{"type": "text", "text": json.dumps(value)}]}}))
+PYTOOLEOF
+}
+
 err() {
   [ "$NOTIFICATION" = 1 ] && return 0
   local code="-32603"
@@ -219,7 +234,7 @@ case "$METHOD" in
         require_string_arg run_id || continue; RID="$ARG_VALUE"
         require_string_arg objective || continue; OBJ="$ARG_VALUE"
         if run_state create-run.sh "$RID" "$OBJ"; then
-          reply "$(result_object status ok run_id "$RID")"
+          reply_tool "$(result_object status ok run_id "$RID")"
         fi
         ;;
       list_runs)
@@ -232,12 +247,12 @@ import sys
 print(len(json.loads(sys.argv[1])))
 PYEOF
 )
-          reply "{\"runs\":$RUNS,\"count\":$COUNT}"
+          reply_tool "{\"runs\":$RUNS,\"count\":$COUNT}"
         fi
         ;;
       latest_run)
         if run_state latest-run.sh; then
-          reply "$(result_object output "$STATE_OUTPUT")"
+          reply_tool "$(result_object output "$STATE_OUTPUT")"
         fi
         ;;
       read_state)
@@ -249,7 +264,7 @@ PYEOF
         elif ! STATE_JSON=$(read_state_file "$STATE_RUN_DIR/state.json" 2>&1); then
           err "${STATE_JSON:-failed to read run state}"
         else
-          reply "$STATE_JSON"
+          reply_tool "$STATE_JSON"
         fi
         ;;
       summarize_run)
@@ -257,7 +272,7 @@ PYEOF
         if run_state summarize-run.sh "$RID"; then
           SUMMARY_LINES=$(printf '%s\n' "$STATE_OUTPUT" | grep -v '^===' || true)
           SUMMARY=$(lines_as_json_array "$SUMMARY_LINES")
-          reply "{\"summary\":$SUMMARY}"
+          reply_tool "{\"summary\":$SUMMARY}"
         fi
         ;;
       append_event)
@@ -265,7 +280,7 @@ PYEOF
         require_string_arg event_type || continue; EVENT_TYPE="$ARG_VALUE"
         require_object_arg payload || continue; PAYLOAD="$ARG_VALUE"
         if run_state append-event.sh "$RID" "$EVENT_TYPE" "$PAYLOAD"; then
-          reply '{"status":"ok","event_appended":true}'
+          reply_tool '{"status":"ok","event_appended":true}'
         fi
         ;;
       update_task)
@@ -273,7 +288,7 @@ PYEOF
         require_string_arg task_id || continue; TID="$ARG_VALUE"
         require_string_arg status || continue; TSTAT="$ARG_VALUE"
         if run_state update-task.sh "$RID" "$TID" "$TSTAT"; then
-          reply "$(result_object status ok task_id "$TID" new_status "$TSTAT")"
+          reply_tool "$(result_object status ok task_id "$TID" new_status "$TSTAT")"
         fi
         ;;
       create_checkpoint)
@@ -282,14 +297,14 @@ PYEOF
           if [ -z "$STATE_OUTPUT" ]; then
             err "checkpoint script returned no checkpoint path"
           else
-            reply "$(result_object status ok checkpoint "$STATE_OUTPUT")"
+            reply_tool "$(result_object status ok checkpoint "$STATE_OUTPUT")"
           fi
         fi
         ;;
       recover_run)
         require_string_arg run_id || continue; RID="$ARG_VALUE"
         if run_state recover-run.sh "$RID"; then
-          reply '{"status":"ok","recovered":true}'
+          reply_tool '{"status":"ok","recovered":true}'
         fi
         ;;
       *) err "unknown tool: $TOOL" ;;

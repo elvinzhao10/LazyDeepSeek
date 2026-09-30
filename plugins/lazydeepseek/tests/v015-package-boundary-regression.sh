@@ -100,7 +100,10 @@ import json
 import sys
 
 payload = json.loads(sys.argv[1])
-checks = payload["result"]
+# tools/call results carry MCP content blocks (dsh 0.2.0-rc.2 contract).
+result = payload["result"]
+assert isinstance(result, dict) and isinstance(result.get("content"), list), payload
+checks = json.loads(result["content"][0]["text"])
 assert isinstance(checks, list)
 assert checks
 assert {check["step"] for check in checks} >= {"Package readiness", "Package verification"}

@@ -75,6 +75,20 @@ import sys
 print(json.dumps({"jsonrpc": "2.0", "id": json.loads(sys.argv[1]), "result": json.loads(sys.argv[2])}))
 PYEOF
 }
+# tools/call results MUST carry MCP content blocks (observed live on dsh
+# 0.2.0-rc.2, M4 acceptance): a raw object renders no model-visible content and
+# a raw top-level array breaks the client ("Error: Request timed out"). The
+# python-backed servers (docs/context-graph/code-intel) already use this shape.
+reply_tool() {
+  [ "$NOTIFICATION" = 1 ] && return 0
+  python3 - "$ID_JSON" "$1" <<'PYEOF'
+import json
+import sys
+
+value = json.loads(sys.argv[2])
+print(json.dumps({"jsonrpc": "2.0", "id": json.loads(sys.argv[1]), "result": {"content": [{"type": "text", "text": json.dumps(value)}]}}))
+PYEOF
+}
 err() {
   [ "$NOTIFICATION" = 1 ] && return 0
   python3 - "$ID_JSON" "$1" <<'PYEOF'
@@ -176,12 +190,12 @@ case "$METHOD" in
           err "package verification contract is missing"
           continue
         fi
-        reply "$CHECKS" ;;
+        reply_tool "$CHECKS" ;;
       run_check)
         resolve_run_state "$RID" >/dev/null || { err "invalid or unsafe run_id"; continue; }
         TID=$(arg_req task_id); EMSG=$(arg_req error_message)
         CLASS=$(run_script loop/classify-failure.sh "$TID" "$EMSG")
-        reply "$(result_object status ok classification "$CLASS")" ;;
+        reply_tool "$(result_object status ok classification "$CLASS")" ;;
       record_gate_result)
         resolve_run_state "$RID" >/dev/null || { err "invalid or unsafe run_id"; continue; }
         require_run_events "$RID" || { err "invalid or unsafe run_id"; continue; }
@@ -193,17 +207,17 @@ import json, os; cwd=os.environ['CWD']; rid=os.environ['RID']
 ev=dict(ts=os.environ['NOW'], run_id=rid, event='gate_result', gate=os.environ['GNAME'], status=os.environ['GST'], result=os.environ.get('GRES',''))
 with open(os.environ['STATE_RUN_DIR'] + '/events.jsonl','a') as f: f.write(json.dumps(ev)+'\n')
 "
-        reply "$(result_object status ok gate "$GNAME" gate_result "$GST")" ;;
+        reply_tool "$(result_object status ok gate "$GNAME" gate_result "$GST")" ;;
       record_criterion_result)
         EVIDENCE_ROOT="$CWD/.lazydeepseek/evidence/runtime"
         if ! RESULT=$(printf '%s' "$ARGS" | node "$PLUGIN_ROOT/scripts/runtime-freshness-entry.js" criterion "$EVIDENCE_ROOT" 2>&1); then
           err "$RESULT"
           continue
         fi
-        reply "$RESULT" ;;
+        reply_tool "$RESULT" ;;
       list_gate_results)
         SF=$(resolve_run_state "$RID") || { err "invalid or unsafe run_id"; continue; }
-        reply "$(python3 - "$SF" <<'PY' 2>/dev/null
+        reply_tool "$(python3 - "$SF" <<'PY' 2>/dev/null
 import json, sys
 try:
     d = json.load(open(sys.argv[1]))
@@ -216,7 +230,7 @@ PY
         resolve_run_state "$RID" >/dev/null || { err "invalid or unsafe run_id"; continue; }
         FTID=$(arg_req failed_task_id); CLS=$(arg_req classification)
         NEWID=$(run_script loop/create-repair-task.sh "$FTID" "$CLS")
-        reply "$(result_object status ok repair_task_id "$NEWID")" ;;
+        reply_tool "$(result_object status ok repair_task_id "$NEWID")" ;;
       summarize_verification)
         SF=$(resolve_run_state "$RID") || { err "invalid or unsafe run_id"; continue; }
         require_run_events "$RID" || { err "invalid or unsafe run_id"; continue; }
@@ -245,7 +259,7 @@ PYEOF
           err "$SUMMARY"
           continue
         fi
-        reply "$SUMMARY" ;;
+        reply_tool "$SUMMARY" ;;
       *) err "unknown tool: $TNAME" ;;
     esac ;;
   *) err "unsupported method: $METHOD" ;;

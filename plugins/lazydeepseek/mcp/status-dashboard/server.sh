@@ -74,6 +74,21 @@ import sys
 print(json.dumps({"jsonrpc": "2.0", "id": json.loads(sys.argv[1]), "result": json.loads(sys.argv[2])}))
 PYEOF
 }
+
+# tools/call results MUST carry MCP content blocks (observed live on dsh
+# 0.2.0-rc.2, M4 acceptance): a raw object renders no model-visible content and
+# a raw top-level array breaks the client ("Error: Request timed out"). The
+# python-backed servers (docs/context-graph/code-intel) already use this shape.
+reply_tool() {
+  [ "$NOTIFICATION" = 1 ] && return 0
+  python3 - "$ID_JSON" "$1" <<'PYTOOLEOF'
+import json
+import sys
+
+value = json.loads(sys.argv[2])
+print(json.dumps({"jsonrpc": "2.0", "id": json.loads(sys.argv[1]), "result": {"content": [{"type": "text", "text": json.dumps(value)}]}}))
+PYTOOLEOF
+}
 err() {
   [ "$NOTIFICATION" = 1 ] && return 0
   local code="-32603"
@@ -156,7 +171,7 @@ if isinstance(adaptive, dict):
 print(json.dumps(r))
 PYEOF
 )
-    reply "$RESULT"
+    reply_tool "$RESULT"
     ;;
   show_task_graph)
     SF=$(resolve_run "$(param_raw "run_id")") || { err "invalid or unsafe run_id"; continue; }
@@ -165,7 +180,7 @@ import json,sys
 with open(sys.argv[1]) as f: s=json.load(f); t=s.get('tasks',[]); n=[{'id':x.get('id',''),'title':x.get('title',''),'status':x.get('status','')} for x in t]; e=[{'from':d,'to':x.get('id','')} for x in t for d in x.get('depends_on',[])]; print(json.dumps({'nodes':n,'edges':e}))
 PYEOF
 )
-    reply "$RESULT"
+    reply_tool "$RESULT"
     ;;
   show_verification_matrix)
     SF=$(resolve_run "$(param_raw "run_id")") || { err "invalid or unsafe run_id"; continue; }
@@ -174,7 +189,7 @@ import json,sys
 with open(sys.argv[1]) as f: s=json.load(f); g=[{'name':x.get('name',''),'status':x.get('status',''),'result':x.get('result','')} for x in s.get('verification_gates',[])]; print(json.dumps(g))
 PYEOF
 )
-    reply "$RESULT"
+    reply_tool "$RESULT"
     ;;
   show_pending_approvals)
     SF=$(resolve_run "$(param_raw "run_id")") || { err "invalid or unsafe run_id"; continue; }
@@ -185,7 +200,7 @@ if s.get('review_status','')=='pending': p.append({'name':'review','status':'pen
 print(json.dumps(p))
 PYEOF
 )
-    reply "$RESULT"
+    reply_tool "$RESULT"
     ;;
   *)
     err "unknown method: $METHOD"

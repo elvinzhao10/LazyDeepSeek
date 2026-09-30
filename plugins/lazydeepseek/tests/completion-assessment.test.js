@@ -124,6 +124,10 @@ test('CLI validator and MCP status expose the same ready assessment', () => {
   const request = `${JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'show_run_status', arguments: { run_id: 'run-1' } } })}\n`;
   const mcp = spawnSync('bash', [server], { input: request, encoding: 'utf8', env: { ...process.env, CWD: f.root, CLAUDE_PROJECT_DIR: f.root, CLAUDE_PLUGIN_ROOT: pluginRoot } });
   assert.equal(mcp.status, 0, mcp.stderr || mcp.stdout);
-  const assessment = JSON.parse(mcp.stdout).result.completion_assessment;
+  // tools/call results carry MCP content blocks (dsh 0.2.0-rc.2 contract):
+  // the payload rides JSON-escaped inside the text block.
+  const reply = JSON.parse(mcp.stdout);
+  const block = reply.result.content.find((b) => b.type === 'text');
+  const assessment = JSON.parse(block.text).completion_assessment;
   assert.deepEqual([assessment.status, assessment.reason_code], ['ready', 'READY']);
 });

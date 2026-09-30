@@ -144,6 +144,13 @@ OUT=$(rpc verification '{"jsonrpc":"2.0","id":1,"method":"initialize"}')
 check "verification/initialize" "verification" "$OUT"
 OUT=$(rpc verification '{"jsonrpc":"2.0","id":2,"method":"tools/list"}')
 check "verification/tools-list" "discover_checks|summarize" "$OUT"
+# tools/call must return MCP content blocks (raw arrays break the dsh client —
+# observed live in M4 acceptance) and carry the verification contract payload.
+OUT=$(rpc verification '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"discover_checks","arguments":{}}}')
+check "verification/discover_checks-content-blocks" '"content": \[\{"type": "text"' "$OUT"
+check "verification/discover_checks-payload" 'Package checks' "$OUT"
+OUT=$(rpc run-ledger '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"list_runs","arguments":{}}}')
+check "run-ledger/list_runs-content-blocks" '"content": \[\{"type": "text"' "$OUT"
 
 OUT=$(rpc status-dashboard '{"jsonrpc":"2.0","id":1,"method":"initialize"}')
 check "status-dashboard/initialize" "status-dashboard" "$OUT"

@@ -90,8 +90,11 @@ def assert_package_doc_discovery(server, tool_names):
             assert readable, f"{server}/{tool_name} did not respond before stdin closed"
             response = json.loads(process.stdout.readline())
             assert response["id"] == request_id, response
-            assert isinstance(response.get("result"), list), response
-            assert response["result"], response
+            # tools/call results carry MCP content blocks (dsh 0.2.0-rc.2 contract).
+            result = response.get("result")
+            assert isinstance(result, dict) and isinstance(result.get("content"), list), response
+            text = "".join(block.get("text", "") for block in result["content"] if isinstance(block, dict))
+            assert text.strip(), response
         process.stdin.write(json.dumps({"jsonrpc": "2.0", "id": f"{server}-session-survives", "method": "tools/list"}) + "\n")
         process.stdin.flush()
         readable, _, _ = select.select([process.stdout], [], [], 1.5)
