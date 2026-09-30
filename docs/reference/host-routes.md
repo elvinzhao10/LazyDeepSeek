@@ -226,6 +226,12 @@ host proof must be recorded separately.
 - **Duplicate skills or MCP processes:** stop the session and follow the
   migration checklist above. Never keep plugin and manual routes active
   together.
+- **SessionStart reports degraded readiness on a local-dir link install:** the
+  package's load-check refuses symlinked plugin roots (fail-safe path guard),
+  so the development link route always reports
+  `SESSIONSTART_READINESS=degraded reason=package-readiness-failed`. Run the
+  load-check against the repository checkout, or use the git-spec/tarball
+  install (a real directory), for a full-readiness result.
 - **MCP tool call errors:** tools must return MCP content blocks; a tool
   that reports `Request timed out` immediately indicates a nonconforming
   server build (fixed in this release) or an unreachable launcher path.
