@@ -86,7 +86,10 @@ def _installed_hook(project: Path, prompt: str) -> dict[str, object]:
     assert completed.returncode == 0, completed.stderr
     assert completed.stderr == ""
     outer = json.loads(completed.stdout)
-    context = outer.get("additionalContext")
+    bridge = outer.get("hookSpecificOutput")
+    assert isinstance(bridge, dict)
+    assert bridge.get("hookEventName") == "UserPromptSubmit"
+    context = bridge.get("additionalContext")
     assert isinstance(context, str)
     marker = "Adaptive intake directive: "
     start = context.index(marker) + len(marker)

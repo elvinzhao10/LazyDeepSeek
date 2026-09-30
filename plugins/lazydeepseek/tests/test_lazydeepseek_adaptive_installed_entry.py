@@ -20,9 +20,12 @@ PROMPT_REDACTION_NOTICE = (
 
 
 def _additional_context(stdout: str) -> str:
-    """The hook prints DeepSeek Harness-safe JSON; notices ride inside additionalContext."""
+    """The hook prints bridge-shape JSON; notices ride inside hookSpecificOutput.additionalContext."""
     outer = json.loads(stdout)
-    context = outer.get("additionalContext")
+    bridge = outer.get("hookSpecificOutput")
+    assert isinstance(bridge, dict)
+    assert bridge.get("hookEventName") == "UserPromptSubmit"
+    context = bridge.get("additionalContext")
     assert isinstance(context, str)
     return context + "\n"
 
@@ -33,7 +36,9 @@ DIRECTIVE_MARKER = "Adaptive intake directive: "
 def _directive_from_stdout(stdout: str) -> dict[str, object]:
     """Unwrap the machine-readable adaptive directive from hook stdout."""
     outer = json.loads(stdout)
-    context = outer.get("additionalContext")
+    bridge = outer.get("hookSpecificOutput")
+    assert isinstance(bridge, dict)
+    context = bridge.get("additionalContext")
     assert isinstance(context, str)
     start = context.index(DIRECTIVE_MARKER) + len(DIRECTIVE_MARKER)
     directive = json.JSONDecoder().raw_decode(context[start:])[0]

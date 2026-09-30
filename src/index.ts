@@ -76,7 +76,7 @@ export function buildHooksConfig(pkgRoot: string): { _lazydeepseek: string; hook
     }));
   }
   return {
-    _lazydeepseek: `LazyDeepSeek v1.3.3 generated hook surface for the dsh-hooks-claude-code bridge. Five events are bridged (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop); PermissionRequest and PostToolUseFailure do not exist on the bridge and are synthesized inside the PreToolUse/PostToolUse handlers (degraded; see contracts/dsh-hook-consumers.v1.json). Commands carry absolute paths baked at generation; \${CLAUDE_PROJECT_DIR} is substituted by the bridge per-run. Hooks print EITHER strict JSON ({"additionalContext": "..."}) OR nothing on stdout; deny = exit 2 with stderr reason; diagnostics to stderr; no network I/O.`,
+    _lazydeepseek: `LazyDeepSeek v1.3.3 generated hook surface for the dsh-hooks-claude-code bridge. Five events are bridged (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop); PermissionRequest and PostToolUseFailure do not exist on the bridge and are synthesized inside the PreToolUse/PostToolUse handlers (degraded; see contracts/dsh-hook-consumers.v1.json). Commands carry absolute paths baked at generation; \${CLAUDE_PROJECT_DIR} is substituted by the bridge per-run. Hooks print EITHER strict JSON in the bridge shape ({"hookSpecificOutput": {"hookEventName": "<Event>", "additionalContext": "..."}}; the 0.2.0-rc.2 codec reads additionalContext ONLY from hookSpecificOutput) OR nothing on stdout; deny = exit 2 with stderr reason; diagnostics to stderr; no network I/O.`,
     hooks
   };
 }

@@ -3,7 +3,7 @@
 #
 # Reads completion status via the launcher (scripts/completion-assessment.js)
 # when resolvable, otherwise falls back to reading .lazydeepseek state directly
-# (active run + unchecked plan checkboxes). Emits {"additionalContext": ...}.
+# (active run + unchecked plan checkboxes). Emits the bridge-shape hookSpecificOutput additionalContext JSON.
 #
 # DeepSeek Harness output contract: print EITHER strict JSON OR nothing on stdout.
 # ADVISORY — ALWAYS exits 0. DeepSeek Harness continuation semantics differ from earlier
@@ -60,7 +60,7 @@ print(
         if [ "$LAUNCHER_STATUS" = "0" ]; then
             # ready, or a reminder was produced
             if [ -n "$REMINDER" ]; then
-                printf '%s' "$REMINDER" | python3 -c 'import json,sys; print(json.dumps({"additionalContext": sys.stdin.read()}))'
+                printf '%s' "$REMINDER" | python3 -c 'import json,sys; print(json.dumps({"hookSpecificOutput": {"hookEventName": "Stop", "additionalContext": sys.stdin.read()}}))'
             fi
             exit 0
         fi
@@ -154,6 +154,6 @@ PLAN_NAME=$(basename "$PLAN_PATH" .md)
 
 REMINDER="[LazyDeepSeek] Completion gate: $REMAINING unfinished task(s) in plan \`$PLAN_NAME\`. Next: $NEXT_TASK. Do not claim completion without verification. Run /lazy-start-work $PLAN_NAME to continue the planned work."
 
-# --- Emit strict JSON only: {"additionalContext": "<reminder>"} ---
-printf '%s' "$REMINDER" | python3 -c 'import json,sys; print(json.dumps({"additionalContext": sys.stdin.read()}))'
+# --- Emit strict JSON only: bridge-shape hookSpecificOutput additionalContext ---
+printf '%s' "$REMINDER" | python3 -c 'import json,sys; print(json.dumps({"hookSpecificOutput": {"hookEventName": "Stop", "additionalContext": sys.stdin.read()}}))'
 exit 0

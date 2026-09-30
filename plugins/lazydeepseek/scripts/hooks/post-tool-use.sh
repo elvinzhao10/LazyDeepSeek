@@ -99,13 +99,14 @@ def _failure_signature(payload):
             return json.dumps(response.get('error') if response.get('error') is not None else response)[:200]
     if isinstance(response, str):
         stripped = response.strip()
-        if stripped.startswith('[exit code:'):
-            try:
-                code = int(stripped[len('[exit code:'):].split(']', 1)[0])
-                if code != 0:
-                    return stripped[:200]
-            except ValueError:
-                pass
+        # dsh renders failed bash as text ending in an "[exit code: N]" marker
+        # (observed live: '(no output)\n[exit code: 3]'); denied/errored calls
+        # surface as 'Error: ...' text. Match the marker anywhere in the text.
+        marker = re.search(r'\[exit code: (\d+)\]', stripped)
+        if marker and int(marker.group(1)) != 0:
+            return stripped[:200]
+        if stripped.startswith('Error:'):
+            return stripped[:200]
     if payload.get('is_error') is True:
         return json.dumps(payload.get('error', 'tool error'))[:200]
     return None

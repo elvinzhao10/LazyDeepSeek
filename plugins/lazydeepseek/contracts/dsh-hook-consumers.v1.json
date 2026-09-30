@@ -13,6 +13,7 @@
       "Hook children are file-sandboxed to the session workspace; hooks keep all state under the workspace .lazydeepseek/ directory.",
       "Matchers are case-sensitive regexes over lowercase dsh tool names (write|edit|bash).",
       "Deny is exit code 2 with the stderr reason surfaced to the model as the tool error.",
+      "Context injection: the codec reads additionalContext ONLY from hookSpecificOutput.additionalContext (hookEventName must match the running event); a top-level additionalContext key is ignored (observed live, M3 acceptance).",
       "No bridge-side stdout cap exists; the strict-JSON-or-nothing stdout discipline with the 64KB payload ceiling is this contract's own."
     ]
   },

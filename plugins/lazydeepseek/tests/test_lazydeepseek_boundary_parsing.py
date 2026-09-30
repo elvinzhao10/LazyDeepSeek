@@ -43,7 +43,10 @@ def _run_hook(project: Path, prompt: str) -> HookDirective:
     assert completed.stderr == ""
     outer = json.loads(completed.stdout)
     assert isinstance(outer, dict)
-    context = outer.get("additionalContext")
+    bridge = outer.get("hookSpecificOutput")
+    assert isinstance(bridge, dict)
+    assert bridge.get("hookEventName") == "UserPromptSubmit"
+    context = bridge.get("additionalContext")
     assert isinstance(context, str)
     marker = "Adaptive intake directive: "
     start = context.index(marker) + len(marker)
@@ -116,7 +119,10 @@ def test_hook_rejects_oversized_input_without_retaining_or_echoing_prompt(
     # Then: it fails closed with the fixed directive and never discloses input.
     assert completed.returncode == 0
     outer = json.loads(completed.stdout)
-    context = outer.get("additionalContext")
+    bridge = outer.get("hookSpecificOutput")
+    assert isinstance(bridge, dict)
+    assert bridge.get("hookEventName") == "UserPromptSubmit"
+    context = bridge.get("additionalContext")
     assert isinstance(context, str)
     marker = "Adaptive intake directive: "
     start = context.index(marker) + len(marker)

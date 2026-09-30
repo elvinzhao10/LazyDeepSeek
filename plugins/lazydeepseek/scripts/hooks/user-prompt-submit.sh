@@ -8,7 +8,7 @@
 # Also detects context-pressure markers (DeepSeek Harness has no PreCompact event, so
 # compaction recovery is re-entered here) and LazyDeepSeek command keywords.
 #
-# DeepSeek Harness output contract: print EITHER strict JSON ({"additionalContext": "..."})
+# DeepSeek Harness output contract: print EITHER strict JSON in the bridge shape ({"hookSpecificOutput": {"hookEventName": "<Event>", "additionalContext": "..."}}; the 0.2.0-rc.2 codec reads additionalContext ONLY from hookSpecificOutput)
 # OR nothing on stdout; diagnostics go to stderr. Nothing may block: ALWAYS
 # exits 0, never emits a deny/continue-false payload.
 set -uo pipefail
@@ -169,7 +169,7 @@ for pattern, keyword, route in KEYWORD_ROUTES:
             add(f"[LazyDeepSeek] Command keyword '{keyword}' detected — use {route} for this request.")
 
 if notes:
-    print(json.dumps({'additionalContext': '\n'.join(notes)}))
+    print(json.dumps({'hookSpecificOutput': {'hookEventName': 'UserPromptSubmit', 'additionalContext': '\n'.join(notes)}}))
 PY
 )" || NOTES=""
 

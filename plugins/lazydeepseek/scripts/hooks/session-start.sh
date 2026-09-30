@@ -2,7 +2,7 @@
 # session-start.sh — DeepSeek Harness SessionStart hook: bootstrap .lazydeepseek state, run the
 # package load-check, and summarize boulder / active-loop / active-run state.
 #
-# DeepSeek Harness output contract: print EITHER strict JSON ({"additionalContext": "..."})
+# DeepSeek Harness output contract: print EITHER strict JSON in the bridge shape ({"hookSpecificOutput": {"hookEventName": "<Event>", "additionalContext": "..."}}; the 0.2.0-rc.2 codec reads additionalContext ONLY from hookSpecificOutput)
 # OR nothing on stdout; diagnostics go to stderr. This hook is advisory and
 # ALWAYS exits 0 — a degraded package must never break session startup.
 set -uo pipefail
@@ -144,12 +144,12 @@ PY
     done
 fi
 
-# --- Emit strict JSON only: {"additionalContext": "<summary text>"} ---
+# --- Emit strict JSON only: bridge-shape hookSpecificOutput additionalContext ---
 NOTES="$(cat "$NOTES_FILE")" python3 - <<'PY'
 import json, os
 notes = os.environ.get('NOTES', '')
 if notes.strip():
-    print(json.dumps({"additionalContext": notes}))
+    print(json.dumps({"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": notes}}))
 PY
 
 exit 0

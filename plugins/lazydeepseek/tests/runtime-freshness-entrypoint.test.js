@@ -51,10 +51,13 @@ function run(root, runtime_freshness) {
     env: { ...process.env, CWD: root, CLAUDE_PLUGIN_ROOT: PLUGIN },
   });
   assert.equal(completed.status, 0, completed.stderr);
-  // The shipped hook emits DeepSeek Harness-safe JSON: the machine-readable directive is
-  // carried inside additionalContext. Parse the embedded directive object.
+  // The shipped hook emits DeepSeek Harness-safe JSON in the bridge shape observed live on
+  // dsh 0.2.0-rc.2 (M3 acceptance): the codec reads additionalContext ONLY from
+  // hookSpecificOutput. Parse the embedded directive object from there.
   const outer = JSON.parse(completed.stdout);
-  const context = typeof outer.additionalContext === 'string' ? outer.additionalContext : '';
+  const bridge = outer.hookSpecificOutput || {};
+  assert.equal(bridge.hookEventName, 'UserPromptSubmit');
+  const context = typeof bridge.additionalContext === 'string' ? bridge.additionalContext : '';
   const start = context.indexOf('{');
   assert.notEqual(start, -1, context);
   return JSON.parse(context.slice(start));

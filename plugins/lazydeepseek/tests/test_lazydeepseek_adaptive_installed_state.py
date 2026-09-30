@@ -92,11 +92,16 @@ def _run(project: Path, payload: dict[str, object]) -> dict[str, object]:
 
 
 def _directive_from_stdout(stdout: str) -> dict[str, object]:
-    # The shipped hook emits DeepSeek Harness-safe JSON: the machine-readable adaptive
-    # directive rides inside "additionalContext" after a fixed marker.
+    # The shipped hook emits DeepSeek Harness-safe JSON in the bridge shape observed
+    # live on dsh 0.2.0-rc.2 (M3 acceptance): the codec reads additionalContext ONLY
+    # from hookSpecificOutput, so the machine-readable adaptive directive rides
+    # inside hookSpecificOutput.additionalContext after a fixed marker.
     outer = json.loads(stdout)
     assert isinstance(outer, dict)
-    context = outer.get("additionalContext")
+    bridge = outer.get("hookSpecificOutput")
+    assert isinstance(bridge, dict)
+    assert bridge.get("hookEventName") == "UserPromptSubmit"
+    context = bridge.get("additionalContext")
     assert isinstance(context, str)
     marker = "Adaptive intake directive: "
     start = context.index(marker) + len(marker)

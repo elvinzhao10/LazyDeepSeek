@@ -5,8 +5,9 @@
 # live DeepSeek Harness session.
 #
 # DeepSeek Harness output contract under test:
-#   - SessionStart / UserPromptSubmit / Stop print strict JSON
-#     ({"additionalContext": "..."}) or NOTHING on stdout, exit 0.
+#   - SessionStart / UserPromptSubmit / Stop print strict JSON in the bridge
+#     shape ({"hookSpecificOutput": {"hookEventName": "<Event>",
+#     "additionalContext": "..."}}) or NOTHING on stdout, exit 0.
 #   - PreToolUse denies with exit code 2 and a stderr reason; otherwise prints
 #     NOTHING and exits 0.
 #   - PostToolUse / PostToolUseFailure print NOTHING, exit 0.
