@@ -189,3 +189,35 @@ copy_publication_fixture "$DIRECTORY_FIXTURE"
 printf '%s\n' '[reference](reference/)' >> "$DIRECTORY_FIXTURE/docs/00-learning-path.md"
 (REPOSITORY_ROOT="$DIRECTORY_FIXTURE"; check_local_links) || fail 'existing directory link target was rejected'
 pass 'existing directory link fixture is accepted'
+
+# --- Tarball pack dry-run (integrity check ONLY; never released to any registry) ---
+# The distribution routes are the git spec and the release tarball asset
+# (GitHub-only; the npm registry is not used for this package). This dry run
+# proves the pack surface: prebuilt lib/ included, research/state trees
+# excluded, contracts sidecars intact.
+PACK_JSON="$TMP/pack.json"
+if ! (cd "$REPOSITORY_ROOT" && npm pack --dry-run --json >"$PACK_JSON" 2>"$TMP/pack.err"); then
+    cat "$TMP/pack.err" >&2
+    fail 'tarball pack dry-run failed'
+fi
+python3 - "$PACK_JSON" <<'PY' || fail 'tarball pack surface is invalid'
+import json
+import sys
+
+entries = json.load(open(sys.argv[1]))
+files = [entry.get('path', '') for pack in entries for entry in pack.get('files', [])]
+assert files, 'pack file list is empty'
+required = ['package.json', 'lib/index.mjs', 'cordis.patch.yml',
+            'plugins/lazydeepseek/contracts/dsh-route-contract.v1.json',
+            'plugins/lazydeepseek/contracts/dsh-route-contract.v1.json.sha256',
+            'plugins/lazydeepseek/hooks/hooks.json',
+            'plugins/lazydeepseek/mcp/verification/server.sh']
+for item in required:
+    assert item in files, f'pack is missing required file: {item}'
+for forbidden_prefix in ('.study/', '.lazydeepseek/'):
+    bad = [f for f in files if f.startswith(forbidden_prefix)]
+    assert not bad, f'pack leaks {forbidden_prefix} content: {bad[:3]}'
+assert not any('/.git/' in f for f in files), 'pack leaks git internals'
+print(f'pack surface ok: {len(files)} files')
+PY
+pass 'tarball pack dry-run surface is valid (integrity check only; no registry release)'

@@ -1,31 +1,75 @@
-# LazyDeepSeek v1.3.3 — reliability and release consistency
+# LazyDeepSeek v1.3.3 — the DeepSeek Harness port release
 
-**Status:** v1.3.3 release. Package, lifecycle, language, and publication checks passed locally and in PR CI. Fresh DeepSeek Harness activation remains pending.
+**Status:** v1.3.3 release candidate. Package, lifecycle, language, and
+publication checks passed locally (full verify suite `all_pass=true`).
+Distribution is GitHub-only: the git-spec install pinned to a commit sha is
+the default route and the release tarball the alternate; the npm registry is
+not used for this package. Fresh DeepSeek Harness activation was observed
+live on the pinned `0.2.0-rc.2` during acceptance (skills, hooks, all six MCP
+servers, native ralph); per-component readiness is recorded in the docs.
 
 ## Eval-driven fixes
 
-- Versioned plugin cache roots use native DeepSeek Harness variables, with bounded path and manifest checks. Restricted-role hooks reject conflicting identities, malformed or oversized mutating input, and unrestricted shell dispatch.
-- Execution context rejects unsupported shell wrappers before dispatch. Deferred optional MCP servers retain a protocol endpoint and invalid profile values fail explicitly.
+- Hook stdout now uses the bridge shape observed live on dsh 0.2.0-rc.2:
+  `additionalContext` is read only from `hookSpecificOutput`, so every
+  injecting hook (SessionStart, UserPromptSubmit, Stop) emits that envelope.
+- The PostToolUse failure discriminator matches the host's actual failure
+  text shapes (`[exit code: N]` markers anywhere in the result; `Error:`
+  prefixes), keeping the synthesized PostToolUseFailure records accurate.
+- MCP `tools/call` results now carry MCP content blocks. Raw top-level arrays
+  broke the dsh client with an immediate `Request timed out` (found live on
+  the verification server) and raw objects rendered no model-visible content;
+  run-ledger, status-dashboard, and verification were fixed and the MCP gate
+  now exercises `discover_checks` so this class cannot ship silently again.
+- Versioned plugin cache roots use native DeepSeek Harness variables, with
+  bounded path and manifest checks. Restricted-role hooks reject conflicting
+  identities, malformed or oversized mutating input, and unrestricted shell
+  dispatch. Execution context rejects unsupported shell wrappers before
+  dispatch. Deferred optional MCP servers retain a protocol endpoint and
+  invalid profile values fail explicitly.
 
 ## Measured efficiency
 
-No token, latency, or cost improvement has been measured for this patch.
+No token, latency, or cost improvement has been measured for this patch. The
+native `ralph` loop tool is adopted as the primary fresh-agent engine
+(pinned profile overlay, `maxRounds: 64`), with the ported scripts engine
+kept as the documented fallback route.
 
 ## Host capability matrix
 
-Package checks exercise the DeepSeek Harness plugin route. Fresh host activation and MCP behavior still require observation on a recorded build and session.
+Live-observed on the pinned host during acceptance: 19 bundled skills plus 10
+user-invocable command entries (model invocation of the twins is blocked by
+design; slash registrations serve interactive adapters), five bridged hook
+events with the two synthesized gates (PermissionRequest audit,
+PostToolUseFailure) landing in workspace state, all six MCP servers
+initializing and completing round-trips under the orchestrated default, the
+native ralph cycle completing with structured reports and run-ledger events,
+and persona-restricted subagents (toolFilter allowlists enforced in the child
+roster). Degraded: the advisory Stop reminder is not surfaced by the host
+(only exit-2 deny continues a turn), and the interactive slash surface
+requires an interactive adapter. Full facts: docs/10-host-capability-matrix.md.
 
 ## Migration and upgrade
 
-Update from v1.3.2 through the normal host route. Preserve caller state and verify installed package identity.
+Initial LazyDeepSeek release on the DeepSeek Harness host (family version
+1.3.3). Install the pinned git spec into a profile; prebuilt `lib/` is
+committed and no build scripts run, so no build approval is required. The
+documented profile ships telemetry opt-outs applied (session-log upload
+disabled, `DSH_TELEMETRY_MODE=DISABLED`); the doctor warns if upload is
+detected enabled.
 
 ## Known risks
 
-Role enforcement depends on trusted host identity and an explicitly restricted run. Package checks do not establish host sandboxing or live connection health.
+The host is a developer preview (`0.2.0-rc.2`, exact peer pin); breaking
+changes are promised across RCs. The hooks bridge parses its config once per
+session, so a hooks regeneration applies after a session restart. Advisory
+Stop output is dropped by the host (see the capability matrix). Package
+checks do not establish host sandboxing or live connection health.
 
 ## Rollback
 
-Use lifecycle rollback to the prior verified v1.3.2 release while preserving run evidence and caller state.
+Remove the plugin from its profile and reinstall the prior pinned spec; the
+durable lifecycle rollback path preserves run evidence and caller state.
 
 ## Prior release notes
 
