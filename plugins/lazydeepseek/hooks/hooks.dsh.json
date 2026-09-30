@@ -1,0 +1,62 @@
+{
+  "_lazydeepseek_template": "TEMPLATE ONLY — the live bridge config is GENERATED at plugin start by lib/index.js into $DSH_HOME/lazydeepseek/hooks.dsh.json, with <LAZYDEEPSEEK_PACKAGE_ROOT> baked to the installed package root and matchers lowercased for dsh tool names. This checked-in template documents the expected generated shape (load-check compares structure). Five events are bridged; PermissionRequest and PostToolUseFailure are synthesized inside the PreToolUse/PostToolUse handlers (degraded; contracts/dsh-hook-consumers.v1.json).",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "LAZYDEEPSEEK_PLUGIN_ROOT='<LAZYDEEPSEEK_PACKAGE_ROOT>' LAZYDEEPSEEK_PROJECT_DIR=\"${CLAUDE_PROJECT_DIR}\" bash '<LAZYDEEPSEEK_PACKAGE_ROOT>/plugins/lazydeepseek/scripts/hooks/session-start.sh'"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "LAZYDEEPSEEK_PLUGIN_ROOT='<LAZYDEEPSEEK_PACKAGE_ROOT>' LAZYDEEPSEEK_PROJECT_DIR=\"${CLAUDE_PROJECT_DIR}\" bash '<LAZYDEEPSEEK_PACKAGE_ROOT>/plugins/lazydeepseek/scripts/hooks/user-prompt-submit.sh'"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "write|edit|bash",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 5,
+            "command": "LAZYDEEPSEEK_PLUGIN_ROOT='<LAZYDEEPSEEK_PACKAGE_ROOT>' LAZYDEEPSEEK_PROJECT_DIR=\"${CLAUDE_PROJECT_DIR}\" bash '<LAZYDEEPSEEK_PACKAGE_ROOT>/plugins/lazydeepseek/scripts/hooks/pre-tool-use.sh'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "LAZYDEEPSEEK_PLUGIN_ROOT='<LAZYDEEPSEEK_PACKAGE_ROOT>' LAZYDEEPSEEK_PROJECT_DIR=\"${CLAUDE_PROJECT_DIR}\" bash '<LAZYDEEPSEEK_PACKAGE_ROOT>/plugins/lazydeepseek/scripts/hooks/post-tool-use.sh'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "LAZYDEEPSEEK_PLUGIN_ROOT='<LAZYDEEPSEEK_PACKAGE_ROOT>' LAZYDEEPSEEK_PROJECT_DIR=\"${CLAUDE_PROJECT_DIR}\" bash '<LAZYDEEPSEEK_PACKAGE_ROOT>/plugins/lazydeepseek/scripts/hooks/stop-gate.sh'"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "version": "1.3.3",
+  "identity": {
+    "package": "lazydeepseek",
+    "product": "LazyDeepSeek",
+    "owner": "LazyDeepSeek",
+    "plugin": "lazydeepseek",
+    "repository": "github.com/elvinzhao10/LazyDeepSeek",
+    "distribution": "GitHub-only (ratified Q1 2026-09-29): the GitHub repository with topic dsh-plugin is the distribution channel; the npm registry is NOT used for this package.",
+    "install_id": "lazydeepseek@dsh"
+  },
+  "dsh": {
+    "peer_pin": "@deepseek-ai/dsh 0.2.0-rc.2 (exact)",
+    "hooks_bridge": "@deepseek-ai/dsh-hooks-claude-code 0.2.0-rc.2",
+    "entry": "lib/index.mjs (prebuilt, committed; no install-time build scripts)"
+  },
+  "artifacts": {
+    "package.json": "d92bd9796c4b75b4496662c7e339aa742005920ae0069e0a381d1f9a9c12711b",
+    "cordis.patch.yml": "fe093eddc9d039250bfce1b03673894b1dffa73f6b4ee25b2c3f40b8ff273ddb"
+  },
+  "payload": {
+    "method": "Deterministic inventory: walk each payload root (skills, commands, agents, hooks, mcp) recursively from the plugin root; reject symlinks and non-regular files; skip entries named .gitkeep, __pycache__ directories, and .pyc bytecode; include only regular files with st_nlink == 1. Record {path, sha256} per file with the POSIX path relative to plugins/lazydeepseek and sha256 over the file bytes. Append policy.files entries the same way. Sort records byte-wise (Buffer.compare) by path. file_count is the record count; inventory_sha256 is the SHA-256 of the UTF-8 JSON serialization of the sorted record array (JSON.stringify with default separators, no whitespace, insertion order = sorted path order).",
+    "roots": [
+      "skills",
+      "commands",
+      "agents",
+      "hooks",
+      "mcp"
+    ],
+    "files": [
+      ".mcp.json"
+    ],
+    "file_count": 74,
+    "inventory_sha256": "c3dd0911d6d2aea6ab45be0e8ce64ce1775405cd282f4f3504338f586558f55a"
+  },
+  "default_routes": {
+    "dsh": "dsh-plugin-git-sha"
+  },
+  "routes": {
+    "dsh-plugin-git-sha": {
+      "role": "default",
+      "command_shape": "dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<commit-sha>",
+      "notes": "Git spec pinned to a commit sha; installs the prebuilt package with no build scripts, so the pnpm>=10 allowBuilds gate does not apply."
+    },
+    "dsh-plugin-tarball": {
+      "role": "alternate",
+      "command_shape": "dsh plugin --profile <name> add <path-to-release-tarball>",
+      "notes": "Pinned GitHub release tarball asset; integrity-checked against this contract's payload inventory."
+    },
+    "dsh-plugin-local-dir": {
+      "role": "development",
+      "command_shape": "dsh plugin --profile <name> add ./lazydeepseek",
+      "notes": "Local directory install for development and acceptance runs."
+    },
+    "manual-skills-mcp-fallback": {
+      "role": "recovery-only",
+      "command_shape": "manual copy of the bundled skills dir plus hand-written dsh-mcp-client rows",
+      "notes": "Recovery-only route: excludes commands, agents, and hooks."
+    }
+  },
+  "fallback": {
+    "route": "manual-skills-mcp-fallback",
+    "excludes": [
+      "commands",
+      "agents",
+      "hooks"
+    ],
+    "scope": "Skills and individually configured MCP only; the documented manual fallback in docs/reference/host-routes.md."
+  }
+}

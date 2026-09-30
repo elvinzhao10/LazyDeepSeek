@@ -1,0 +1,323 @@
+---
+name: lazy-start-work
+description: "Execute a work plan with orchestrated subagent delegation and verified completion evidence. Loads a plan, selects tasks, delegates to implementers, verifies, reviews. Maps to the DeepSeek Harness Agent tool with parallel subagent dispatch."
+when_to_use: "Use when a decision-complete plan must be executed with orchestrated subagent delegation and verified completion evidence."
+metadata:
+  author: LazyDeepSeek
+  version: "1.3.0"
+---
+
+# start-work
+
+> **Maps to DeepSeek Harness:** the DeepSeek Harness Agent tool with parallel subagent dispatch; durable state in `.lazydeepseek/runs/`.
+
+> **earlier host implementation source:** `local project documentation`
+
+## Purpose
+
+Execute a work plan until every top-level checkbox is complete. This skill is the orchestrator (Sisyphus) — it delegates ALL implementation, test, QA, and review work to spawned subagents. The root agent NEVER writes product code, NEVER edits product files, NEVER runs QA itself. It exclusively manages plan selection, run state, decomposition, dispatch, verdicts, and evidence records.
+
+## Trigger Conditions
+
+- User invokes `/lazy-start-work [plan-name]`
+- User says "execute plan", "start the plan", "run the plan"
+- Stop/SubagentStop hook re-injects after continuation check (v0.6+)
+
+## Required Context
+
+Before executing:
+- Read the plan from `.lazydeepseek/plans/<slug>.md`
+- Read `.lazydeepseek/runs/<run_id>/state.json` if resuming
+- Read `dsh.md` for project conventions
+- Read `.lazydeepseek/rules/lazydeepseek-verification.md` for evidence standards
+- Treat those files as orchestrator context. Workers receive the fixed contract,
+  task delta, and artifact references below, never a copy of the full plan.
+
+## Tool Access
+
+- Allowed: Read, Grep, Glob, Write, Edit (ONLY to `.lazydeepseek/` and plan files), Bash (verification only), Agent (subagent spawning)
+- **Disallowed on product paths:** Write, Edit — NEVER modify product code directly
+- **Orchestrator-only constraint:** Root NEVER implements, writes tests, or runs QA. Spawn a worker for every implementation unit.
+
+## Step-by-Step Procedure
+
+### Phase 1: Select the plan
+
+1. Read `.lazydeepseek/runs/<run_id>/state.json` if it exists (resume)
+2. List plans under `.lazydeepseek/plans/`
+3. If plan-name provided: select matching plan
+4. If exactly one active/paused run exists: resume it
+5. If exactly one plan exists and no active run: select it
+6. If no selectable plan: enter **No-plan bootstrap** — invoke `ulw-plan` to create a plan, then continue
+
+### Phase 2: Create or update run state
+
+Write `.lazydeepseek/runs/<run_id>/state.json` with:
+- `schema_version: 2`
+- `run_id`, `plan_reference`, `plan_name`
+- `status: "active"`, `session_ids: ["<session_id>"]`
+- `tier: { level: "LIGHT" | "HEAVY", justification: "..." }`
+- `checkboxes: []` — one entry per plan todo
+
+### Phase 3: Execute the next checkbox
+
+1. Find the first unchecked checkbox in the plan
+2. Classify tier (LIGHT/HEAVY) per ultrawork triage rules
+3. Decompose into atomic sub-tasks
+4. Before any dispatch, capture `git status --porcelain=v1` and the status of
+   every task-owned path without editing, staging, stashing, or cleaning. Store
+   the status digest and owned-path provenance in the execution-context record.
+5. Parse each plan-named verification command into argv, reject shell control
+   syntax or a command that would mutate user/host state, resolve its executable,
+   and perform one bounded syntax/dry-run smoke check. Persist the exact argv
+   arrays under the current run directory. On the single current `running` task
+   in `state.json`, record `execution_authority` with the run/task repo revision,
+   criterion IDs, `plan_reference` and its SHA-256, plus the command file's
+   project-relative path and SHA-256. Set the dispatch record's `plan_sha256`
+   to the plan digest and `validated_once: true`; reuse that authority.
+6. Validate the record with `node ${CLAUDE_PLUGIN_ROOT}/contracts/validate-lazyseries-record.js execution --project-root <project-root> --plan-commands-file <current-run-command-file> <record.json>`. The file option is only a hint: the validator resolves the latest non-terminal run and its single running task from `.lazydeepseek/runs/`, then requires the hint, state identity, plan, digests, and record to match before dispatch.
+7. **DELEGATE EVERYTHING.** Spawn worker subagents for ALL independent sub-tasks in parallel using DeepSeek Harness Agent tool.
+8. For LIGHT: direct implementation. For HEAVY: failing-first proof then implementation.
+
+#### Compact worker contract
+
+Every dispatch uses the fixed `TASK/DELTA/REFS/VERIFY` contract. Send only:
+
+- task/run/revision identity and criterion IDs;
+- the task-specific goal delta and exact owned paths;
+- artifact references for plan, baseline, provenance, and prior accepted evidence;
+- the once-validated command argv and the Manual-QA observable;
+- constraints that differ from the referenced plan/rules.
+
+Do not paste the plan, repository overview, shared safety rules, unchanged test
+output, or prior worker prose. The worker already has the fixed agent contract.
+The dispatch record must validate against
+`contracts/lazyseries-execution-context.v1.schema.json` before Agent is called.
+
+#### Coupled implementation bundles (narrow exception)
+
+Keep independent work split and dispatched in parallel. A single worker may receive a coupled file/test bundle only when one of these makes a split unsafe:
+
+- a shared mutable interface;
+- an atomic fixture; or
+- an invalid intermediate state while the split work is incomplete.
+
+The dispatch must explicitly enumerate the coupled bundle and record all of the
+following with it: `coupled: true`; the qualifying reason; the exact
+checkbox/file scope; and why parallel decomposition is unsafe. For example:
+
+```
+COUPLED DISPATCH RECORD
+coupled: true
+reason: atomic fixture
+checkbox_scope: task-7 acceptance fixture
+file_scope: tests/fixture.json, tests/fixture.test.sh
+parallel_unsafe: either half leaves the fixture invalid for every worker
+```
+
+This is dispatch evidence, not a ledger schema or an automated exemption.
+Coupling is never allowed for convenience, capacity, or generic multi-file
+changes. It does not allow root product edits and does not bypass the normal
+tests, Manual-QA, applicable adversarial probes, independent verifier verdict,
+or final review gates.
+
+**Each subagent task delta must include:**
+- Task/run/revision identity, criterion IDs, and exact files/directories in scope
+- For a coupled bundle only: the coupled dispatch record above, with no broader scope
+- References to the plan, baseline artifact, and project rules
+- Only task-specific constraints not present in those references
+- Once-validated automated verification argv
+- One Manual-QA channel (exact tool + exact invocation + binary observable)
+- Only applicable adversarial classes and a reference to the fixed nine-class list
+
+**The 9 adversarial classes** (from earlier host implementation `start-work` source line 118; a class applies when its trigger fact holds — probe each applicable one, record non-applicable with a one-line reason):
+1. `malformed_input` — new input parsing
+2. `prompt_injection` — untrusted external text
+3. `cancel_resume` — resumable or long-running flows
+4. `stale_state` — generated or cached artifacts
+5. `dirty_worktree` — uncommitted user files in scope
+6. `hung_commands` — long external commands
+7. `flaky_tests` — new or timing-sensitive tests
+8. `misleading_success_output` — log-based success claims
+9. `repeated_interruptions` — mid-operation interrupts
+
+### Phase 4: Verify and record evidence
+
+For each checkbox, complete FIVE gates:
+1. **Plan reread:** Confirm checkbox and acceptance criteria
+2. **Automated verification:** Run tests, typecheck, lint, build
+3. **Manual-QA channel:** Capture real artifact (screenshot, curl output)
+4. **Adversarial QA:** Probe every applicable ultraqa class
+5. **Cleanup:** Tear down QA resources; capture receipts
+
+Before the verifier runs tests, require `.lazydeepseek/runs/<run_id>/evidence/<task_id>.verification.md` with `status: in-progress` and the run/task/full HEAD/criterion identity. The verifier appends each result as it completes and writes a terminal `status: complete` verdict only after independent reproduction. A missing, in-progress, stale, or identity-mismatched report blocks the checkbox even when an agent completion notification or prose verdict says `confirmed`. Reuse green scoped receipts; run the whole matrix once at task closure. Refresh a compact `.lazydeepseek/context/run-digest.md` after each stage and wait on completion events instead of polling. Do not re-dispatch a worker while evidence or owned files are changing.
+
+Before a new dispatch, check shell access, the dependency store, and any available quota/reset signal. Record a working dependency command once in the run digest; after a sandbox or store failure, stop heavy dispatch until the host is healthy. Narrow a timed-out search by path or symbol instead of repeating the same broad query. Do not start a heavy verifier within 60 minutes of a known quota reset. Keep the digest under 2,000 tokens and ship its path rather than the full plan. Read each target before writing it and re-read after another actor changes it.
+
+Before marking a task done, compare the current HEAD and dirty paths with the dispatch, run `scripts/state/sync-plan-state.sh <run_id>` in check mode, and confirm every fold-forward ID has a landed artifact or remains an explicit blocker. Check that the plan's owner decision gates are closed for this task; a recommendation is not approval. If a task was split, update the plan's task IDs, dependencies, owner, and baseline HEAD before further dispatch. Corrections to prior ledger events must append a machine-readable superseding event naming the old event ID; do not rewrite or silently reinterpret history.
+
+Append evidence to `.lazydeepseek/runs/<run_id>/events.jsonl`.
+
+Classify every criterion as `static`, `runtime`, or `stateful`. A runtime
+criterion cannot pass without a real public/installed entry artifact. A
+stateful criterion additionally requires an artifact showing the before/after
+state transition. Test output or success prose is not a substitute.
+
+If a worker result is lost, accept recovery only from a terminal report with
+`status: complete`, the current run/task/repository revision, the exact current
+criterion-ID set, and readable artifact references. Missing, partial, stale, or
+identity-mismatched reports are unaccepted boundaries: preserve state and do not
+write memory. Append a memory update only after the execution-context validator
+accepts the terminal report.
+
+**Sisyphus completion contract:**
+- Worker returns `DoneClaim` → Verifier runs `AdversarialVerify` → `confirmed` → `FullyDone`
+- `confirmed` is the ONLY pass verdict
+- Verifier MUST be independent from executor
+
+### Phase 5: Mark progress
+
+Only after all 5 gates pass:
+1. Edit plan checkbox: `- [ ]` → `- [x]`
+2. Append `checkbox-completed` event to ledger
+3. Continue to next checkbox. Do NOT ask whether to continue.
+
+### Completion
+
+When all checkboxes + Final Verification Wave are done:
+1. Run final verification commands
+2. Run the Global Review Gate (`/lazy-review-work` — 5-agent review)
+3. All review lanes must PASS
+4. Print `ORCHESTRATION COMPLETE`
+
+## Expected Output Artifacts
+
+- `.lazydeepseek/runs/<run_id>/state.json` — run state with completed checkboxes
+- `.lazydeepseek/runs/<run_id>/events.jsonl` — evidence ledger with DoneClaim + AdversarialVerify entries
+- `.lazydeepseek/runs/<run_id>/evidence/` — Manual-QA artifacts
+- Plan file with checkboxes marked `[x]`
+
+## Verification Gates
+
+1. All plan checkboxes completed by subagents (not root)
+2. Every checkbox has DoneClaim + AdversarialVerify in events.jsonl
+3. Manual-QA artifacts exist and are verifiable
+4. 5-agent review passes all lanes
+5. `ORCHESTRATION COMPLETE` printed with artifacts and cleanup receipts
+
+## Verification Tiers (v1.3.0)
+
+Scale ceremony to the changed boundary and risk. Select the lowest sufficient tier
+once; reuse a green receipt while its declared inputs and covered behavior stay
+unchanged (do not rerun an identical green command solely because a new phase or
+agent started). These tiers are the shared LazySeries contract (plan behavior 9),
+consumed by Buddy, Trae, and DeepSeek Harness — do not fork them per host.
+
+- **V0 inspect** — documentation, metadata, formatting, or inert fixture changes. Run syntax/schema/static checks only when applicable; no new test required by default.
+- **V1 focused** — localized reversible behavior. Run the smallest existing test or direct user-surface scenario covering the changed boundary.
+- **V2 integrated** — cross-module, state, parser, migration, lifecycle, or host-routing behavior. Run focused checks plus one real consumer/integration scenario.
+- **V3 comprehensive** — security/trust boundaries, release packaging, shared contract/schema changes, broad infrastructure changes, or an unexplained focused failure. Run the repository's comprehensive gate once, normally in protected CI.
+
+Selection rules: default to the lowest sufficient tier. Test count, file count, plan size, agent count, or a request being called "complex" can NEVER promote verification. Promote only for the changed boundary or observed risk. A failing focused check triggers diagnosis and reruns only itself plus the directly affected integration — it does not trigger every suite.
+
+## Failure Behavior
+
+- If a subagent's DoneClaim fails AdversarialVerify: re-dispatch with exact failure feedback
+- If a subagent times out or returns inconclusive: first validate an available
+  identity-bound terminal report; otherwise preserve memory and respawn the
+  smaller scoped task
+- If iteration cap hit: pause; record `run_paused` event
+- If state corruption: restore from latest checkpoint
+
+## Handoff Format
+
+```
+ORCHESTRATION COMPLETE
+  Plan: .lazydeepseek/plans/<slug>.md
+  Checkboxes: N/N completed
+  Verification: [commands + results]
+  Review: [5-lane verdict]
+  Artifacts: [paths]
+  Cleanup: [receipts]
+```
+
+## State Ledger Integration (v0.7)
+
+The start-work orchestrator now writes all run state through the state/ and loop/ script layer.
+
+- **Phase 2 (Create state):** Calls `${CLAUDE_PLUGIN_ROOT}/scripts/state/create-run.sh <run_id> "<objective>"` to create the run directory with `state.json`, `events.jsonl`, and all subdirectories (`evidence/`, `checkpoints/`, `verification/`, `review/`, `agent_outputs/`, `artifacts/`, `memory_updates/`). The script also initializes `status: "planning"` and `iteration.count: 0`.
+- **Phase 3 (Execute):** Calls `${CLAUDE_PLUGIN_ROOT}/scripts/loop/next-task.sh <run_id>` to fetch the next unverified checkbox from `state.json` and mark it `in_progress`. When a task is complete, calls `${CLAUDE_PLUGIN_ROOT}/scripts/state/update-task.sh <run_id> <task_index> done` to record completion, validation status, and evidence paths.
+- **Phase 4 (Evidence):** Calls `${CLAUDE_PLUGIN_ROOT}/scripts/state/append-event.sh <run_id> done_claim "<json>"` to write each DoneClaim as a structured event in `events.jsonl`. After adversarial verification, calls `${CLAUDE_PLUGIN_ROOT}/scripts/state/update-task.sh <run_id> <task_index> evidence --field verified_by=<agent> --field confidence=<score>` to attach verification metadata to the task.
+- **Phase 5 (Checkpoint):** Calls `${CLAUDE_PLUGIN_ROOT}/scripts/state/checkpoint.sh <run_id>` every N checkboxes (default N=3) to snapshot `state.json` into `checkpoints/checkpoint-<NN>.json` for crash recovery.
+
+## Worktree Discipline (v0.9 hardening)
+
+When work involves branch/PR changes:
+- Create a git worktree: `git worktree add ../worktree-<run_id> main`
+- Verify with `git worktree list --porcelain`
+- Record `worktree_path` in `state.json`
+- All implementation happens in the worktree; review artifacts reference the worktree path
+- See earlier host implementation source: start-work Phase 2 lines 71-92
+
+## Debugging Runtime Audit (v0.9 hardening)
+
+After the 5-agent review gate and before `ORCHESTRATION COMPLETE`:
+- Name 3+ failure hypotheses for the implemented work
+- Run distinguishing checks for each hypothesis
+- Append results to `events.jsonl`
+- See earlier host implementation source: start-work Completion phase lines 176-184
+
+## DoneClaim/AdversarialVerify JSON Schema (v0.9 hardening)
+
+```json
+DoneClaim: {
+  "task": "<task id/title>",
+  "changed_files": ["absolute paths"],
+  "tests": ["exact command + result"],
+  "manual_qa": ["artifact paths"],
+  "adversarial_classes": {
+    "malformed_input": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "prompt_injection": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "cancel_resume": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "stale_state": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "dirty_worktree": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "hung_commands": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "flaky_tests": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "misleading_success_output": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "repeated_interruptions": {"probed": bool, "result": "PASS|FAIL|N-A"}
+  },
+  "cleanup": ["receipt paths"],
+  "risks": ["known risks or empty"]
+}
+AdversarialVerify: {
+  "verdict": "confirmed|false-positive|needs-fix|needs-human-review",
+  "evidence": ["command+result per claim"],
+  "repro": "exact repro command",
+  "confidence": 0.0-1.0,
+  "adversarial_classes": {
+    "malformed_input": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "prompt_injection": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "cancel_resume": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "stale_state": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "dirty_worktree": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "hung_commands": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "flaky_tests": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "misleading_success_output": {"probed": bool, "result": "PASS|FAIL|N-A"},
+    "repeated_interruptions": {"probed": bool, "result": "PASS|FAIL|N-A"}
+  },
+  "gap_analysis": {"missing_test_gap": "description or N-A"}
+}
+```
+
+See earlier host implementation source: start-work SKILL.md lines 136-160
+
+## Harness-native Features
+
+- **Subagent spawning:** DeepSeek Harness Agent tool replaces `multi_agent_v1.spawn_agent`; `isolation: true` replaces `fork_context: false`
+- **`.lazydeepseek/runs/`:** Run state replaces `.lazydeepseek/boulder.json` + `.lazydeepseek/start-work/`
+- **Hooks:** Stop/SubagentStop hooks (v0.6) drive continuation loop
+- **State ledger:** `state.json` + `events.jsonl` are the package-owned run record; inspect the scripts that create and update them before changing their shape.
+
+---
+
+_Adapted from earlier host implementation start-work. Preserved: orchestrator-delegate discipline, 5 verification gates, Sisyphus completion contract, Boulder state, evidence ledger. Adapted: all Codex tool names → DeepSeek Harness equivalents; `.lazydeepseek/` → `.lazydeepseek/`; plan scaffolding script → inline plan reading. The "NO DIRECT IMPLEMENTATION" rule is preserved verbatim._

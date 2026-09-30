@@ -1,0 +1,79 @@
+# ---------------------------------------------------------------------------
+# LazyDeepSeek — gitignore
+# ---------------------------------------------------------------------------
+# Rule of thumb: runtime state and dependency trees are local; fixtures,
+# receipts, and pinned digests are release content. If a fixture is caught by
+# a broad pattern below, add a negation for it AND verify its sha256sums.txt
+# entry still matches after any change.
+
+# --- Runtime state (regenerated per session; never a release artifact) -----
+.lazydeepseek/
+# Pre-rename state dirs, so local sessions in old checkouts never leak in.
+.lazycode/
+.lazyqoder/
+.lazyworkbuddy/
+.workbuddy/
+.omo/
+# Session-start bootstrap in odd cwds has created nested state dirs.
+**/.lazydeepseek/
+**/.lazycode/
+
+# Local test/live-verification scratch
+.live-test/
+dev/
+
+# Internal research material for the port (never shipped)
+.study/
+
+# --- Dependency trees and caches -------------------------------------------
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.eggs/
+*.egg-info/
+dist/
+build/
+
+# --- Hygiene: debug drops and editor/OS junk --------------------------------
+*.dbg
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Logs -------------------------------------------------------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log
+
+# --- Local-only host configuration ------------------------------------------
+# Shareable DeepSeek Harness workspace settings may be committed; the local-only file
+# and any personal credential state must not.
+.dsh/settings.local.json
+.dsh/*.local.json
+
+# --- Pinned fixture evidence (negations — release content) ------------------
+# The completion/outcome fixtures sha-pin their artifact logs; the blanket
+# *.log pattern above must never swallow them.
+!plugins/lazydeepseek/contracts/fixtures/**/*.log
+!plugins/lazydeepseek/tests/fixtures/**/*.log

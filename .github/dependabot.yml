@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    labels: [dependencies, maintenance]
+    groups:
+      github-actions:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /plugins/lazydeepseek/tooling
+    schedule:
+      interval: weekly
+      day: monday
+    labels: [dependencies]
+    groups:
+      tooling:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /plugins/lazydeepseek/tooling/lsp/python
+    schedule:
+      interval: monthly
+    labels: [dependencies]
+
+  - package-ecosystem: npm
+    directory: /plugins/lazydeepseek/tooling/lsp/typescript
+    schedule:
+      interval: monthly
+    labels: [dependencies]

@@ -1,0 +1,88 @@
+{
+  "mcpServers": {
+    "run-ledger": {
+      "type": "stdio",
+      "command": "bash",
+      "args": [
+        "${LAZYDEEPSEEK_PLUGIN_ROOT}/mcp/run-ledger/server.sh"
+      ],
+      "env": {
+        "CWD": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_PROJECT_DIR": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_MCP_MODE": "${LAZYDEEPSEEK_MCP_MODE}",
+        "LAZYDEEPSEEK_DEPENDENCY_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/dependencies",
+        "LAZYDEEPSEEK_CACHE_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/cache"
+      }
+    },
+    "verification": {
+      "type": "stdio",
+      "command": "bash",
+      "args": [
+        "${LAZYDEEPSEEK_PLUGIN_ROOT}/mcp/verification/server.sh"
+      ],
+      "env": {
+        "CWD": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_PROJECT_DIR": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_MCP_MODE": "${LAZYDEEPSEEK_MCP_MODE}",
+        "LAZYDEEPSEEK_DEPENDENCY_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/dependencies",
+        "LAZYDEEPSEEK_CACHE_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/cache"
+      }
+    },
+    "status-dashboard": {
+      "type": "stdio",
+      "command": "bash",
+      "args": [
+        "${LAZYDEEPSEEK_PLUGIN_ROOT}/mcp/status-dashboard/server.sh"
+      ],
+      "env": {
+        "CWD": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_PROJECT_DIR": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_MCP_MODE": "${LAZYDEEPSEEK_MCP_MODE}",
+        "LAZYDEEPSEEK_DEPENDENCY_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/dependencies",
+        "LAZYDEEPSEEK_CACHE_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/cache"
+      }
+    },
+    "context-graph": {
+      "type": "stdio",
+      "command": "bash",
+      "args": [
+        "${LAZYDEEPSEEK_PLUGIN_ROOT}/mcp/context-graph/server.sh"
+      ],
+      "env": {
+        "CWD": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_PROJECT_DIR": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_MCP_MODE": "${LAZYDEEPSEEK_MCP_MODE}",
+        "LAZYDEEPSEEK_DEPENDENCY_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/dependencies",
+        "LAZYDEEPSEEK_CACHE_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/cache"
+      }
+    },
+    "code-intel": {
+      "type": "stdio",
+      "command": "bash",
+      "args": [
+        "${LAZYDEEPSEEK_PLUGIN_ROOT}/mcp/code-intel/server.sh"
+      ],
+      "env": {
+        "CWD": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_PROJECT_DIR": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_MCP_MODE": "${LAZYDEEPSEEK_MCP_MODE}",
+        "LAZYDEEPSEEK_DEPENDENCY_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/dependencies",
+        "LAZYDEEPSEEK_CACHE_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/cache"
+      }
+    },
+    "docs": {
+      "type": "stdio",
+      "command": "bash",
+      "args": [
+        "${LAZYDEEPSEEK_PLUGIN_ROOT}/mcp/docs/server.sh"
+      ],
+      "env": {
+        "CWD": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_PROJECT_DIR": "${LAZYDEEPSEEK_PROJECT_DIR}",
+        "LAZYDEEPSEEK_MCP_MODE": "${LAZYDEEPSEEK_MCP_MODE}",
+        "LAZYDEEPSEEK_DEPENDENCY_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/dependencies",
+        "LAZYDEEPSEEK_CACHE_ROOT": "${LAZYDEEPSEEK_DATA_ROOT}/cache"
+      }
+    }
+  }
+}

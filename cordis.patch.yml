@@ -1,0 +1,135 @@
+# LazyDeepSeek v1.3.3 bundle patch for DeepSeek Harness (dsh) 0.2.0-rc.2.
+#
+# Applied as ONE layer when the `lazydeepseek` bundle is added to a profile
+# (`dsh plugin --profile <name> add <git-spec|tarball|./dir>`). Rows address
+# base entries by id; a patch replaces the targeted row's whole config.
+#
+# Path strategy (M0 probe findings): dsh exposes no PLUGIN_ROOT env to plugins,
+# so the plugin's own entry (`name: './lib/index.mjs'`, anchored beside this
+# patch file) generates everything the rows below consume under
+# `$DSH_HOME/lazydeepseek/` at plugin start:
+#   - hooks.dsh.json      (bridge config; absolute command paths)
+#   - launch/mcp-*.sh     (six MCP stdio launchers)
+#   - skills -> <pkg>/plugins/lazydeepseek/skills (symlink, bundled rank 600)
+# The generator runs on every start and rewrites on version change; a hooks
+# config regeneration applies after a session restart (bridge parses once).
+
+- insert:
+    # The LazyDeepSeek shim: plugin-root resolution, hooks-file and MCP
+    # launcher generation, slash-command registrations, preset catalog.
+    - id: lazydeepseek
+      name: './lib/index.mjs'
+
+    # Claude Code hooks bridge carrying LazyDeepSeek's five bridged events
+    # (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop).
+    # PermissionRequest and PostToolUseFailure do not exist on the bridge and
+    # are synthesized inside the PreToolUse/PostToolUse handlers (degraded;
+    # see contracts/dsh-hook-consumers.v1.json).
+    - id: lazydeepseek-hooks
+      name: '@deepseek-ai/dsh-hooks-claude-code'
+      config:
+        configPath: !!js dshHomePath('lazydeepseek/hooks.dsh.json')
+        defaultTimeoutMs: 30000
+
+    # Six MCP stdio servers. `command`/`args` are absolute at runtime via the
+    # generated launchers; the servers self-resolve the plugin root. Project
+    # dir rides the harness process cwd (headless boots in the workspace).
+    - id: lazydeepseek-mcp-run-ledger
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: run-ledger
+        transport: stdio
+        command: bash
+        args: [!!js dshHomePath('lazydeepseek/launch/mcp-run-ledger.sh')]
+        env:
+          CWD: !!js process.cwd()
+          LAZYDEEPSEEK_DEPENDENCY_ROOT: !!js dshHomePath('lazydeepseek/dependencies')
+          LAZYDEEPSEEK_CACHE_ROOT: !!js dshHomePath('lazydeepseek/cache')
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+
+    - id: lazydeepseek-mcp-verification
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: verification
+        transport: stdio
+        command: bash
+        args: [!!js dshHomePath('lazydeepseek/launch/mcp-verification.sh')]
+        env:
+          CWD: !!js process.cwd()
+          LAZYDEEPSEEK_DEPENDENCY_ROOT: !!js dshHomePath('lazydeepseek/dependencies')
+          LAZYDEEPSEEK_CACHE_ROOT: !!js dshHomePath('lazydeepseek/cache')
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+
+    - id: lazydeepseek-mcp-status-dashboard
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: status-dashboard
+        transport: stdio
+        command: bash
+        args: [!!js dshHomePath('lazydeepseek/launch/mcp-status-dashboard.sh')]
+        env:
+          CWD: !!js process.cwd()
+          LAZYDEEPSEEK_DEPENDENCY_ROOT: !!js dshHomePath('lazydeepseek/dependencies')
+          LAZYDEEPSEEK_CACHE_ROOT: !!js dshHomePath('lazydeepseek/cache')
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+
+    - id: lazydeepseek-mcp-context-graph
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: context-graph
+        transport: stdio
+        command: bash
+        args: [!!js dshHomePath('lazydeepseek/launch/mcp-context-graph.sh')]
+        env:
+          CWD: !!js process.cwd()
+          LAZYDEEPSEEK_DEPENDENCY_ROOT: !!js dshHomePath('lazydeepseek/dependencies')
+          LAZYDEEPSEEK_CACHE_ROOT: !!js dshHomePath('lazydeepseek/cache')
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+
+    - id: lazydeepseek-mcp-code-intel
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: code-intel
+        transport: stdio
+        command: bash
+        args: [!!js dshHomePath('lazydeepseek/launch/mcp-code-intel.sh')]
+        env:
+          CWD: !!js process.cwd()
+          LAZYDEEPSEEK_DEPENDENCY_ROOT: !!js dshHomePath('lazydeepseek/dependencies')
+          LAZYDEEPSEEK_CACHE_ROOT: !!js dshHomePath('lazydeepseek/cache')
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+
+    - id: lazydeepseek-mcp-docs
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: docs
+        transport: stdio
+        command: bash
+        args: [!!js dshHomePath('lazydeepseek/launch/mcp-docs.sh')]
+        env:
+          CWD: !!js process.cwd()
+          LAZYDEEPSEEK_DEPENDENCY_ROOT: !!js dshHomePath('lazydeepseek/dependencies')
+          LAZYDEEPSEEK_CACHE_ROOT: !!js dshHomePath('lazydeepseek/cache')
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+
+# Bundled skills at rank 600 through the generated symlink. The provider
+# probes a not-yet-existing root until it appears, so discovery converges
+# in-boot even when the shim activates after skill-filesystem.
+- id: skill-filesystem
+  config:
+    bundledSkillDir: !!js dshHomePath('lazydeepseek/skills')
+
+# Adopt the native Ralph loop as the primary fresh-agent engine (ratified Q3;
+# M0 probe P-14). The base ships the row disabled; our overlay enables it with
+# the family's round ceiling. `workflow` is already registered by dsh-base.
+- id: tool-ralph
+  disabled: false
+  config:
+    subagentProvider: spawn
+    maxRounds: 64

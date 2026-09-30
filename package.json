@@ -1,0 +1,36 @@
+{
+  "name": "lazydeepseek",
+  "version": "1.3.3",
+  "description": "LazyDeepSeek \u2014 the DeepSeek Harness (dsh) member of the LazySeries family: skills, hooks, MCP servers, commands, agents and the Ralph/ULW loop ported from LazyZCode.",
+  "license": "MIT",
+  "main": "lib/index.mjs",
+  "files": [
+    "lib/",
+    "cordis.patch.yml",
+    "plugins/",
+    "docs/",
+    "README.md",
+    "NOTICE",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "agent-skills",
+    "hooks",
+    "mcp",
+    "lazyseries"
+  ],
+  "dependencies": {
+    "@deepseek-ai/dsh-hooks-claude-code": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-mcp-client": "0.2.0-rc.2"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh": "0.2.0-rc.2"
+  }
+}

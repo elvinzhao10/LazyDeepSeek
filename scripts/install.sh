@@ -1,0 +1,277 @@
+#!/usr/bin/env bash
+# LazyDeepSeek native onboarding (repository root).
+#
+# Verifies the local package (prerequisites, dsh package boundary, load-check,
+# plugin doctor), prints the exact dsh plugin install steps (git-spec route),
+# and — with --project — additionally runs the durable lifecycle onboard.
+#
+# Usage:
+#   bash scripts/install.sh [--project <abs>] [--install-root <abs>]
+#
+# Boundaries:
+#   - No network calls in the package checks (the optional durable lifecycle
+#     onboard with --project fetches the official release by design).
+#   - Never edits host configuration; install/enable/update happen through
+#     DeepSeek Harness's own Settings -> Plugins UI.
+#   - Package readiness only: HOST READINESS stays PENDING until a fresh
+#     DeepSeek Harness session observes one real skill or command plus all six MCP
+#     connections.
+
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd -P)"
+PLUGIN_DIR="$REPO_ROOT/plugins/lazydeepseek"
+REMOTE_MARKETPLACE_URL="https://github.com/elvinzhao10/LazyDeepSeek"
+SOURCE_URL="https://github.com/elvinzhao10/LazyDeepSeek.git"
+
+info() { printf '%s\n' "$*"; }
+fail() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
+
+usage() {
+    cat <<'USAGE'
+LazyDeepSeek native onboarding
+
+Usage: bash scripts/install.sh [--project <abs>] [--install-root <abs>]
+
+Options:
+  --project <abs>        Also run the durable lifecycle onboard for the given
+                         absolute project directory (fetches the official
+                         release from the LazyDeepSeek GitHub origin).
+  --install-root <abs>   Durable install root for --project (default: the
+                         lifecycle's own resolution, e.g.
+                         ~/Library/Application Support/LazySeries on macOS).
+  -h, --help             Show this help.
+USAGE
+}
+
+PROJECT=""
+INSTALL_ROOT=""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --project)
+            [ $# -ge 2 ] || fail "--project requires an absolute directory argument"
+            PROJECT="$2"
+            shift 2
+            ;;
+        --install-root)
+            [ $# -ge 2 ] || fail "--install-root requires an absolute directory argument"
+            INSTALL_ROOT="$2"
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            fail "unknown option: $1 (supported: --project <abs>, --install-root <abs>, --help)"
+            ;;
+    esac
+done
+
+case "$PROJECT" in
+    "") : ;;
+    /*) : ;;
+    *) fail "--project must be an absolute path" ;;
+esac
+case "$INSTALL_ROOT" in
+    "") : ;;
+    /*) : ;;
+    *) fail "--install-root must be an absolute path" ;;
+esac
+
+[ -d "$PLUGIN_DIR" ] || fail "plugin directory not found: $PLUGIN_DIR"
+[ -f "$REPO_ROOT/package.json" ] || fail "package manifest not found: $REPO_ROOT/package.json"
+[ -f "$REPO_ROOT/cordis.patch.yml" ] || fail "bundle patch not found: $REPO_ROOT/cordis.patch.yml"
+[ -f "$REPO_ROOT/lib/index.mjs" ] || fail "prebuilt entry not found: $REPO_ROOT/lib/index.mjs"
+
+info "=== LazyDeepSeek native onboarding ==="
+info "Repository root: $REPO_ROOT"
+info "Package root:    $REPO_ROOT"
+info ""
+
+# --- Prerequisites -----------------------------------------------------------
+info "--- Prerequisites ---"
+
+if ! command -v node >/dev/null 2>&1; then
+    fail "Node.js is required on PATH. Install Node.js LTS 24 (recommended) or 22 (supported; LTS 20 accepted for compatibility), then rerun."
+fi
+NODE_VERSION="$(node --version)"
+NODE_MAJOR="${NODE_VERSION#v}"
+NODE_MAJOR="${NODE_MAJOR%%.*}"
+case "$NODE_MAJOR" in
+    ''|*[!0-9]*) fail "cannot parse the Node.js version output: $NODE_VERSION" ;;
+esac
+if [ "$NODE_MAJOR" -lt 20 ]; then
+    fail "Node.js LTS 20+ is required (found $NODE_VERSION). Install Node.js LTS 24 (recommended) or 22, then rerun."
+fi
+if [ "$NODE_MAJOR" -eq 24 ]; then
+    info "Node.js $NODE_VERSION (recommended LTS line)"
+elif [ "$NODE_MAJOR" -eq 20 ] || [ "$NODE_MAJOR" -eq 22 ]; then
+    info "Node.js $NODE_VERSION (supported; Node.js LTS 24 is recommended)"
+else
+    info "Node.js $NODE_VERSION (accepted; Node.js LTS 24 is recommended)"
+fi
+
+command -v git >/dev/null 2>&1 || fail "Git is required on PATH. Install Git, then rerun."
+GIT_VERSION="$(git --version)"
+info "$GIT_VERSION"
+info ""
+
+# --- dsh package boundary (in-repo, no network) ------------------------------
+info "--- dsh package boundary ---"
+
+node -e '
+const fs = require("node:fs");
+const [, packagePath, patchPath] = process.argv;
+let pkg;
+let patch;
+try {
+    pkg = JSON.parse(fs.readFileSync(packagePath, "utf8"));
+} catch (error) {
+    console.error(`package.json does not parse as JSON: ${error.message}`);
+    process.exit(1);
+}
+try {
+    patch = fs.readFileSync(patchPath, "utf8");
+} catch (error) {
+    console.error(`cordis.patch.yml is not readable: ${error.message}`);
+    process.exit(1);
+}
+if (pkg.name !== "lazydeepseek") {
+    console.error(`package name must be "lazydeepseek" (found ${JSON.stringify(pkg.name)})`);
+    process.exit(1);
+}
+if (typeof pkg.version !== "string") {
+    console.error("package version must be a string");
+    process.exit(1);
+}
+if (pkg.dsh?.bundle?.patch !== "./cordis.patch.yml") {
+    console.error("package dsh.bundle.patch must be ./cordis.patch.yml");
+    process.exit(1);
+}
+if (pkg.peerDependencies?.["@deepseek-ai/dsh"] !== "0.2.0-rc.2") {
+    console.error("peerDependencies[@deepseek-ai/dsh] must be exactly 0.2.0-rc.2");
+    process.exit(1);
+}
+for (const script of ["prepare", "preinstall", "postinstall", "install"]) {
+    if (pkg.scripts?.[script]) {
+        console.error(`install-time build script present (${script}); git-spec installs must not depend on allowBuilds`);
+        process.exit(1);
+    }
+}
+for (const needle of ["name: './lib/index.mjs'", "'@deepseek-ai/dsh-hooks-claude-code'", "id: tool-ralph"]) {
+    if (!patch.includes(needle)) {
+        console.error(`cordis.patch.yml missing expected row content: ${needle}`);
+        process.exit(1);
+    }
+}
+const servers = [...patch.matchAll(/serverName:\s*(\S+)/g)];
+if (servers.length !== 6) {
+    console.error(`expected exactly six dsh-mcp-client rows (found ${servers.length})`);
+    process.exit(1);
+}
+console.log(`package boundary: lazydeepseek@${pkg.version} (dsh key + six MCP rows verified)`);
+' "$REPO_ROOT/package.json" "$REPO_ROOT/cordis.patch.yml"
+
+info ""
+
+# --- Package readiness: load-check -------------------------------------------
+info "--- Package readiness (lazydeepseek-load-check.sh) ---"
+
+LOAD_CHECK_STATUS=0
+LOAD_CHECK_OUTPUT="$(bash "$PLUGIN_DIR/scripts/lazydeepseek-load-check.sh" 2>&1)" || LOAD_CHECK_STATUS=$?
+printf '%s\n' "$LOAD_CHECK_OUTPUT"
+if [ "$LOAD_CHECK_STATUS" -ne 0 ] || ! printf '%s\n' "$LOAD_CHECK_OUTPUT" | grep -q '^PACKAGE_READINESS=full$'; then
+    fail "load-check did not report PACKAGE_READINESS=full (exit $LOAD_CHECK_STATUS). Package readiness failed loudly; correct the named package file and rerun scripts/install.sh."
+fi
+info ""
+
+# --- Package health: plugin doctor (host=package) ----------------------------
+info "--- Plugin doctor (host=package) ---"
+
+DOCTOR_STATUS=0
+DOCTOR_OUTPUT="$(bash "$PLUGIN_DIR/scripts/lazydeepseek-plugin-doctor.sh" 2>&1)" || DOCTOR_STATUS=$?
+printf '%s\n' "$DOCTOR_OUTPUT"
+if [ "$DOCTOR_STATUS" -ne 0 ]; then
+    fail "plugin doctor failed (exit $DOCTOR_STATUS). Package readiness failed loudly; correct the named check and rerun scripts/install.sh."
+fi
+info ""
+
+# --- dsh install handoff ---------------------------------------------------------
+info "--- Install through the dsh CLI (plugin add) ---"
+info ""
+info "DeepSeek Harness installs plugins through the dsh CLI plugin verbs. Default"
+info "route: git spec pinned to a commit sha from the public GitHub repository"
+info "(GitHub-only distribution; the npm registry is not used for this package):"
+info ""
+info "    dsh plugin --profile <name> add ${REMOTE_MARKETPLACE_URL}#<commit-sha>"
+info ""
+info "For an offline/local checkout, use the ABSOLUTE package root directory:"
+info "    $REPO_ROOT"
+info ""
+CLIPBOARD_NOTE=""
+if [ "$(uname -s)" = "Darwin" ] && command -v pbcopy >/dev/null 2>&1; then
+    # Best-effort clipboard copy; a pbcopy failure never fails onboarding.
+    if printf '%s' "$REMOTE_MARKETPLACE_URL" | pbcopy >/dev/null 2>&1; then
+        CLIPBOARD_NOTE=" (copied to the clipboard)"
+    fi
+fi
+info "Steps:"
+info "  1. Confirm the pinned host: dsh --version must print 0.2.0-rc.2."
+info "  2. Run the plugin add command for the chosen profile (the URL is the"
+info "     repository${CLIPBOARD_NOTE}; append #<commit-sha> to pin)."
+info "  3. Confirm our rows compose: dsh --profile <name> --dump-config must"
+info "     show the lazydeepseek shim, bridge, and six MCP rows."
+info "  4. Start a fresh session and verify: one real skill via the Skill tool,"
+info "     one command as a slash menu entry, and all six MCP connections."
+info ""
+
+# --- Optional development-only dump-config validation --------------------------------
+info "--- Optional: dsh composed-config validation (development-only) ---"
+
+if command -v dsh >/dev/null 2>&1; then
+    LAZYDEEPSEEK_VALIDATE_STATUS=0
+    LAZYDEEPSEEK_VALIDATE_OUTPUT="$(cd "$REPO_ROOT" && dsh --dump-config 2>&1)" || LAZYDEEPSEEK_VALIDATE_STATUS=$?
+    if [ "$LAZYDEEPSEEK_VALIDATE_STATUS" -eq 0 ]; then
+        info "dsh --dump-config exited 0 (base config composes on the installed host)."
+    else
+        info "NOTE: 'dsh --dump-config' exited $LAZYDEEPSEEK_VALIDATE_STATUS. This development-only check is best-effort; its absence or failure is not an install and not host proof. Continuing."
+    fi
+else
+    info "No 'dsh' binary on PATH; skipping the optional composed-config check."
+    info "(Normal on end-user machines — the CLI is not required to install.)"
+fi
+info ""
+
+# --- Optional durable lifecycle onboard --------------------------------------
+if [ -n "$PROJECT" ]; then
+    [ -d "$PROJECT" ] || fail "--project directory does not exist: $PROJECT"
+    info "--- Durable lifecycle onboard (launcher route) ---"
+    info "Fetches the official release from $SOURCE_URL (the only network step; the package checks above stayed offline)."
+    DEFAULT_INSTALL_ROOT="$(node -e 'try { process.stdout.write(require(process.argv[1]).resolveInstallRoot({})); } catch { }' "$PLUGIN_DIR/scripts/lifecycle/index.js" 2>/dev/null || true)"
+    if [ -n "$INSTALL_ROOT" ]; then
+        info "Install root: $INSTALL_ROOT (explicit)"
+    elif [ -n "$DEFAULT_INSTALL_ROOT" ]; then
+        info "Install root: $DEFAULT_INSTALL_ROOT (lifecycle default)"
+    fi
+    LIFECYCLE_ARGS=(onboard --source "$SOURCE_URL" --project "$PROJECT")
+    if [ -n "$INSTALL_ROOT" ]; then
+        LIFECYCLE_ARGS+=(--install-root "$INSTALL_ROOT")
+    fi
+    LIFECYCLE_STATUS=0
+    LIFECYCLE_OUTPUT="$(node "$PLUGIN_DIR/scripts/lazydeepseek-lifecycle.js" "${LIFECYCLE_ARGS[@]}" --json 2>&1)" || LIFECYCLE_STATUS=$?
+    printf '%s\n' "$LIFECYCLE_OUTPUT"
+    if [ "$LIFECYCLE_STATUS" -ne 0 ]; then
+        info ""
+        fail "durable lifecycle onboard failed (exit $LIFECYCLE_STATUS). The lifecycle error above is authoritative. Package checks already passed, but the durable install did not complete and host readiness is NOT claimed."
+    fi
+    info "Next (durable route): node \"<install-root>/LazyDeepSeek/launcher.js\" status"
+    info ""
+fi
+
+# --- Readiness discipline ----------------------------------------------------
+info "=== Readiness discipline ==="
+info "PACKAGE READINESS: full"
+info "HOST READINESS: PENDING — until a fresh DeepSeek Harness session observes one real"
+info "skill or command plus all six MCP connections, host readiness remains"
+info "pending. Package checks never prove host activation."
