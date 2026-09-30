@@ -1,7 +1,8 @@
 ---
 name: lazy-librarian
 description: "Update project memory after accepted changes for DeepSeek Harness: dsh.md, command index, parity ledger, known gaps, risk register."
-when_to_use: "Use after accepted changes to bring project memory and package documentation back in line with the implementation."
+whenToUse: "Use after accepted changes to bring project memory and package documentation back in line with the implementation."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

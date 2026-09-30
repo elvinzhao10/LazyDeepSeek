@@ -17,7 +17,7 @@
   },
   "artifacts": {
     "package.json": "d92bd9796c4b75b4496662c7e339aa742005920ae0069e0a381d1f9a9c12711b",
-    "cordis.patch.yml": "fe093eddc9d039250bfce1b03673894b1dffa73f6b4ee25b2c3f40b8ff273ddb"
+    "cordis.patch.yml": "26f25882ecfd13f010e1f2ab3dc40ebfb54d5ff1b1c4583f8189a263531f7231"
   },
   "payload": {
     "method": "Deterministic inventory: walk each payload root (skills, commands, agents, hooks, mcp) recursively from the plugin root; reject symlinks and non-regular files; skip entries named .gitkeep, __pycache__ directories, and .pyc bytecode; include only regular files with st_nlink == 1. Record {path, sha256} per file with the POSIX path relative to plugins/lazydeepseek and sha256 over the file bytes. Append policy.files entries the same way. Sort records byte-wise (Buffer.compare) by path. file_count is the record count; inventory_sha256 is the SHA-256 of the UTF-8 JSON serialization of the sorted record array (JSON.stringify with default separators, no whitespace, insertion order = sorted path order).",
@@ -32,7 +32,7 @@
       ".mcp.json"
     ],
     "file_count": 74,
-    "inventory_sha256": "c3dd0911d6d2aea6ab45be0e8ce64ce1775405cd282f4f3504338f586558f55a"
+    "inventory_sha256": "aeb250a4804c6c33f741f30aadcc3a64dc35b04415bfe57569ec9a35466adae8"
   },
   "default_routes": {
     "dsh": "dsh-plugin-git-sha"

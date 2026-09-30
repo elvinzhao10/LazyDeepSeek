@@ -173,7 +173,9 @@ test('refuses malformed oversized incomplete and unsupported payloads with typed
   const cases = [
     ['malformed_json', '{not-json'],
     ['payload_too_large', JSON.stringify({ ...fixture('PermissionRequest', projectDir), reason: 'x'.repeat(70 * 1024) })],
-    ['missing_event_field', JSON.stringify({ ...fixture('PermissionRequest', projectDir), request_id: undefined })],
+    // tool_name is the required field on the dsh contract (request_id is
+    // nullable and synthesized when the host provides none).
+    ['missing_event_field', JSON.stringify({ ...fixture('PermissionRequest', projectDir), tool_name: undefined })],
     ['missing_common_field', JSON.stringify({ ...fixture('PermissionRequest', projectDir), session_id: undefined })],
     ['unsupported_event', JSON.stringify({ ...fixture('PermissionRequest', projectDir), hook_event_name: 'PostCompact' })],
   ];

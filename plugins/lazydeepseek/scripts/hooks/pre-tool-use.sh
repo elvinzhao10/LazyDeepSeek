@@ -24,7 +24,7 @@ except (ValueError, UnicodeDecodeError, RecursionError):
     sys.exit(2)
 if not isinstance(event, dict) or not isinstance(event.get("tool_name"), str):
     sys.exit(2)
-if event["tool_name"] in ("Write", "Edit", "Bash", "Shell", "RunCommand", "ExecuteCommand") and not isinstance(event.get("tool_input"), dict):
+if event["tool_name"].lower() in ("write", "edit", "bash", "shell", "runcommand", "executecommand") and not isinstance(event.get("tool_input"), dict):
     sys.exit(2)
 sys.stdout.write(json.dumps(event, separators=(",", ":")))
 ' 2>/dev/null); then
@@ -37,7 +37,14 @@ else
     deny "Hook input is malformed or missing a mutating tool payload."
 fi
 TOOL_NAME=$(printf '%s' "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tool_name',''))" 2>/dev/null || echo "")
-case "$TOOL_NAME" in Shell|RunCommand|ExecuteCommand) TOOL_NAME=Bash ;; esac
+# dsh tool names are lowercase (M0 probe discovery #1); this policy is written
+# against the canonical capitalized form, so normalize aliases up front.
+case "$TOOL_NAME" in
+    write) TOOL_NAME=Write ;;
+    edit) TOOL_NAME=Edit ;;
+    bash) TOOL_NAME=Bash ;;
+    Shell|RunCommand|ExecuteCommand) TOOL_NAME=Bash ;;
+esac
 TOOL_INPUT=$(printf '%s' "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(json.dumps(d.get('tool_input',{})))" 2>/dev/null || echo "{}")
 
 # Enforce role-scoped writes when the host supplies agent identity.
@@ -54,6 +61,9 @@ if len(restricted) > 1:
     raise SystemExit(0)
 role = next(iter(restricted), "")
 tool = event.get("tool_name")
+if isinstance(tool, str):
+    # dsh delivers lowercase tool names (M0 probe discovery #1).
+    tool = {"write": "Write", "edit": "Edit", "bash": "Bash"}.get(tool, tool)
 if tool not in ("Write", "Edit", "Bash", "Shell", "RunCommand", "ExecuteCommand"):
     raise SystemExit(0)
 if not role:
@@ -258,4 +268,51 @@ if printf '%s' "$TOOL_INPUT" | grep -qE 'npm\s+publish|pip\s+upload|docker\s+pus
 fi
 
 # --- Allow: safe operations pass through silently ---
+
+# --- dsh synthesis: PermissionRequest audit (degraded) ----------------------
+# The bridge has no PermissionRequest event; the policy-checked tool call is
+# the audit fact. Append a normalized record with a synthesized request id to
+# the ACTIVE run's events.jsonl only (workspace-sandboxed writes stay inside
+# .lazydeepseek/). Advisory: failures here never deny the tool call.
+AUDIT_INPUT_FILE=$(mktemp "${TMPDIR:-/tmp}/lazydeepseek-prereq.XXXXXX")
+printf '%s' "$INPUT" >"$AUDIT_INPUT_FILE"
+python3 - "$AUDIT_INPUT_FILE" "${LAZYDEEPSEEK_PROJECT_DIR:-${CLAUDE_PROJECT_DIR:-$(pwd)}}" <<'PYAUDIT' 2>/dev/null || true
+import datetime, glob, json, os, sys
+try:
+    with open(sys.argv[1], encoding='utf-8', errors='replace') as handle:
+        payload = json.loads(handle.read())
+except Exception:
+    raise SystemExit(0)
+if not isinstance(payload, dict) or not isinstance(payload.get('tool_name'), str):
+    raise SystemExit(0)
+cwd = payload.get('cwd') or sys.argv[2] or os.getcwd()
+runs_dir = os.path.join(cwd, '.lazydeepseek', 'runs')
+if not os.path.isdir(runs_dir):
+    raise SystemExit(0)
+for run_dir in sorted(glob.glob(os.path.join(runs_dir, '*/'))):
+    state_file = os.path.join(run_dir, 'state.json')
+    try:
+        with open(state_file, encoding='utf-8') as handle:
+            state = json.load(handle)
+    except Exception:
+        continue
+    if isinstance(state, dict) and state.get('status') in ('active', 'paused', 'created', 'planning', 'executing', 'blocked', 'verifying', 'reviewing'):
+        now = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
+        record = {
+            'event': 'permission_request',
+            'synthesized': 'dsh-pre-tool-use',
+            'request_id': 'dsh-synthetic-' + now,
+            'tool_name': payload.get('tool_name'),
+            'timestamp': now,
+            'degraded': True,
+        }
+        try:
+            with open(os.path.join(run_dir, 'events.jsonl'), 'a', encoding='utf-8') as handle:
+                handle.write(json.dumps(record, default=str) + '\n')
+        except OSError:
+            pass
+        break
+raise SystemExit(0)
+PYAUDIT
+rm -f "$AUDIT_INPUT_FILE"
 exit 0

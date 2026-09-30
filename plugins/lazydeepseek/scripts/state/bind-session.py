@@ -29,7 +29,7 @@ FINGERPRINT_NAMES: Final = (
     "worktree",
     "mcp",
     "generated_asset",
-    "marketplace",
+    "package",
     "root",
     "revision",
 )
@@ -47,7 +47,7 @@ class Fingerprints(TypedDict):
     worktree: str
     mcp: str
     generated_asset: str
-    marketplace: str
+    package: str
 
 
 class Binding(TypedDict):
@@ -218,7 +218,9 @@ def main() -> int:
     parser.add_argument("--probe-file", required=True, type=Path)
     parser.add_argument(
         "--package-file",
-        default=Path(__file__).resolve().parents[3] / "package.json",
+        # <pkg>/plugins/lazydeepseek/scripts/state/bind-session.py -> repo root
+        # (or durable install root), where package.json lives.
+        default=Path(__file__).resolve().parents[4] / "package.json",
         type=Path,
     )
     args = parser.parse_args()

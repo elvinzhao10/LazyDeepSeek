@@ -1,7 +1,8 @@
 ---
 name: lazy-ulw-plan
 description: "Strategic planning consultant. Produces one decision-complete work plan from vague or large requests. Explore-first, asks only genuine owner-decisions. Backs the /lazy-ulw-plan command."
-when_to_use: "Use when a vague or large request must become one decision-complete work plan before any implementation."
+whenToUse: "Use when a vague or large request must become one decision-complete work plan before any implementation."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

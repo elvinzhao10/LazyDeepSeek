@@ -1,7 +1,8 @@
 ---
 name: lazy-init-deep
 description: "Generate hierarchical project memory for the DeepSeek Harness workspace. Inspects repo structure, identifies language/runtime/test/build commands, generates a .lazydeepseek/context/ knowledge base on top of AGENTS.md project memory."
-when_to_use: "Use when a new workspace needs hierarchical project memory (dsh.md tree plus .lazydeepseek/context/) or an existing one needs a memory refresh."
+whenToUse: "Use when a new workspace needs hierarchical project memory (dsh.md tree plus .lazydeepseek/context/) or an existing one needs a memory refresh."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

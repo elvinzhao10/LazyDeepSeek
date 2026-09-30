@@ -1,7 +1,8 @@
 ---
 name: lazy-reviewer
 description: "Post-implementation review agent. Reviews changed files against original intent and earlier host implementation parity. Checks for overreach, missing tests, missing docs. Runs as one parallel Agent tool dispatch lane."
-when_to_use: "Use when changed files must be reviewed against original intent (overreach, missing tests, missing docs, slop)."
+whenToUse: "Use when changed files must be reviewed against original intent (overreach, missing tests, missing docs, slop)."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

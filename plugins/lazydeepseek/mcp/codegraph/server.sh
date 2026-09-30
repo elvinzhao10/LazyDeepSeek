@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/../.." && pwd -P)}"
+PLUGIN_ROOT="${LAZYDEEPSEEK_PLUGIN_ROOT:-$(cd "$(dirname "$0")/../.." && pwd -P)}"
 TOOLING="$PLUGIN_ROOT/scripts/lazydeepseek-tooling.sh"
 TARGET_ROOT="${CWD:-$(pwd -P)}"
 TOOLING_ROOT="${LAZYDEEPSEEK_TOOLING_ROOT:-}"

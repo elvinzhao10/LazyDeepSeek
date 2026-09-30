@@ -1,7 +1,8 @@
 ---
 name: lazy-start-work
 description: "Execute a work plan with orchestrated subagent delegation and verified completion evidence. Loads a plan, selects tasks, delegates to implementers, verifies, reviews. Maps to the DeepSeek Harness Agent tool with parallel subagent dispatch."
-when_to_use: "Use when a decision-complete plan must be executed with orchestrated subagent delegation and verified completion evidence."
+whenToUse: "Use when a decision-complete plan must be executed with orchestrated subagent delegation and verified completion evidence."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

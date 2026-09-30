@@ -1,7 +1,7 @@
 ---
 name: lazy-coding-agent-sessions
 description: "Find, read, list, search, inspect, or reconstruct coding-agent sessions across DeepSeek Harness and other platforms. Covers session tracking, transcript search, session history, token usage, and subagent sessions. Use when asked about past sessions, session IDs, or reconstructing prior work. Triggers: coding agent sessions, session history, session ID, read session, find session, transcript search, what did I work on, did we already do this, reconstruct past work."
-when_to_use: "Use when past coding-agent sessions must be found, read, or reconstructed (session IDs, transcripts, token usage, prior work)."
+whenToUse: "Use when past coding-agent sessions must be found, read, or reconstructed (session IDs, transcripts, token usage, prior work)."
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

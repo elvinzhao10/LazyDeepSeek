@@ -1,7 +1,7 @@
 ---
 name: lazy-remove-ai-slops
 description: "Behavior-preserving cleanup of AI-generated code smells for DeepSeek Harness. Locks behavior with regression tests first, then runs targeted cleanup passes."
-when_to_use: "Use when AI-generated slop must be cleaned from a bounded set of changed files while behavior stays locked by green tests."
+whenToUse: "Use when AI-generated slop must be cleaned from a bounded set of changed files while behavior stays locked by green tests."
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

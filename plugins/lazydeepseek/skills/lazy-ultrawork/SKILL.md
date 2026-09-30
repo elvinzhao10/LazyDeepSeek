@@ -1,7 +1,8 @@
 ---
 name: lazy-ultrawork
 description: "Binding high-precision mode for DeepSeek Harness. Tier triage (LIGHT/HEAVY), PIN-RED-GREEN-SURFACE-CLEAN loop, binding reviewer gate, evidence-grade rigor."
-when_to_use: "Use when a task needs evidence-grade rigor: tier triage, the PIN-RED-GREEN-SURFACE-CLEAN loop, and a binding reviewer gate."
+whenToUse: "Use when a task needs evidence-grade rigor: tier triage, the PIN-RED-GREEN-SURFACE-CLEAN loop, and a binding reviewer gate."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

@@ -1,7 +1,7 @@
 ---
 name: lazy-frontend
 description: "Frontend development best practices. Use for UI, web frontend, and client-side implementation work. Triggers: frontend, UI, component, page, layout, style, CSS, React, Vue, web, browser."
-when_to_use: "Use for UI, web frontend, and client-side implementation work."
+whenToUse: "Use for UI, web frontend, and client-side implementation work."
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

@@ -81,6 +81,36 @@ export function buildHooksConfig(pkgRoot: string): { _lazydeepseek: string; hook
   };
 }
 
+
+const USER_INVOCABLE_COMMANDS = [
+  'lazy-handoff', 'lazy-new-run', 'lazy-offboard', 'lazy-onboard', 'lazy-ralph-loop',
+  'lazy-resume', 'lazy-status', 'lazy-stop-continuation', 'lazy-update', 'lazy-verify',
+];
+
+function generateBundledSkills(payloadSkills, ownDir, version) {
+  const bundled = join(ownDir, 'skills');
+  try { rmSync(bundled, { recursive: true, force: true }); } catch { /* absent */ }
+  mkdirSync(bundled, { recursive: true });
+  for (const entry of readdirSync(payloadSkills).sort()) {
+    const source = join(payloadSkills, entry);
+    if (!existsSync(join(source, 'SKILL.md'))) continue;
+    try { symlinkSync(source, join(bundled, entry), 'dir'); } catch { /* best-effort */ }
+  }
+  // Command-only slash entries: user-invocable, excluded from model auto-use
+  // (the same-named skill files stay the model-invoked surface; these ten have
+  // no skill twin, so the generated entry IS the dsh user route).
+  for (const command of USER_INVOCABLE_COMMANDS) {
+    const text = readFileSync(join(payloadSkills, '..', 'commands', `${command}.md`), 'utf8');
+    const frontmatter = parseFrontmatter(text);
+    const body = text.replace(/^---\n[\s\S]*?\n---\n/, '');
+    const dir = join(bundled, command);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, 'SKILL.md'),
+      `---\nname: ${command}\ndescription: ${(frontmatter.description ?? `LazyDeepSeek ${command} command`).replace(/"/g, '&quot;')}\nwhenToUse: User invoked the /${command} command explicitly.\nuser-invocable: true\ndisable-model-invocation: true\nmetadata:\n  author: LazyDeepSeek\n  generated_by: lazydeepseek v${version}\n---\n${body}`);
+  }
+  return bundled;
+}
+
 function artifactsPresent(ownDir: string): boolean {
   if (!existsSync(join(ownDir, "hooks.dsh.json"))) return false;
   if (!existsSync(join(ownDir, "skills"))) return false;
@@ -114,10 +144,7 @@ export function generateRuntimeArtifacts(pkgRoot: string, home: string): { ownDi
       { mode: 0o755 }
     );
   }
-  const skillsLink = join(ownDir, "skills");
-  const skillsTarget = join(payloadDir, "skills");
-  try { rmSync(skillsLink, { recursive: true, force: true }); } catch { /* absent */ }
-  symlinkSync(skillsTarget, skillsLink, "dir");
+  const skillsLink = generateBundledSkills(join(payloadDir, "skills"), ownDir, version);
   writeFileSync(stampPath, version);
   process.env.DSH_BUNDLED_SKILL_DIR ??= skillsLink;
   return { ownDir, regenerated: true, version };

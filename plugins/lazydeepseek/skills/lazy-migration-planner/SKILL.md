@@ -1,7 +1,8 @@
 ---
 name: lazy-migration-planner
 description: "Create host-adapter plans for porting earlier host implementation semantics to future platforms. Requires canonical repo inspection and semantic mapping."
-when_to_use: "Use when porting earlier host implementation semantics to another host must be planned component by component with risks recorded."
+whenToUse: "Use when porting earlier host implementation semantics to another host must be planned component by component with risks recorded."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

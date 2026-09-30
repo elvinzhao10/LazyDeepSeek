@@ -65,7 +65,8 @@ if not isinstance(tool_input, dict):
     tool_input = {}
 
 changed_file = None
-if tool_name in ('Write', 'Edit'):
+# dsh tool names are lowercase (M0 probe discovery #1); accept both casings.
+if tool_name in ('Write', 'Edit', 'write', 'edit'):
     file_path = tool_input.get('file_path')
     if isinstance(file_path, str) and file_path:
         event['files'] = [file_path]
@@ -89,9 +90,54 @@ if tool_name in ('Write', 'Edit'):
             except OSError:
                 pass
 
+def _failure_signature(payload):
+    # dsh synthesis (degraded): the bridge delivers failed calls to PostToolUse,
+    # so PostToolUseFailure is discriminated from tool_response error signatures.
+    response = payload.get('tool_response')
+    if isinstance(response, dict):
+        if response.get('is_error') is True or isinstance(response.get('error'), (str, dict)):
+            return json.dumps(response.get('error') if response.get('error') is not None else response)[:200]
+    if isinstance(response, str):
+        stripped = response.strip()
+        if stripped.startswith('[exit code:'):
+            try:
+                code = int(stripped[len('[exit code:'):].split(']', 1)[0])
+                if code != 0:
+                    return stripped[:200]
+            except ValueError:
+                pass
+    if payload.get('is_error') is True:
+        return json.dumps(payload.get('error', 'tool error'))[:200]
+    return None
+
+failure_detail = _failure_signature(payload)
+records = [event]
+if failure_detail is not None:
+    lower = failure_detail.lower()
+    if 'permission denied' in lower or 'eacces' in lower or 'not permitted' in lower:
+        suggestion = 'ask-user: request elevated permissions or alternate path'
+    elif 'timeout' in lower or 'timed out' in lower or 'etimedout' in lower:
+        suggestion = 'retry: operation may succeed with increased timeout or network recovery'
+    elif 'not found' in lower or 'enoent' in lower or 'no such file' in lower or '404' in lower:
+        suggestion = 'fallback: resource not found — verify path/URL exists or use alternative'
+    elif 'out of memory' in lower or 'oom' in lower or 'killed' in lower:
+        suggestion = 'blocker: resource exhausted — reduce scope or increase limits'
+    else:
+        suggestion = 'review: generic failure — check error details and retry or escalate'
+    records.append({
+        'event': 'post_tool_use_failure',
+        'synthesized': 'dsh-post-tool-use',
+        'tool': tool_name,
+        'status': 'failure',
+        'error': failure_detail,
+        'suggestion': suggestion,
+        'degraded': True,
+        'timestamp': datetime.datetime.utcnow().isoformat() + 'Z',
+    })
 try:
     with open(os.path.join(active_run, 'events.jsonl'), 'a', encoding='utf-8') as event_handle:
-        event_handle.write(json.dumps(event, default=str) + '\n')
+        for record in records:
+            event_handle.write(json.dumps(record, default=str) + '\n')
 except OSError:
     print(json.dumps({'error': 'events_append_failed'}), file=sys.stderr)
 PY

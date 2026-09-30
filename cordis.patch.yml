@@ -10,7 +10,9 @@
 # `$DSH_HOME/lazydeepseek/` at plugin start:
 #   - hooks.dsh.json      (bridge config; absolute command paths)
 #   - launch/mcp-*.sh     (six MCP stdio launchers)
-#   - skills -> <pkg>/plugins/lazydeepseek/skills (symlink, bundled rank 600)
+#   - skills/             (generated bundled dir, rank 600: per-skill symlinks
+#                          into <pkg>/plugins/lazydeepseek/skills plus ten
+#                          generated user-invocable entries from commands/*.md)
 # The generator runs on every start and rewrites on version change; a hooks
 # config regeneration applies after a session restart (bridge parses once).
 

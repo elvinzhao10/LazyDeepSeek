@@ -1,7 +1,7 @@
 ---
 name: lazy-refactor
 description: "Safe refactoring discipline. Use when changing code structure without changing behavior. Triggers: refactor, clean up, restructure, reorganize, improve code, rename, extract, move."
-when_to_use: "Use when changing code structure without changing behavior."
+whenToUse: "Use when changing code structure without changing behavior."
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

@@ -1,7 +1,7 @@
 ---
 name: lazy-report-bug
 description: "Structured bug reporting for LazyDeepSeek issues. Use when you need to report a bug or issue with the tool itself, not with the project you're working on. Triggers: report bug, bug report, issue, feedback, problem with lazydeepseek."
-when_to_use: "Use when reporting a bug or issue with the LazyDeepSeek tool itself, not with the user's project."
+whenToUse: "Use when reporting a bug or issue with the LazyDeepSeek tool itself, not with the user's project."
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

@@ -1,7 +1,8 @@
 ---
 name: lazy-ulw-loop
 description: "Verified completion loop for open-ended DeepSeek Harness tasks. Creates goals with binding success criteria, decomposes into evidence-bound steps, runs until all criteria have proof."
-when_to_use: "Use when an open-ended task must loop until every binding success criterion has real-surface proof."
+whenToUse: "Use when an open-ended task must loop until every binding success criterion has real-surface proof."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

@@ -59,7 +59,9 @@ function fixture(version = '1.3.3') {
   git(source, ['config', 'user.email', 'fixture@example.invalid']);
   git(source, ['config', 'user.name', 'Lifecycle Fixture']);
   writeFixtureFiles(source, undefined, version);
-  git(source, ['add', 'plugins/lazydeepseek']);
+  // The dsh package boundary is the package root: the manifest lives at the
+  // repository root beside plugins/lazydeepseek, so both must be committed.
+  git(source, ['add', 'package.json', 'plugins/lazydeepseek']);
   git(source, ['commit', '-m', 'fixture v1']);
   git(source, ['branch', '-M', 'main']);
   git(source, ['tag', `v${version}`]);
@@ -203,7 +205,7 @@ test('same version at a different SHA requires an exact revision confirmation', 
   const f = fixture();
   const first = bootstrap(f);
   fs.appendFileSync(path.join(f.source, 'plugins/lazydeepseek', 'scripts', 'lazydeepseek-lifecycle.js'), "// v2\n");
-  git(f.source, ['add', 'package.json']);
+  git(f.source, ['add', 'package.json', 'plugins/lazydeepseek']);
   git(f.source, ['commit', '-m', 'fixture v2']);
   git(f.source, ['push', '--force', f.remote, 'main']);
   const secondSha = git(f.source, ['rev-parse', 'HEAD']);
@@ -234,7 +236,13 @@ test('v1.3.2 upgrades to v1.3.3 while retaining the prior release', () => {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   manifest.version = '1.3.3';
   fs.writeFileSync(manifestPath, `${JSON.stringify(manifest)}\n`);
-  git(f.source, ['add', 'package.json']);
+  // tooling/package.json is version-bearing too: every manifest in the package
+  // must agree on the release version or staged verification fails closed.
+  const toolingManifestPath = path.join(f.source, 'plugins/lazydeepseek', 'tooling', 'package.json');
+  const toolingManifest = JSON.parse(fs.readFileSync(toolingManifestPath, 'utf8'));
+  toolingManifest.version = '1.3.3';
+  fs.writeFileSync(toolingManifestPath, `${JSON.stringify(toolingManifest)}\n`);
+  git(f.source, ['add', 'package.json', 'plugins/lazydeepseek']);
   git(f.source, ['commit', '-m', 'fixture v1.3.3']);
   git(f.source, ['push', f.remote, 'main']);
   const upgraded = bootstrap(f);

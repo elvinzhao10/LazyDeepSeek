@@ -1,7 +1,7 @@
 ---
 name: lazy-ast-grep
 description: "Structural code search and rewriting using AST patterns. Use when you need to find or rewrite code by its structure, not just its text. Triggers: ast-grep, sg, structural search, codemod, find pattern, rewrite code, AST search."
-when_to_use: "Use when code must be found or rewritten by its structure rather than its text (AST codemods, structural search, symbol-shape rewrites)."
+whenToUse: "Use when code must be found or rewritten by its structure rather than its text (AST codemods, structural search, symbol-shape rewrites)."
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

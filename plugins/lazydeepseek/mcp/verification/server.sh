@@ -12,7 +12,7 @@ case "$SOURCE_PATH" in
   *) SOURCE_PATH="$PWD/$SOURCE_PATH" ;;
 esac
 SCRIPT_DIR="$(cd -P -- "$(dirname -- "$SOURCE_PATH")" 2>/dev/null && pwd -P)" || die "cannot locate launcher"
-PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd -P -- "$SCRIPT_DIR/../.." 2>/dev/null && pwd -P)}"
+PLUGIN_ROOT="${LAZYDEEPSEEK_PLUGIN_ROOT:-$(cd -P -- "$SCRIPT_DIR/../.." 2>/dev/null && pwd -P)}"
 case "$PLUGIN_ROOT" in
   /*) ;;
   *) die "plugin root must be absolute: $PLUGIN_ROOT" ;;
@@ -28,8 +28,8 @@ else
   fi
   exit "$profile_status"
 fi
-RAW_CWD="${CWD:-${CLAUDE_PROJECT_DIR:-}}"
-[ -n "$RAW_CWD" ] || die "project CWD is required: set CWD or CLAUDE_PROJECT_DIR"
+RAW_CWD="${CWD:-${LAZYDEEPSEEK_PROJECT_DIR:-}}"
+[ -n "$RAW_CWD" ] || die "project CWD is required: set CWD or LAZYDEEPSEEK_PROJECT_DIR"
 case "$RAW_CWD" in
   /*) ;;
   *) RAW_CWD="$PWD/$RAW_CWD" ;;

@@ -34,17 +34,25 @@ test('package load check keeps package-ready separate from pending host proof', 
 });
 
 test('installed-only package load check validates machine status without release metadata', (t) => {
-  // Given: an exact plugin copy whose parent has no marketplace release artifacts.
+  // Given: an exact copy of the dsh package boundary (package root with the
+  // manifest, bundle patch, prebuilt lib, and the nested plugin payload) whose
+  // parent has no release metadata.
   const parent = fs.mkdtempSync(path.join(os.tmpdir(), 'lazydeepseek-installed-only-'));
   const installed = path.join(parent, 'lazydeepseek');
-  fs.cpSync(PLUGIN_ROOT, installed, { recursive: true });
+  fs.mkdirSync(path.join(installed, 'plugins'), { recursive: true });
+  fs.cpSync(PLUGIN_ROOT, path.join(installed, 'plugins', 'lazydeepseek'), { recursive: true });
+  fs.copyFileSync(path.join(REPOSITORY_ROOT, 'package.json'), path.join(installed, 'package.json'));
+  fs.copyFileSync(path.join(REPOSITORY_ROOT, 'cordis.patch.yml'), path.join(installed, 'cordis.patch.yml'));
+  fs.mkdirSync(path.join(installed, 'lib'), { recursive: true });
+  fs.copyFileSync(path.join(REPOSITORY_ROOT, 'lib', 'index.mjs'), path.join(installed, 'lib', 'index.mjs'));
+  const installedPlugin = path.join(installed, 'plugins', 'lazydeepseek');
   t.after(() => fs.rmSync(parent, { recursive: true, force: true }));
 
   // When: the installed plugin runs its public package load check.
-  const result = spawnSync('bash', [path.join(installed, 'scripts', 'lazydeepseek-load-check.sh')], {
+  const result = spawnSync('bash', [path.join(installedPlugin, 'scripts', 'lazydeepseek-load-check.sh')], {
     cwd: parent,
     encoding: 'utf8',
-    env: { ...process.env, CLAUDE_PLUGIN_ROOT: installed },
+    env: { ...process.env, CLAUDE_PLUGIN_ROOT: installedPlugin },
   });
 
   // Then: route and machine-status validation use the self-contained package boundary.

@@ -1,7 +1,7 @@
 ---
 name: lazy-programming
 description: "Strict coding discipline for DeepSeek Harness (.py/.rs/.ts/.go files). Type system as proof system, parse-don't-validate, branded primitives, exhaustive match, TDD."
-when_to_use: "Use when writing or reviewing Python, Rust, TypeScript, or Go where strict coding discipline (types as proofs, parse-don't-validate, TDD) applies."
+whenToUse: "Use when writing or reviewing Python, Rust, TypeScript, or Go where strict coding discipline (types as proofs, parse-don't-validate, TDD) applies."
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

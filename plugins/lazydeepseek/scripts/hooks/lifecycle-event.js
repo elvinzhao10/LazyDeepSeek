@@ -146,6 +146,12 @@ function processEvent() {
       return;
     }
   }
+  // dsh synthesis (dsh-hook-consumers.v1.json: request_id is nullable): when
+  // the host provides no request id — the bridge has no PermissionRequest at
+  // all — the audit fact carries a synthesized one instead of being refused.
+  if (typeof payload.request_id !== 'string' || payload.request_id.length === 0) {
+    payload.request_id = `dsh-synthetic-${new Date().toISOString()}`;
+  }
   const projectRoot = path.resolve(cwdText);
   const whitelist = ['request_id', 'tool_name', 'reason'];
   const normalizedPayload = {};

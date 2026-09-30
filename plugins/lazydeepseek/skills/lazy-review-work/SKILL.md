@@ -1,7 +1,8 @@
 ---
 name: lazy-review-work
 description: "Post-implementation review orchestrator. Launches 5 parallel subagents (Goal Verifier, QA Executor, Code Reviewer, Security Auditor, Context Miner) — all must pass. Runs as parallel Agent tool dispatch lanes."
-when_to_use: "Use after significant implementation to run the 5-agent parallel review gate where every lane must pass."
+whenToUse: "Use after significant implementation to run the 5-agent parallel review gate where every lane must pass."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

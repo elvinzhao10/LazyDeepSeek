@@ -34,9 +34,9 @@ servers = config["mcpServers"]
 assert tuple(servers) == ("run-ledger", "verification", "status-dashboard", "context-graph", "code-intel", "docs"), servers
 for name, entry in servers.items():
     assert entry["type"] == "stdio", (name, entry)
-    assert entry["args"] == [f"${{CLAUDE_PLUGIN_ROOT}}/mcp/{name}/server.sh"], (name, entry)
-    assert entry["env"]["CWD"] == "${CLAUDE_PROJECT_DIR}", (name, entry)
-    assert entry["env"]["CLAUDE_PROJECT_DIR"] == "${CLAUDE_PROJECT_DIR}", (name, entry)
+    assert entry["args"] == [f"${{LAZYDEEPSEEK_PLUGIN_ROOT}}/mcp/{name}/server.sh"], (name, entry)
+    assert entry["env"]["CWD"] == "${LAZYDEEPSEEK_PROJECT_DIR}", (name, entry)
+    assert entry["env"]["LAZYDEEPSEEK_PROJECT_DIR"] == "${LAZYDEEPSEEK_PROJECT_DIR}", (name, entry)
     assert "cwd" not in entry and "required" not in entry, (name, entry)
 PYEOF
 then pass_case 'all six typed declarations use project CWD and plugin-root launchers'; else fail_case 'all six typed declarations use project CWD and plugin-root launchers'; fi
@@ -45,7 +45,7 @@ assert_jsonrpc_initialize() {
     local label="$1" server="$2" output
     output="$(
         cd -- "$CALLER"
-        env -u CLAUDE_PLUGIN_ROOT CWD="$PROJECT" \
+        env -u LAZYDEEPSEEK_PLUGIN_ROOT CWD="$PROJECT" \
             bash "$server" <<'EOF'
 {"jsonrpc":"2.0","id":"init","method":"initialize","params":{}}
 EOF
@@ -63,7 +63,7 @@ PYEOF
 }
 
 for server in "${SERVERS[@]}"; do
-    assert_jsonrpc_initialize "$server self-locates without CLAUDE_PLUGIN_ROOT" \
+    assert_jsonrpc_initialize "$server self-locates without LAZYDEEPSEEK_PLUGIN_ROOT" \
         "$PLUGIN/mcp/$server/server.sh"
 done
 
@@ -77,7 +77,7 @@ for server in "${SERVERS[@]}"; do
     fi
     if (
         cd -- "$NO_CONTEXT_CALLER"
-        env -u CWD -u CLAUDE_PROJECT_DIR -u CLAUDE_PLUGIN_ROOT \
+        env -u CWD -u LAZYDEEPSEEK_PROJECT_DIR -u LAZYDEEPSEEK_PLUGIN_ROOT \
             bash "$PLUGIN/mcp/$server/server.sh" <<<"$no_context_request"
     ) >"$no_context_out" 2>"$no_context_err"; then
         fail_case "$server fails without project context"
@@ -97,20 +97,20 @@ fi
 
 project_dir_output="$(
     cd -- "$CALLER"
-    env -u CWD -u CLAUDE_PLUGIN_ROOT CLAUDE_PROJECT_DIR="$PROJECT" \
+    env -u CWD -u LAZYDEEPSEEK_PLUGIN_ROOT LAZYDEEPSEEK_PROJECT_DIR="$PROJECT" \
         bash "$PLUGIN/mcp/code-intel/server.sh" <<'EOF'
 {"jsonrpc":"2.0","id":"project-dir","method":"tools/call","params":{"name":"symbols","arguments":{"path":"src/consumer.py"}}}
 EOF
 )"
 if printf '%s\n' "$project_dir_output" | grep -q 'consumer_marker'; then
-    pass_case 'CLAUDE_PROJECT_DIR supplies CWD when CWD is unset'
+    pass_case 'LAZYDEEPSEEK_PROJECT_DIR supplies CWD when CWD is unset'
 else
-    fail_case 'CLAUDE_PROJECT_DIR supplies CWD when CWD is unset'
+    fail_case 'LAZYDEEPSEEK_PROJECT_DIR supplies CWD when CWD is unset'
 fi
 
 code_output="$(
     cd -- "$CALLER"
-    env -u CLAUDE_PLUGIN_ROOT CWD="$PROJECT" \
+    env -u LAZYDEEPSEEK_PLUGIN_ROOT CWD="$PROJECT" \
         bash "$PLUGIN/mcp/code-intel/server.sh" <<'EOF'
 {"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"symbols","arguments":{"path":"src/consumer.py"}}}
 EOF
@@ -123,7 +123,7 @@ fi
 
 graph_output="$(
     cd -- "$CALLER"
-    env -u CLAUDE_PLUGIN_ROOT CWD="$PROJECT" \
+    env -u LAZYDEEPSEEK_PLUGIN_ROOT CWD="$PROJECT" \
         bash "$PLUGIN/mcp/context-graph/server.sh" <<'EOF'
 {"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"file_deps","arguments":{"path":"src/main.js"}}}
 EOF
@@ -136,7 +136,7 @@ fi
 
 run_output="$(
     cd -- "$CALLER"
-    env -u CLAUDE_PLUGIN_ROOT CWD="$PROJECT" \
+    env -u LAZYDEEPSEEK_PLUGIN_ROOT CWD="$PROJECT" \
         bash "$PLUGIN/mcp/run-ledger/server.sh" <<'EOF'
 {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"create_run","arguments":{"run_id":"cwd-proof","objective":"consumer context"}}}
 EOF
@@ -151,7 +151,7 @@ fi
 
 moved_output="$(
     cd -- "$CALLER"
-    env -u CLAUDE_PLUGIN_ROOT CWD="$PROJECT" \
+    env -u LAZYDEEPSEEK_PLUGIN_ROOT CWD="$PROJECT" \
         bash "$MOVED_PLUGIN/mcp/code-intel/server.sh" <<'EOF'
 {"jsonrpc":"2.0","id":"moved","method":"initialize","params":{}}
 EOF
@@ -165,22 +165,22 @@ fi
 stale_err="$TMP/stale.err"
 if (
     cd -- "$CALLER"
-    env CLAUDE_PLUGIN_ROOT="$TMP/missing release/plugins/lazydeepseek" CWD="$PROJECT" \
+    env LAZYDEEPSEEK_PLUGIN_ROOT="$TMP/missing release/plugins/lazydeepseek" CWD="$PROJECT" \
         bash "$PLUGIN/mcp/code-intel/server.sh" <<'EOF'
 {"jsonrpc":"2.0","id":"stale","method":"initialize","params":{}}
 EOF
 ) >"$TMP/stale.out" 2>"$stale_err"; then
-    fail_case 'stale CLAUDE_PLUGIN_ROOT fails safely'
+    fail_case 'stale LAZYDEEPSEEK_PLUGIN_ROOT fails safely'
 elif grep -Eiq 'plugin root|not found|unavailable' "$stale_err"; then
-    pass_case 'stale CLAUDE_PLUGIN_ROOT fails safely'
+    pass_case 'stale LAZYDEEPSEEK_PLUGIN_ROOT fails safely'
 else
-    fail_case 'stale CLAUDE_PLUGIN_ROOT has actionable diagnostic'
+    fail_case 'stale LAZYDEEPSEEK_PLUGIN_ROOT has actionable diagnostic'
 fi
 
 unsafe_err="$TMP/unsafe.err"
 if (
     cd -- "$CALLER"
-    env -u CLAUDE_PLUGIN_ROOT CWD="$TMP/missing consumer" \
+    env -u LAZYDEEPSEEK_PLUGIN_ROOT CWD="$TMP/missing consumer" \
         bash "$PLUGIN/mcp/code-intel/server.sh" <<'EOF'
 {"jsonrpc":"2.0","id":"unsafe","method":"initialize","params":{}}
 EOF
@@ -196,7 +196,7 @@ fi
 for server in "${SERVERS[@]}"; do
     malformed_output="$(
         cd -- "$CALLER"
-        env -u CLAUDE_PLUGIN_ROOT CWD="$PROJECT" \
+        env -u LAZYDEEPSEEK_PLUGIN_ROOT CWD="$PROJECT" \
             bash "$PLUGIN/mcp/$server/server.sh" <<'EOF'
 {not-json
 {"jsonrpc":"2.0","id":"after-malformed","method":"initialize","params":{}}

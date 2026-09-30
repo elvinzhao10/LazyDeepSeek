@@ -1,7 +1,7 @@
 ---
 name: lazy-debugging
 description: "Systematic debugging across any language or binary for DeepSeek Harness: crashes, silent failures, wrong responses, stuck processes, memory leaks, async race conditions."
-when_to_use: "Use when a crash, silent failure, wrong response, stuck process, memory leak, or async race must be systematically debugged."
+whenToUse: "Use when a crash, silent failure, wrong response, stuck process, memory leak, or async race must be systematically debugged."
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

@@ -1,7 +1,8 @@
 ---
 name: lazy-verifier
 description: "Evidence verification agent. Discovers available checks, runs them with exact commands, summarizes results as pass/fail/warning/skipped/N-A. Runs as an isolated Agent tool subagent."
-when_to_use: "Use when an implementer's claim must be independently verified: discover checks, run exact commands, record pass/fail verdicts."
+whenToUse: "Use when an implementer's claim must be independently verified: discover checks, run exact commands, record pass/fail verdicts."
+user-invocable: true
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"

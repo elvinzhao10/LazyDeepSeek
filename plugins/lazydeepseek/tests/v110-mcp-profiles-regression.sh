@@ -30,11 +30,11 @@ assert tuple(servers) == names
 for name, declaration in servers.items():
     assert declaration["type"] == "stdio", (name, declaration)
     assert declaration["command"] == "bash", (name, declaration)
-    assert declaration["args"] == [f"${{CLAUDE_PLUGIN_ROOT}}/mcp/{name}/server.sh"]
+    assert declaration["args"] == [f"${{LAZYDEEPSEEK_PLUGIN_ROOT}}/mcp/{name}/server.sh"]
     assert set(declaration) == {"type", "command", "args", "env"}
     env = declaration["env"]
-    assert env["CWD"] == "${CLAUDE_PROJECT_DIR}"
-    assert env["CLAUDE_PROJECT_DIR"] == "${CLAUDE_PROJECT_DIR}"
+    assert env["CWD"] == "${LAZYDEEPSEEK_PROJECT_DIR}"
+    assert env["LAZYDEEPSEEK_PROJECT_DIR"] == "${LAZYDEEPSEEK_PROJECT_DIR}"
     assert env["LAZYDEEPSEEK_MCP_MODE"] == "${LAZYDEEPSEEK_MCP_MODE}"
     assert env["LAZYDEEPSEEK_DEPENDENCY_ROOT"] == "${LAZYDEEPSEEK_DATA_ROOT}/dependencies"
     assert env["LAZYDEEPSEEK_CACHE_ROOT"] == "${LAZYDEEPSEEK_DATA_ROOT}/cache"
@@ -79,7 +79,7 @@ for name, declaration in payload["mcpServers"].items():
     assert declaration["type"] == "stdio"
     assert declaration["args"] == [str(plugin_root / "mcp" / name / "server.sh")]
     assert declaration["env"]["CWD"] == str(project)
-    assert declaration["env"]["CLAUDE_PROJECT_DIR"] == str(project)
+    assert declaration["env"]["LAZYDEEPSEEK_PROJECT_DIR"] == str(project)
     assert declaration["env"]["LAZYDEEPSEEK_MCP_MODE"] == "direct"
     assert declaration["env"]["LAZYDEEPSEEK_DEPENDENCY_ROOT"] == str(plugin_data / "dependencies")
     assert declaration["env"]["LAZYDEEPSEEK_CACHE_ROOT"] == str(plugin_data / "cache")
@@ -223,7 +223,7 @@ else
 fi
 
 if printf '%s\n' '{"jsonrpc":"2.0","id":"deferred","method":"initialize","params":{}}' '{"jsonrpc":"2.0","id":"tools","method":"tools/list","params":{}}' \
-    | CWD="$PROJECT" CLAUDE_PROJECT_DIR="$PROJECT" CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" LAZYDEEPSEEK_MCP_MODE=direct \
+    | CWD="$PROJECT" LAZYDEEPSEEK_PROJECT_DIR="$PROJECT" LAZYDEEPSEEK_PLUGIN_ROOT="$PLUGIN_ROOT" LAZYDEEPSEEK_MCP_MODE=direct \
         bash "$PLUGIN_ROOT/mcp/docs/server.sh" > "$TMP/runtime-deferred.out" 2> "$TMP/runtime-deferred.err"; then
     if grep -Fq '"id":"deferred"' "$TMP/runtime-deferred.out" \
         && grep -Fq '"id":"tools","result":{"tools":[]}' "$TMP/runtime-deferred.out" \
@@ -237,7 +237,7 @@ else
 fi
 
 if printf '%s\n' '{"jsonrpc":"2.0","id":"invalid","method":"initialize","params":{}}' \
-    | LAZYDEEPSEEK_MCP_MODE=invalid CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" bash "$PLUGIN_ROOT/mcp/docs/server.sh" > "$TMP/runtime-invalid.out" 2> "$TMP/runtime-invalid.err"; then
+    | LAZYDEEPSEEK_MCP_MODE=invalid LAZYDEEPSEEK_PLUGIN_ROOT="$PLUGIN_ROOT" bash "$PLUGIN_ROOT/mcp/docs/server.sh" > "$TMP/runtime-invalid.out" 2> "$TMP/runtime-invalid.err"; then
     fail_case 'invalid runtime profile remains an actionable error'
 elif [ "$?" -eq 2 ] && [ ! -s "$TMP/runtime-invalid.out" ] \
     && grep -Fq 'MCP_PROFILE_INVALID mode=invalid' "$TMP/runtime-invalid.err"; then
@@ -248,7 +248,7 @@ fi
 
 for server in run-ledger verification status-dashboard; do
     if printf '%s\n' '{"jsonrpc":"2.0","id":"profile","method":"initialize","params":{}}' \
-        | CWD="$PROJECT" CLAUDE_PROJECT_DIR="$PROJECT" CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" \
+        | CWD="$PROJECT" LAZYDEEPSEEK_PROJECT_DIR="$PROJECT" LAZYDEEPSEEK_PLUGIN_ROOT="$PLUGIN_ROOT" \
             LAZYDEEPSEEK_MCP_MODE=direct \
             bash "$PLUGIN_ROOT/mcp/$server/server.sh" > "$TMP/$server.out" 2> "$TMP/$server.err" \
         && grep -Fq '"id": "profile"' "$TMP/$server.out"; then
@@ -260,7 +260,7 @@ done
 
 for server in context-graph code-intel docs lsp; do
     printf '%s\n' '{"jsonrpc":"2.0","id":"cache","method":"initialize","params":{}}' \
-        | CWD="$PROJECT" CLAUDE_PROJECT_DIR="$PROJECT" CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" \
+        | CWD="$PROJECT" LAZYDEEPSEEK_PROJECT_DIR="$PROJECT" LAZYDEEPSEEK_PLUGIN_ROOT="$PLUGIN_ROOT" \
             bash "$PLUGIN_ROOT/mcp/$server/server.sh" > "$TMP/$server-cache.out" 2> "$TMP/$server-cache.err" \
         || fail_case "$server launcher avoids plugin-root bytecode state"
 done

@@ -1,7 +1,7 @@
 ---
 name: lazy-git-master
 description: "Git workflow discipline for DeepSeek Harness: atomic commits, staging, commit-message style, rebase, squash, fixup, cherry-pick, branch management."
-when_to_use: "Use when git discipline matters: atomic commits, staging, rebase, squash, fixup, cherry-pick, and branch management."
+whenToUse: "Use when git discipline matters: atomic commits, staging, rebase, squash, fixup, cherry-pick, and branch management."
 metadata:
   author: LazyDeepSeek
   version: "1.3.0"
