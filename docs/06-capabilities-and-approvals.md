@@ -85,7 +85,7 @@ host's network policy.
 ## Activating optional capabilities when needed
 
 The six bundled MCP servers are profile-gated by the plugin's `mcp_mode`
-user setting (Settings → Plugins → lazydeepseek → details): `direct` keeps
+environment variable (`LAZYDEEPSEEK_MCP_MODE`; unset defers to the profile gate's `orchestrated` default): `direct` keeps
 run-ledger, verification, and status-dashboard; `assisted` adds
 context-graph and code-intel; `planned` adds context-graph and docs;
 `orchestrated` or unset runs all six. A deferred server exits 0 quietly so

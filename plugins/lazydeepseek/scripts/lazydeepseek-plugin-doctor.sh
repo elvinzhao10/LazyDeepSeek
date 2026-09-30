@@ -918,6 +918,31 @@ else
     check "Run state drift/evidence/boundaries" "$state_error"
 fi
 
+# --- Telemetry posture (advisory; never gates the doctor) ---
+# Ratified Q5: the documented lazydeepseek profile ships session-log upload
+# disabled and DSH_TELEMETRY_MODE=DISABLED. dsh enables session-log upload by
+# default on the official API route, so surface a warning whenever the local
+# posture re-enables it. Reads only profile patch layers (never credentials
+# storages); lazydeepseek itself does no network I/O.
+TELEMETRY_NOTE=""
+if [ -n "${DSH_TELEMETRY_MODE:-}" ] && [ "${DSH_TELEMETRY_MODE}" != "DISABLED" ]; then
+    TELEMETRY_NOTE="DSH_TELEMETRY_MODE=${DSH_TELEMETRY_MODE} (documented profile ships DISABLED)"
+fi
+DSH_HOME_DIR="${DSH_HOME:-$HOME/.dsh}"
+for _patch in "$DSH_HOME_DIR/cordis.patch.yml" "$DSH_HOME_DIR"/profiles/*/cordis.patch.yml; do
+    [ -f "$_patch" ] || continue
+    if grep -q 'session-log-deepseek' "$_patch" 2>/dev/null \
+        && ! grep -A3 'session-log-deepseek' "$_patch" 2>/dev/null | grep -q 'enabled: *false'; then
+        _profile_name="$(basename "$(dirname "$_patch")")"
+        TELEMETRY_NOTE="${TELEMETRY_NOTE:+$TELEMETRY_NOTE; }session-log upload enabled in profile patch: ${_profile_name}"
+    fi
+done
+if [ -n "$TELEMETRY_NOTE" ]; then
+    echo "  [WARN] Telemetry posture — ${TELEMETRY_NOTE}. Session-log upload is a host feature; the plugin performs no network I/O."
+else
+    echo "  [PASS] Telemetry posture — no enabled session-log upload detected in profile patch layers"
+fi
+
 echo ""
 echo "=== Results ==="
 echo "Passed: ${PASS}"

@@ -39,7 +39,7 @@ downloads or caches. Open or link the active durable release in the selected
 DeepSeek Harness CLI, DeepSeek Harness IDE, or DeepSeek Harness app host, give the agent `https://github.com/elvinzhao10/LazyDeepSeek`,
 and type `onboard`. The agent asks which host is in use, runs safe package
 checks, and reports **package readiness** separately from **host readiness**.
-Before any host-managed marketplace, plugin, Skills, connector, account, or
+Before any host-managed plugin, Skills, connector, account, or
 credential action it asks for approval, then gives one exact action and waits.
 After the response it inspects the app with Computer Use; reload/new session is
 a separate action. If Computer Use is unavailable, a user-pasted verbatim
@@ -86,7 +86,7 @@ recommendation that stays advisory until the host visibly honors it. See
 
 ## What this plugin provides
 
-LazyDeepSeek provides a workflow harness for DeepSeek Harness CLI, DeepSeek Harness IDE, and the DeepSeek Harness app. DeepSeek Harness app plugin/marketplace behavior must be verified in a live session; its local fallback uses imported skills:
+LazyDeepSeek provides a workflow harness for DeepSeek Harness CLI, DeepSeek Harness IDE, and the DeepSeek Harness app. DeepSeek Harness app plugin behavior must be verified in a live session; its local fallback uses imported skills:
 
 - **Hierarchical project memory** (`/lazy-init-deep`) — generates `AGENTS.md` with directory scoring
 - **Prometheus planning** (`/lazy-ulw-plan`) — decision-complete work plans; never writes product code
@@ -118,8 +118,8 @@ files, and leaves the run eligible for retry.
 | Directory | Purpose | Status |
 |-----------|---------|--------|
 | `skills/` | 19 workflow skills | Full-plugin content; manual fallback imports Skills only |
-| `commands/` | 20 current slash-command workflows | DeepSeek Harness CLI; DeepSeek Harness app only after a verified plugin/marketplace session |
-| `agents/` | 13 agent role definitions | DeepSeek Harness CLI; DeepSeek Harness app only after a verified plugin/marketplace session |
+| `commands/` | 20 current slash-command workflows | DeepSeek Harness CLI; DeepSeek Harness app only after a verified plugin session |
+| `agents/` | 13 agent role definitions | DeepSeek Harness CLI; DeepSeek Harness app only after a verified plugin session |
 | `hooks/hooks.json` | 7 hook events | Full-plugin declaration; host activation requires observation |
 | `mcp/` and `.mcp.json` | 6 local MCP server declarations | DeepSeek Harness CLI declarations; manual connector configuration is the verified DeepSeek Harness app fallback |
 | `scripts/` | state, loop, hooks, and validation utilities | Used by package readiness and workflow checks |
@@ -129,10 +129,12 @@ files, and leaves the run eligible for retry.
 
 For current DeepSeek Harness steps, use the installation and host-route guides in the
 source repository. Those guides are outside this installable plugin package.
-The marketplace root is `<repo>/plugins`, the directory containing
-the route contract; the nested `plugins/lazydeepseek/` directory is the plugin payload,
-not the marketplace root. DeepSeek Harness manages marketplace discovery and installation
-through **Settings → Plugins**, and package checks do not perform
+The repository root is the package root (root `package.json` with the `dsh` key
+plus `cordis.patch.yml`); the nested `plugins/lazydeepseek/` directory is the
+plugin payload, not the package root. DeepSeek Harness installs plugins into
+profiles through the `dsh plugin` verb set (git spec pinned to a commit sha by
+default; release tarball alternate; local directory for development — the npm
+registry is not used for this package), and package checks do not perform
 those host actions.
 
 For read-only development validation from the repository root:
@@ -140,21 +142,29 @@ For read-only development validation from the repository root:
 ```bash
 bash plugins/lazydeepseek/scripts/lazydeepseek-load-check.sh
 bash plugins/lazydeepseek/scripts/lazydeepseek-plugin-doctor.sh
-dsh plugins validate plugins/lazydeepseek
 ```
 
-The first two commands validate package inputs. The `dsh plugins validate`
-command is optional when the host CLI is available; it validates declarations
-without installing the plugin. All three are package evidence only. After the
+Both commands validate package inputs; they are package evidence only. After the
 full plugin is installed, observe one real skill or command and all six MCP
 connections in a fresh session. The manual fallback imports Skills and six
-individual connectors only; it does not load commands, agents, or hooks.
+individual MCP rows only; it does not load commands, agent presets, or hooks.
+
+## Telemetry and privacy
+
+DeepSeek Harness uploads session logs by default when the official API route
+is used. The documented `lazydeepseek` profile ships the opt-outs applied:
+session-log upload set to disabled in the profile patch and
+`DSH_TELEMETRY_MODE=DISABLED` exported by the lifecycle and acceptance
+tooling; the plugin doctor warns whenever session-log upload is detected as
+enabled. LazyDeepSeek itself performs no network I/O — hooks, MCP servers,
+and scripts do pure local file I/O under the workspace `.lazydeepseek/`
+state directory and the `$DSH_HOME/lazydeepseek/` runtime directory.
 
 ## DeepSeek Harness CLI project-local configuration
 
 `.dsh/settings.json` may be shared for non-secret project defaults.
 `.dsh/settings.local.json` is local/machine scope and must remain ignored
-and unstaged; secrets must never be committed. Repeating the local marketplace
+and unstaged; secrets must never be committed. Repeating the local plugin
 route or package readiness checks preserves both files and does not write host
 configuration.
 
@@ -173,7 +183,7 @@ and verify it in a fresh session.
 
 Use DeepSeek Harness CLI's plugin removal flow for a DeepSeek Harness CLI or CLI installation,
 then remove or disable only the LazyDeepSeek MCP servers that were manually
-registered. Use DeepSeek Harness IDE's documented plugin/marketplace removal flow for a
+registered. Use DeepSeek Harness's documented plugin removal flow for a
 verified DeepSeek Harness IDE plugin installation. For the local-import fallback, remove
 the imported `skills/` entries through DeepSeek Harness IDE's Skills UI and remove the
 manually configured connectors through Settings. Never guess, scan for, or

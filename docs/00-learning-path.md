@@ -29,7 +29,7 @@ The arrows are not all automatic. Skills and commands are instructions that a ho
 - `tooling/`: local capability policy, receipt handling, and provider checks;
 - `tests/`: package-boundary and hostile-input regressions.
 
-The repository root holds public explanations and evaluation evidence. It is not required by the package at runtime. Conversely, marketplace installation, credentials, host configuration, and live sessions are host/user state, not package state.
+The repository root holds public explanations and evaluation evidence. It is not required by the package at runtime. Conversely, plugin installation, credentials, host configuration, and live sessions are host/user state, not package state.
 
 ## Follow one real path
 

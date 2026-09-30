@@ -8,18 +8,19 @@ it does not claim that any host has loaded the package. See
 
 ## Install route
 
-DeepSeek Harness installs plugins from a marketplace through
-**Settings → Plugins**:
+DeepSeek Harness installs plugins into profiles through the `dsh plugin`
+verb set (there is no marketplace):
 
-1. **Create → Add marketplace** → enter
-   `https://github.com/elvinzhao10/LazyDeepSeek`, whose root contains
-   the git spec). For an offline checkout, install the local package root.
-2. **Personal** tab → `lazydeepseek` plugin card → **Install** (enabled by
-   default).
-3. Updates: bump the root `package.json` version and regenerate
-   `contracts/dsh-route-contract.v1.json`, then remove and re-add the plugin →
-   plugin details → **Update**.
-   A previously installed same-version candidate will not show an Update;
+1. Git-spec install (default): `dsh plugin --profile <name> add
+   <repository-url>#<full-commit-sha>`. The GitHub release tarball is the
+   pinned alternate; a local checkout installs with `./lazydeepseek` as the
+   spec. The npm registry is not used for this package. Installed plugins
+   are enabled by default, and no build scripts run (prebuilt `lib/` is
+   committed).
+2. Updates: bump the root `package.json` version and regenerate
+   `contracts/dsh-route-contract.v1.json`, then reinstall the new pinned sha
+   into the same profile.
+   A previously installed same-version candidate needs an explicit reinstall;
    uninstall it through **Manage installed**, refresh the marketplace, and
    install again after the fixed commit reaches `main`.
 4. Removal: **Manage installed** → `lazydeepseek` → **Uninstall** (or the disable

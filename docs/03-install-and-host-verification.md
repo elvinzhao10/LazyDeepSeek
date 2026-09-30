@@ -1,6 +1,6 @@
 # Package delivery
 
-This page explains the deployment boundary in code terms. A plugin package contains files a host may load; it does not contain the host's marketplace registry, session state, or connector process table.
+This page explains the deployment boundary in code terms. A plugin package contains files a host may load; it does not contain the host's profile registry, session state, or connector process table.
 
 ## v1.3.3 candidate route and host readiness
 
@@ -39,7 +39,7 @@ Default install roots are `~/Library/Application Support/LazySeries` on macOS,
 offboard/re-onboard, not receipt edits. Platform paths are package behavior,
 not host proof: **HOST READINESS: PENDING** until current observation.
 
-## DeepSeek Harness plugin marketplace install (primary route)
+## DeepSeek Harness git-spec install (primary route)
 
 **Recommended first step:** run the native onboarding script from the
 repository root:
@@ -48,59 +48,64 @@ repository root:
 bash scripts/install.sh
 ```
 
-It verifies Node.js LTS 20+ and Git, checks both marketplace layouts (single
-`lazydeepseek` entry, version agreement with the plugin manifest), runs
-`scripts/lazydeepseek-load-check.sh` and `scripts/lazydeepseek-plugin-doctor.sh`
-(host=package), prints the exact UI steps below with the GitHub repository URL
-(copied to the clipboard on macOS) and local market root, and — with
-`--project <absolute-project-root>` — additionally runs the durable lifecycle
-onboard. It performs no network calls in its package checks, never edits host
-configuration, and ends with `PACKAGE READINESS: full` plus
-`HOST READINESS: PENDING`. Inside DeepSeek Harness, the `/lazy-onboard`, `/lazy-update`,
-and `/lazy-offboard` commands guide the same flows interactively.
+It verifies Node.js LTS 20+ and Git, checks the dsh package boundary (root
+`package.json` `dsh` key + `cordis.patch.yml` + committed prebuilt `lib/`,
+version agreement), runs `scripts/lazydeepseek-load-check.sh` and
+`scripts/lazydeepseek-plugin-doctor.sh` (host=package), prints the exact
+install command below with the GitHub repository URL (copied to the clipboard
+on macOS), and — with `--project <absolute-project-root>` — additionally runs
+the durable lifecycle onboard. It performs no network calls in its package
+checks, never edits host configuration, and ends with
+`PACKAGE READINESS: full` plus `HOST READINESS: PENDING`. Inside DeepSeek
+Harness, the `/lazy-onboard`, `/lazy-update`, and `/lazy-offboard` command
+entries guide the same flows on interactive surfaces.
 
-The manual UI walkthrough remains canonical:
+The manual walkthrough remains canonical:
 
-Install LazyDeepSeek through DeepSeek Harness's plugin UI:
+Install LazyDeepSeek into a dsh profile through the `dsh plugin` verb set —
+there is no marketplace UI:
 
-1. Open a workspace in DeepSeek Harness, then open **Settings → Plugins**.
-2. Click **Create → Add marketplace** and enter the public repository URL
-   `https://github.com/elvinzhao10/LazyDeepSeek`. For a local checkout, choose
-   the directory containing the local marketplace manifest: `<repo>/plugins`,
-   not the nested `plugins/lazydeepseek/` plugin directory.
-3. Switch to the **Personal** tab, open the marketplace's `lazydeepseek` plugin
-   card, and click **Install**. Installed plugins are enabled by default.
-4. Prerequisites for the local launchers: **Node.js LTS 24 (recommended) or
+1. Confirm the pinned host: `dsh --version` reports exact `0.2.0-rc.2`, and
+   `dsh --profile <name> --dump-config` composes cleanly.
+2. After approval, run the git-spec install for the repository pinned to a
+   full commit sha (the printed form is
+   `dsh plugin --profile <name> add <repository-url>#<commit-sha>`). The
+   GitHub release tarball asset is the pinned alternate; a local checkout
+   installs with `./lazydeepseek` as the spec. The npm registry is not used
+   for this package, and no build scripts run (prebuilt `lib/` is committed,
+   so the pnpm allowBuilds gate never applies).
+3. Prerequisites for the local launchers: **Node.js LTS 24 (recommended) or
    22 (supported alternative)** — the lifecycle also accepts Node.js LTS 20
-   for compatibility — and **Git** on `PATH`. Enabling the plugin grants it
-   code-execution trust.
+   for compatibility — plus **Git** and **Python 3.10+** on `PATH`. Enabling
+   the plugin grants it code-execution trust.
 
 During development you can validate the package without installing:
 
 ```bash
-dsh plugins validate plugins/lazydeepseek
+bash plugins/lazydeepseek/scripts/lazydeepseek-load-check.sh
 ```
 
-That CLI check is a package/manifest validation, not an install and not host
-proof.
+That is a package validation, not an install and not host proof.
 
-**Update flow:** bump the `version` in
-the root `package.json` and the regenerated
-route-contract inventory, then remove and re-add the plugin
-**gear → Refresh**, open the plugin details, and click **Update** when
-offered. Source edits are not hot reload; a catalog refresh is not a plugin
-update.
+**Update flow:** bump the `version` in the root `package.json` and the
+regenerated route-contract inventory, then reinstall the new pinned sha (or
+tarball) into the same profile. Source edits are not hot reload; a catalog
+refresh is not a plugin update. The generated runtime artifacts
+(`$DSH_HOME/lazydeepseek/`) rewrite on version change at the next plugin
+start; the hooks bridge parses its config once per session, so restart the
+session after a hooks regeneration.
 
-**Removal flow:** **Settings → Plugins → Manage installed → lazydeepseek →
-Uninstall** (or flip the enable/disable toggle for a reversible pause). See
-[Safe removal](08-safe-removal.md) for the receipt-scoped protocol.
+**Removal flow:** `dsh plugin --profile <name> remove lazydeepseek`, then
+remove the project `.lazydeepseek/` state directory (after archiving run
+evidence). See [Safe removal](08-safe-removal.md) for the receipt-scoped
+protocol.
 
 ## Host onboarding
 
 Open or link the durable release selected by `status` in DeepSeek Harness, give the agent
 `https://github.com/elvinzhao10/LazyDeepSeek`, and type `onboard`. The agent runs
 safe package checks and reports package readiness separately from host
-readiness. Before a marketplace, plugin, Skills, connector, or credential
+readiness. Before a plugin, Skills, connector, or credential
 change it asks for approval, then gives one exact action and waits. After the
 response it inspects the host; any reload/new-session step is separate.
 Observation happens in a **fresh session**: one real skill/command plus every
@@ -108,7 +113,7 @@ expected MCP connection. If host inspection is unavailable, a user-pasted
 verbatim status or screenshot is observed evidence; otherwise **HOST
 READINESS: PENDING**.
 
-Route status is explicit: the plugin marketplace route (`dsh-plugin-git-sha`)
+Route status is explicit: the git-spec install route (`dsh-plugin-git-sha`)
 is the **default full-plugin route**. The `manual-skills-mcp-fallback` is
 recovery only. Package checks never upgrade any route to host proof.
 
@@ -130,11 +135,11 @@ flowchart LR
     Ready -. does not imply .-> Live
 ```
 
-The first channel supports claims about package contents. The second supports claims about host loading. Keeping the channels separate is what lets uninstall be safe: package removal cannot guess where a host stored marketplace or connector data.
+The first channel supports claims about package contents. The second supports claims about host loading. Keeping the channels separate is what lets uninstall be safe: package removal cannot guess where a host stored plugin or connector data.
 
 ## Delivery surfaces
 
-The **full plugin route** uses the DeepSeek Harness plugin marketplace flow above. The
+The **full plugin route** uses the DeepSeek Harness git-spec install flow above. The
 plugin manifest declares 19 skills, 20 commands, 13 agents, 7 hook events,
 and 6 MCP server declarations; DeepSeek Harness mounts skills via the Skill tool,
 commands as slash menu entries (`/lazy-ulw-plan`, `/lazy-start-work`, ...),

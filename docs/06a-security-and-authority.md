@@ -52,7 +52,7 @@ is expected elsewhere. This is package-readiness evidence, not host proof.
 
 ## Decisions that stay with the user
 
-Host settings, marketplace installation, credentials, remote providers,
+Host settings, plugin installation, credentials, remote providers,
 browser automation, and any connector registration require the host flow or an
 explicit approval. The capability broker is task-scoped; it does not rewrite
 host configuration or persist a registration. Continue with [receipts and

@@ -23,4 +23,4 @@ The shell and Python scripts are the operational layer. They create run records,
 
 ## Host ownership stays external
 
-The package can check manifest structure, local declarations, executable bits, and protocol fixtures. It cannot prove plugin discovery, SessionStart, hook execution, marketplace activation, or a connected MCP session. Those are host facts — on DeepSeek Harness: the plugin card in **Settings → Plugins**, a slash menu entry actually running, a hook event delivered, an MCP server connected. This distinction is central to [05 — Evidence and completion](05-evidence-and-completion.md).
+The package can check manifest structure, local declarations, executable bits, and protocol fixtures. It cannot prove plugin discovery, SessionStart, hook execution, profile installation, or a connected MCP session. Those are host facts — on DeepSeek Harness: the plugin rows in `--dump-config`, a skill or user-invocable entry actually running, a hook event delivered, an MCP server connected. This distinction is central to [05 — Evidence and completion](05-evidence-and-completion.md).

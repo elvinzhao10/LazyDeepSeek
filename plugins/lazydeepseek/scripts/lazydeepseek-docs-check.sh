@@ -112,6 +112,23 @@ check_init_deep_evidence_contract() {
     fi
 }
 
+check_telemetry_privacy_contract() {
+    local document="${PLUGIN_ROOT}/README.md"
+    [ -f "$document" ] || { append_policy_violation "$document" "missing package README"; return; }
+    grep -Fq '## Telemetry and privacy' "$document" \
+        || append_policy_violation "$document" "package README must carry the telemetry privacy section"
+    grep -Fq 'DSH_TELEMETRY_MODE=DISABLED' "$document" \
+        || append_policy_violation "$document" "host-routes privacy note must name the telemetry opt-out"
+    grep -Fqi 'session-log' "$document" \
+        || append_policy_violation "$document" "host-routes privacy note must cover session-log upload"
+    grep -Fq 'no network I/O' "$document" \
+        || append_policy_violation "$document" "host-routes privacy note must state the plugin performs no network I/O"
+    # Banned keyword discipline for route documentation.
+    if grep -Eqi 'npm publish|add github:' "$document"; then
+        append_policy_violation "$document" "route documentation must not use banned keyword phrases"
+    fi
+}
+
 for scan_dir in "${PLUGIN_ROOT}"; do
     [ -d "$scan_dir" ] || continue
     while IFS= read -r -d '' md_file; do
@@ -143,6 +160,7 @@ done
 
 check_active_documentation_policy
 check_init_deep_evidence_contract
+check_telemetry_privacy_contract
 
 if [ "$BROKEN_COUNT" -eq 0 ] && [ "$POLICY_COUNT" -eq 0 ]; then
     echo "{\"total_links\":${TOTAL},\"broken\":0,\"broken_links\":[],\"policy_violations\":0}"

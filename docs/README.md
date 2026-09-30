@@ -54,7 +54,7 @@ concise map.
 | [00 — Architecture tour](00-learning-path.md) | Which component receives an event, and where does its result go? |
 | [01 — Execution model](01-mental-model.md) | Why are instructions, execution, state, and proof distinct layers? |
 | [02 — Request decomposition](02-first-task.md) | How does an outcome become acceptance criteria and a proof surface? |
-| [03 — Package delivery](03-install-and-host-verification.md) | What does the DeepSeek Harness plugin marketplace route establish, and what does it not establish? |
+| [03 — Package delivery](03-install-and-host-verification.md) | What does the DeepSeek Harness git-spec install route establish, and what does it not establish? |
 | [04 — Workflow playbooks](04-workflow-playbooks.md) | How do skills, commands, and agent roles encode proportional workflow policy? |
 | [05 — Evidence and completion](05-evidence-and-completion.md) | How are checks, statuses, timeouts, and completion claims kept honest? |
 | [06 — Capabilities and approvals](06-capabilities-and-approvals.md) | How does local-first capability selection avoid persistent mutation? |

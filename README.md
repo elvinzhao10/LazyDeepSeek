@@ -76,27 +76,26 @@ Open an AI coding assistant in your project and paste this:
 
 > Help me install LazyDeepSeek from https://github.com/elvinzhao10/LazyDeepSeek
 > for this project. Read the repository's AGENTS.md and install guide. Verify
-> the root marketplace manifest and run safe package checks first. Guide me
-> through DeepSeek Harness Settings → Plugins → Create → Add marketplace using that GitHub
-> URL, then verify the installed plugin in a fresh session. Ask me before
-> adding the marketplace or installing/enabling the plugin.
+> the root package manifest and run safe package checks first. Guide me
+> through the dsh git-spec install for that GitHub repository pinned to a
+> commit sha, then verify the installed plugin in a fresh session. Ask me
+> before installing or enabling the plugin.
 
 The assistant can run local checks and guide the host steps. Installing or
 enabling the plugin grants it code-execution trust, so approve those actions
 in DeepSeek Harness after reviewing the source.
 
-## Direct marketplace setup
+## Direct profile setup
 
-1. Open a workspace in DeepSeek Harness. Go to **Settings → Plugins → Create → Add
-   marketplace** and enter `https://github.com/elvinzhao10/LazyDeepSeek`.
-   For an offline checkout, choose the local directory `<repo>/plugins`.
-2. In **Personal**, open the `lazydeepseek` card and click **Install**. Installed
-   plugins are enabled by default.
-   If you installed an earlier v1.3.3 candidate, a marketplace refresh alone
-   will not replace its cached plugin. After this fix reaches `main`, uninstall
-   that copy in **Manage installed**, refresh the marketplace, and install it
-   again; then start a fresh session to check that the duplicate-hook warning
-   is gone.
+1. Confirm the pinned host: `dsh --version` reports exact `0.2.0-rc.2`.
+2. After approval, run the git-spec install with the repository URL pinned to
+   a full commit sha (or the GitHub release tarball, or `./lazydeepseek` for a
+   local development checkout). The npm registry is not used for this package.
+   Installed plugins are enabled by default; no build scripts run because the
+   prebuilt `lib/` is committed.
+   If you installed an earlier v1.3.3 candidate, reinstall the new pinned sha
+   into the same profile and restart the session so the regenerated hooks
+   config is parsed fresh.
 3. You need **Node.js LTS 24 (recommended) or 22 (supported alternative)** —
    the lifecycle also accepts Node.js LTS 20 for compatibility — and **Git**
    on `PATH` for the local
@@ -127,7 +126,7 @@ verified origin
 `https://github.com/elvinzhao10/LazyDeepSeek` and follow the
 [installation guide](docs/03-install-and-host-verification.md).
 
-The marketplace install above is the primary route. For a durable install
+The git-spec install above is the primary route. For a durable install
 that survives source checkouts, run `onboard` once to create a durable
 installation; after that, use the stable launcher for `update`, `status`, and
 safe `offboard`:
@@ -157,7 +156,7 @@ The release verifier runs classified shell regressions serially, all package
 
 Pick one route per project:
 
-- **DeepSeek Harness plugin marketplace** (`dsh-plugin-git-sha`) is the default
+- **DeepSeek Harness git-spec install** (`dsh-plugin-git-sha`) is the default
   full-plugin route: skills, commands, agents, 7 hook events, and 6 MCP
   declarations load together from one install.
 

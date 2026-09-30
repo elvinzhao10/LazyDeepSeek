@@ -33,7 +33,7 @@ The tooling manifest pins fallback packages for ripgrep, ast-grep, and CodeGraph
 
 ## What remains a raw host capability
 
-DeepSeek Harness owns plugin discovery, command exposure, hook-event delivery, MCP process launch, session lifetime, marketplace installation, credentials, and connection status. LazyDeepSeek supplies manifests and launch recipes, but does not reimplement those services or inspect private host state to guess success.
+DeepSeek Harness owns plugin discovery, command exposure, hook-event delivery, MCP process launch, session lifetime, plugin installation, credentials, and connection status. LazyDeepSeek supplies manifests and launch recipes, but does not reimplement those services or inspect private host state to guess success.
 
 The manual-skills-mcp-fallback route is intentionally narrower: importing `skills/` can make skill text available, but does not prove that command definitions, agents, hooks, or `.mcp.json` were loaded. Each is a separate host capability requiring observation.
 

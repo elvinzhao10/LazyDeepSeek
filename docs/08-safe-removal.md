@@ -7,7 +7,7 @@ tooling only when its receipt proves ownership. These are separate operations.
 
 | Route | Safe action | Preserve |
 | --- | --- | --- |
-| DeepSeek Harness plugin (marketplace install) | Use **Settings → Plugins → Manage installed → lazydeepseek → Uninstall** (or the enable/disable toggle for a reversible pause), then confirm in the host. | Other plugins, host installation paths, credentials, and host state. |
+| DeepSeek Harness plugin (git-spec install) | Run `dsh plugin --profile <name> remove lazydeepseek`, then confirm the rows are gone from `--dump-config`. | Other plugins, host installation paths, credentials, and host state. |
 | Manual fallback (imported skills + manual connectors) | Remove imported `skills/` entries through **Settings → Skills** and the manually configured connectors through the MCP settings UI. | Other imported skills, connectors, and Settings entries. |
 | Receipt-owned tooling root | Run the package uninstall command only for the exact owned root. | Modified, foreign, linked, caller-owned, project, global, and host-managed paths. |
 
@@ -34,7 +34,7 @@ Never guess or scan for host-managed installation paths. Do not delete
 workspace host configuration (`.dsh/config.json`, `AGENTS.md` content you
 did not generate), another host's MCP configuration, project files, global
 tools, or credentials. Removing a tooling root does not authorize removal of a
-plugin, marketplace installation, MCP registration, or credential state.
+plugin, plugin installation, MCP registration, or credential state.
 
 CodeGraph follows the same boundary. Its uninstall removes only a project
 index proven by the CodeGraph receipt, and preserves a pre-existing

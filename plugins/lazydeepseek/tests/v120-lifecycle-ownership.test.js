@@ -108,8 +108,8 @@ test('v1.2 offboard reports modified, unknown, mismatched, and cross-product sta
 
 test('removal documentation separates DeepSeek Harness plugin, fallback, and tooling-root scopes', () => {
   const removal = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'docs', '08-safe-removal.md'), 'utf8');
-  assert.match(removal, /DeepSeek Harness plugin \(marketplace install\)/);
-  assert.match(removal, /Settings → Plugins → Manage installed → lazydeepseek → Uninstall/);
+  assert.match(removal, /DeepSeek Harness plugin \(git-spec install\)/);
+  assert.match(removal, /dsh plugin --profile <name> remove lazydeepseek/);
   assert.match(removal, /Manual fallback \(imported skills \+ manual connectors\)/);
   assert.match(removal, /Receipt-owned tooling root/);
   assert.match(removal, /\.lazydeepseek\//);

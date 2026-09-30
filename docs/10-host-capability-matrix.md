@@ -7,7 +7,7 @@ LazyDeepSeek deliberately aligns policy and package safety across hosts while ke
 ## Published v1.3.1 evidence boundary
 
 The published v1.3.1 documentation targets the **DeepSeek Harness** host; no current
-host activation is claimed. The DeepSeek Harness plugin marketplace
+host activation is claimed. The DeepSeek Harness git-spec install
 route (`dsh-plugin-git-sha`) is the default full-plugin route. The
 `manual-skills-mcp-fallback` route is recovery-only and mutually exclusive
 with a full-plugin route in the same project.
@@ -43,7 +43,7 @@ skill/command and all six MCP connections in a fresh session. Without
 observation, **HOST READINESS: PENDING**.
 
 Route status is explicit: `dsh-plugin-git-sha` is the **default full-plugin
-route** through **Settings → Plugins**. The
+route** through the `dsh plugin` verb set. The
 `manual-skills-mcp-fallback` is recovery only.
 
 ## What each route needs
@@ -80,8 +80,8 @@ the native surfaces DeepSeek Harness actually provides:
 | Execution | `lazy-start-work` with Agent-tool subagents | Agent dispatcher |
 | Review | `lazy-review-work` five lanes | Parallel Agent dispatch (5 lanes) |
 | Model routing | Agent frontmatter | `model` / `thoughtLevel` per agent |
-| Automation | `hooks/hooks.json` | 7 hook events: `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PostToolUseFailure`, `Stop` |
-| Local services | `.mcp.json` | 6 MCP servers, auto-connected, namespaced `plugin:lazydeepseek:<server>` |
+| Automation | `hooks/hooks.json` | 7 hook events: 5 bridged (`SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`) + 2 synthesized inside the PreToolUse/PostToolUse handlers (PermissionRequest audit, PostToolUseFailure — both degraded); the bridge reads `additionalContext` only from `hookSpecificOutput`, and an advisory Stop reminder does not continue the turn (only exit-2 deny steers) |
+| Local services | `cordis.patch.yml` MCP rows | 6 MCP servers as `dsh-mcp-client` stdio rows, surfaced as `mcp__<server>__<tool>`, gated by `LAZYDEEPSEEK_MCP_MODE` (unset = `orchestrated`); tools must return MCP content blocks |
 
 Commands run inside a DeepSeek Harness session as natural language or through the slash
 menu; LazyDeepSeek mounts skills, and command files surface as slash menu entries
@@ -134,8 +134,7 @@ evidence only.
 
 To change routes, stop the active session, remove only LazyDeepSeek's
 receipt-scoped plugin/Skills entry and connectors that the user added through
-the host UI (**Settings → Plugins → Manage installed → lazydeepseek →
-Uninstall**), choose one route, and verify it in a fresh session. Preserve
+`dsh plugin --profile <name> remove lazydeepseek`, choose one route, and verify it in a fresh session. Preserve
 other plugins, connectors, credentials, project settings, and host-managed
 paths. Package removal remains separate from observed host removal. Sibling
 ports (LazyBuddy, LazyTrae, LazyQoder) manage their own hosts with their own

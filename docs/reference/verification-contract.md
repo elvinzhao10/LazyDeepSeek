@@ -50,7 +50,7 @@ still-detectable descendants. This is best-effort cleanup, not a security sandbo
 
 ## Intentional exclusions
 
-- DeepSeek Harness uses its plugin marketplace flow (Settings → Plugins). The
+- DeepSeek Harness uses the git-spec plugin install route (`dsh plugin`). The
   recovery-only fallback uses imported local skills with manually configured
   compatible connectors.
 - Tooling roots are receipt-owned. Host-managed paths, workspace host configuration,

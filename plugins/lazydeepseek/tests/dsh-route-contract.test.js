@@ -160,7 +160,7 @@ test('treats fallback as generated recovery and conflicts with the default route
 
   // Then: fallback is recovery-only and must not coexist with the default route.
   assert.equal(fallback.route_priority.recovery_only, true);
-  assert.deepEqual(fallback.recovery.excludes, ['commands', 'agents', 'hooks']);
+  assert.deepEqual(fallback.recovery.excludes, ['commands', 'agents', 'presets', 'hooks']);
   assert.equal(fallback.degraded.status, 'manual-skills-mcp-fallback');
   assert.equal(dshConflict.kind, 'conflict');
   assert.deepEqual(dshConflict.routes, ['dsh-plugin-git-sha', 'manual-skills-mcp-fallback']);
