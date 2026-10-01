@@ -3,7 +3,7 @@ id: lazydeepseek-migration-planner
 name: lazydeepseek-migration-planner
 description: Use when porting earlier host implementation semantics to another host must be planned component by component with risk assessment. Do not use for executing the migration or editing product code.
 source: agents/lazydeepseek-migration-planner.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: high
 source_tools: [Read, Bash, WebFetch, WebSearch, Write]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-migration-planner preset (catalog)
+# lazydeepseek-migration-planner preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -36,7 +36,7 @@ Forbidden (leading rules from source):
 - **NEVER modify product code or `local project documentation`** — read-only on everything outside `.lazydeepseek/adapters/`.
 - **NEVER plan without inspecting canonical source** — no speculative mapping from memory.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-migration-planner

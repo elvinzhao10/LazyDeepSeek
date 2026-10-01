@@ -63,22 +63,27 @@ check_rejected() {
 
 check_contains() {
     local label="$1" needle="$2" output="$3"
-    # tools/call results carry MCP content blocks (dsh 0.2.0-rc.2 contract):
-    # match the needle against the raw reply OR the decoded content text.
-    if printf '%s' "$output" | grep -q "$needle" \
-        || printf '%s' "$output" | python3 -c '
+    if ! output="$(python3 - "$output" <<'PYMCP'
 import json
 import sys
-
+reply = json.loads(sys.argv[1])
+assert "error" not in reply and reply["jsonrpc"] == "2.0", reply
+result = reply["result"]
+assert result.get("isError", False) is False, reply
+assert isinstance(result.get("content"), list) and len(result["content"]) == 1, reply
+block = result["content"][0]
+assert block.get("type") == "text" and isinstance(block.get("text"), str), reply
 try:
-    reply = json.loads(sys.stdin.read())
-    result = reply.get("result", {})
-    text = "".join(block.get("text", "") for block in result.get("content", []) if isinstance(block, dict))
-except Exception:
-    raise SystemExit(1)
-raise SystemExit(0 if sys.argv[1] in text else 1)
-' "$needle"
-    then
+    print(json.dumps(json.loads(block["text"])))
+except json.JSONDecodeError:
+    print(block["text"])
+PYMCP
+)"; then
+        FAIL=$((FAIL + 1))
+        echo "FAIL: $label (invalid MCP tool result envelope)" >&2
+        return
+    fi
+    if printf '%s' "$output" | grep -q "$needle"; then
         PASS=$((PASS + 1))
         echo "PASS: $label"
     else

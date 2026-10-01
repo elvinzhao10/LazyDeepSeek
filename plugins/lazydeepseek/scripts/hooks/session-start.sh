@@ -17,7 +17,7 @@ NOTES_FILE=$(mktemp "${TMPDIR:-/tmp}/lazydeepseek-session-start.XXXXXX")
 trap 'rm -f "$NOTES_FILE"' EXIT
 note() { printf '%s\n' "$1" >>"$NOTES_FILE"; }
 
-note "(LazyDeepSeek v1.3.3): Session starting — checking project state..."
+note "(LazyDeepSeek v1.3.4): Session starting — checking project state..."
 
 # --- Bootstrap the .lazydeepseek/ directory tree so skills/agents that read
 # plans/, context/, drafts/, or runs/ don't crash on a fresh workspace.
@@ -138,8 +138,8 @@ PY
 )
                 note "(LazyDeepSeek): Active run found: $PLAN (status: $STATUS, progress: $PROGRESS)"
                 note "(LazyDeepSeek): Run /lazy-start-work or ask to continue the planned work."
+                break
             fi
-            break
         fi
     done
 fi

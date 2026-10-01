@@ -131,8 +131,9 @@ if [ "$METHOD" = "tools/call" ]; then
 fi
 
 case "$METHOD" in
+  ping) reply '{}' ;;
   initialize)
-    reply '{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"status-dashboard","version":"1.3.3"}}'
+    reply '{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"status-dashboard","version":"1.3.4"}}'
     ;;
   tools/list)
     reply '{"tools":[
@@ -197,7 +198,7 @@ PYEOF
 import json,sys
 with open(sys.argv[1]) as f: s=json.load(f); p=[g for g in s.get('human_gates',[]) if g.get('status','')=='pending']
 if s.get('review_status','')=='pending': p.append({'name':'review','status':'pending','result':''})
-print(json.dumps(p))
+print(json.dumps({'status': 'unknown', 'source': 'persisted_snapshot', 'live_approval_tracking': False, 'pending': p}))
 PYEOF
 )
     reply_tool "$RESULT"

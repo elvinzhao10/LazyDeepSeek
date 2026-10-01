@@ -69,11 +69,12 @@ assert len(lines) == 1, lines
 reply = json.loads(lines[0])
 assert reply["jsonrpc"] == "2.0", reply
 assert "result" in reply and "error" not in reply, reply
-# tools/call results carry MCP content blocks (dsh 0.2.0-rc.2 contract).
 result = reply["result"]
-assert isinstance(result, dict) and isinstance(result.get("content"), list), reply
-text = "".join(block.get("text", "") for block in result["content"] if isinstance(block, dict))
-assert sys.argv[2] in text, reply
+assert result.get("isError", False) is False, reply
+assert isinstance(result.get("content"), list) and len(result["content"]) == 1, reply
+block = result["content"][0]
+assert block.get("type") == "text" and isinstance(block.get("text"), str), reply
+assert sys.argv[2] in json.loads(block["text"]), reply
 PYEOF
     then
         PASS=$((PASS + 1))

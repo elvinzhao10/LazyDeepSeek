@@ -3,7 +3,7 @@ id: lazydeepseek-librarian
 name: lazydeepseek-librarian
 description: Use after accepted changes to update project memory and documentation: dsh.md, command index, parity ledger, known gaps, and risk register. Do not use for implementing product code or reviewing diffs.
 source: agents/lazydeepseek-librarian.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: low
 source_tools: [Read, Bash, TaskOutput, WebFetch, WebSearch]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-librarian preset (catalog)
+# lazydeepseek-librarian preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER write outside** `.lazydeepseek/` and `docs/` — no product code, no evidence, no plan files.
 - **NEVER rewrite the canonical method map** unless `local project documentation` files have changed and the diff justifies an update.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-librarian

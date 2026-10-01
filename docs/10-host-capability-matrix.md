@@ -50,7 +50,7 @@ route** through the `dsh plugin` verb set. The
 
 | Route | Safe package artifact | Required host proof |
 | --- | --- | --- |
-| **dsh plugin route (`dsh-plugin-git-sha`)** | Root `package.json` (`dsh` key + exact peer pin), `cordis.patch.yml` rows, prebuilt `lib/`; payload declares 19 skills, 20 commands, 13 agents, 5 bridged hook events (+2 synthesized), and 6 MCP rows. Install via `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git-spec pinned; GitHub-only distribution, the npm registry is not used for this package); inspect with `dsh --profile <name> --dump-config`. | A fresh session showing one real skill/command and all six MCP connections. |
+| **dsh plugin route (`dsh-plugin-git-sha`)** | Root `package.json` (`dsh` key + exact peer pin), `cordis.patch.yml` rows, prebuilt `lib/`; payload declares 19 skills, 20 commands, 13 agents, 7 bridged hook events (+2 synthesized), and 6 MCP rows. Install via `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git-spec pinned; GitHub-only distribution, the npm registry is not used for this package); inspect with `dsh --profile <name> --dump-config`. | A fresh session showing one real skill/command and all six MCP connections. |
 | **Manual fallback (`manual-skills-mcp-fallback`)** | Import/copy `plugins/lazydeepseek/skills/` only, then configure each of six local MCP connectors manually. | Use only after receipt-scoped removal of the full-plugin route. Observe one imported skill and each connector; commands, agents, and hooks remain excluded. |
 
 Before requesting that host mutation, run this read-only preflight from the
@@ -80,7 +80,7 @@ the native surfaces DeepSeek Harness actually provides:
 | Execution | `lazy-start-work` with Agent-tool subagents | Agent dispatcher |
 | Review | `lazy-review-work` five lanes | Parallel Agent dispatch (5 lanes) |
 | Model routing | Agent frontmatter | `model` / `thoughtLevel` per agent |
-| Automation | `hooks/hooks.json` | 7 hook events: 5 bridged (`SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`) + 2 synthesized inside the PreToolUse/PostToolUse handlers (PermissionRequest audit, PostToolUseFailure — both degraded); the bridge reads `additionalContext` only from `hookSpecificOutput`, and an advisory Stop reminder does not continue the turn (only exit-2 deny steers) |
+| Automation | `hooks/hooks.json` | 9 declared package events: 7 bridged (`SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`, `SubagentStart`, `SubagentStop`) + 2 synthesized inside the PreToolUse/PostToolUse handlers (PermissionRequest audit, PostToolUseFailure — both degraded); the bridge reads `additionalContext` only from `hookSpecificOutput`, and an advisory Stop reminder does not continue the turn (only exit-2 deny steers) |
 | Local services | `cordis.patch.yml` MCP rows | 6 MCP servers as `dsh-mcp-client` stdio rows, surfaced as `mcp__<server>__<tool>`, gated by `LAZYDEEPSEEK_MCP_MODE` (unset = `orchestrated`); tools must return MCP content blocks |
 
 Commands run inside a DeepSeek Harness session as natural language or through the slash

@@ -7,9 +7,9 @@ established. Package
 files, host settings, credentials, marketplace state, and live sessions remain
 separate authorities.
 
-## Current documentation release: v1.3.3
+## Current documentation release: v1.3.4
 
-The current local package candidate is v1.3.3. The v1.3.3 tag and release asset are pending publication; fresh DeepSeek Harness host readiness requires direct observation.
+The current local package candidate is v1.3.4. The v1.3.4 tag and release asset are pending publication; fresh DeepSeek Harness host readiness requires direct observation.
 This guide names current
 human-facing boundaries only and does not
 promote package evidence to host proof. The route IDs are
@@ -118,7 +118,7 @@ without current observation, **HOST READINESS: PENDING**.
 
 | Route | Safe package artifact | Host action and expected observation |
 | --- | --- | --- |
-| **dsh plugin route (`dsh-plugin-git-sha`)** | The repo IS the npm-style package: root `package.json` (`dsh` key + exact `0.2.0-rc.2` peer pin), `cordis.patch.yml` rows, prebuilt `lib/`; payload under `plugins/lazydeepseek/` declares 19 skills, 20 commands, 13 agents, 5 bridged hook events (+2 synthesized), and 6 MCP rows. | `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git spec pinned; GitHub-only, the npm registry is not used) as a separate approved action, then confirm our rows with `dsh --profile <name> --dump-config` and verify a fresh session. |
+| **dsh plugin route (`dsh-plugin-git-sha`)** | The repo IS the npm-style package: root `package.json` (`dsh` key + exact `0.2.0-rc.2` peer pin), `cordis.patch.yml` rows, prebuilt `lib/`; payload under `plugins/lazydeepseek/` declares 19 skills, 20 commands, 13 agents, 7 bridged hook events (+2 synthesized), and 6 MCP rows. | `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git spec pinned; GitHub-only, the npm registry is not used) as a separate approved action, then confirm our rows with `dsh --profile <name> --dump-config` and verify a fresh session. |
 | **Manual fallback (`manual-skills-mcp-fallback`)** | Skills import/copy from `plugins/lazydeepseek/skills/` only, plus six individual manual local MCP connectors. | Use only after the full-plugin route is removed with receipt-scoped ownership. Observe one imported skill and all six connector statuses; commands, agents, and hooks remain excluded. |
 
 ## DeepSeek Harness plugin marketplace handoff
@@ -225,9 +225,10 @@ result separately from the user-observed host result in a new session; never
 scan or guess host directories and never remove another host's settings. An
 upgrade rollback must likewise remove only the selected release's
 receipt-owned assets after approval; never overwrite user-modified
-prior-release assets. Removing the plugin is receipt-safe: LazyDeepSeek keeps no
-host-side state, and project `.lazydeepseek/` state directories can be deleted per
-project if their run history is no longer wanted.
+prior-release assets. Generated DSH runtime artifacts require separate exact-receipt removal after
+the selected bundle is removed and its rows/processes are observed absent.
+See `docs/reference/host-routes.md#generated-runtime-ownership`. Project
+`.lazydeepseek/` evidence is preserved.
 Recovery is limited to an explicitly verified lifecycle-owned sibling bootstrap
 lock or product `staging/`/`locks/` artifact; the caller workspace is always
 preserved.

@@ -2,13 +2,13 @@
 
 This page explains the deployment boundary in code terms. A plugin package contains files a host may load; it does not contain the host's profile registry, session state, or connector process table.
 
-## v1.3.3 candidate route and host readiness
+## v1.3.4 candidate route and host readiness
 
-LazyDeepSeek v1.3.3 is prepared as a native DeepSeek Harness plugin: `plugins/lazydeepseek/`
+LazyDeepSeek v1.3.4 is prepared as a native DeepSeek Harness plugin: `plugins/lazydeepseek/`
 is the npm-style package boundary: the root `package.json` (`dsh` key plus the
 exact `0.2.0-rc.2` peer pin) and `cordis.patch.yml` rows, with the payload under
 `plugins/lazydeepseek/`. v1.3.2 remains the published stable
-release until the v1.3.3 release workflow completes. The supported route IDs
+release until the v1.3.4 release workflow completes. The supported route IDs
 are `dsh-plugin-git-sha` (the full-plugin route) and `manual-skills-mcp-fallback` (recovery only, mutually exclusive
 with a full-plugin route in the same project). v2 records native mode as
 `invoke-documented`, `observe-only`, `descriptor-only`, or `unavailable`;

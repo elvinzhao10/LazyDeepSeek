@@ -213,8 +213,9 @@ while IFS= read -r INPUT || [ -n "$INPUT" ]; do
   ID_JSON=$(python3 -c "import sys,json; d=json.load(sys.stdin); print(json.dumps(d.get('id',None)))" 2>/dev/null <<< "$INPUT" || echo "null")
 
 case "$METHOD" in
+  ping) reply '{}' ;;
   initialize)
-    reply '{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"run-ledger","version":"1.3.3"}}'
+    reply '{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"run-ledger","version":"1.3.4"}}'
     ;;
   tools/list)
     reply "$TOOL_LIST"

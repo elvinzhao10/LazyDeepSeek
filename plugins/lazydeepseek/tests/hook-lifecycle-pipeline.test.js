@@ -14,7 +14,7 @@ const fixtureRoot = path.join(__dirname, 'fixtures', 'hook-events');
 const contract = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'contracts', 'dsh-hook-consumers.v1.json'), 'utf8'));
 const temporaryProjects = [];
 
-// DeepSeek Harness's exactly-seven hook events and their LazyDeepSeek handler commands.
+// DeepSeek Harness's nine package declarations (seven bridged, two synthesized) and their LazyDeepSeek handler commands.
 const dshHandlers = Object.freeze({
   SessionStart: 'bash "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session-start.sh"',
   UserPromptSubmit: 'bash "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/user-prompt-submit.sh"',
@@ -23,6 +23,8 @@ const dshHandlers = Object.freeze({
   PostToolUse: 'bash "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/post-tool-use.sh"',
   PostToolUseFailure: 'bash "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/post-tool-use-failure.sh"',
   Stop: 'bash "${CLAUDE_PLUGIN_ROOT}/scripts/hooks/stop-gate.sh"',
+  SubagentStart: 'node "${CLAUDE_PLUGIN_ROOT}/scripts/native-subagent-event.js"',
+  SubagentStop: 'node "${CLAUDE_PLUGIN_ROOT}/scripts/native-subagent-event.js"',
 });
 
 test.after(() => {
@@ -69,7 +71,7 @@ function recordedEvents(projectDir) {
     .filter(file => file.endsWith('.json'));
 }
 
-test('declares exactly the seven DeepSeek Harness hook events with one handler command each', () => {
+test('declares the nine package event declarations with one handler command each', () => {
   // Given: the DeepSeek Harness hook declaration and the DeepSeek Harness hook-consumer contract.
   const declaration = readHooks();
   const events = Object.keys(declaration.hooks);

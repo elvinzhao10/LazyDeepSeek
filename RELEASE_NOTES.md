@@ -1,3 +1,31 @@
+# LazyDeepSeek v1.3.4 — runtime integrity and native adapter repairs
+
+## Eval-driven fixes
+
+The native bundle configures thirteen full-persona subagents and seven supported bridge events. Twenty commands forward arguments and unregister on unload. Profile/package-content runtime identities and receipts preserve foreign or shared files during generation and removal. Finalization requires all intended tasks done; persisted status is assessed separately from completion evidence.
+
+## Measured efficiency
+
+This maintenance release makes no new latency, token-saving or recall claim. Ledger append/compaction, learned routing and shared-core migration are deferred.
+
+## Host capability matrix
+
+Native configuration is checked against installed DSH 0.2.0-rc.2. Fresh-session acceptance, effective child settings and complete host removal remain pending. Only seven events bridge natively; additional synthesized observations do not create native host capabilities.
+
+## Migration and upgrade
+
+Use the receipt-aware upgrade route with an explicit project binding. Preserve project evidence and unknown host configuration. No credentials or production host settings are changed by package verification.
+
+## Known risks
+
+Native host acceptance is still separate from package readiness. Token/cost budgets are metadata, and pending approval results are persisted observations without a live approval queue. Shell loop policy beyond its configured global cap requires orchestrator enforcement.
+
+## Rollback
+
+Keep the prior local 1.3.3 checkout and ownership receipts; a prior public release is not established. Remove only receipt-owned, unmodified assets and use a fresh host session to verify removal.
+
+## Prior release notes
+
 # LazyDeepSeek v1.3.3 — the DeepSeek Harness port release
 
 **Status:** v1.3.3 release candidate. Package, lifecycle, language, and

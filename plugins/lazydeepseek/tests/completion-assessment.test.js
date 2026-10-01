@@ -8,7 +8,7 @@ const test = require('node:test');
 const { assessCompletion } = require('../scripts/completion-assessment');
 const EXPECTED_MUTATION_REASONS = require('../contracts/fixtures/v120/completion-assessment-reasons.json');
 
-const VERSION = '1.3.3';
+const VERSION = '1.3.4';
 const STATE = '.lazydeepseek/runs/run-1/completion-authority.json';
 const FIXTURE_ROOTS = new Set();
 test.after(() => { for (const root of FIXTURE_ROOTS) fs.rmSync(root, { recursive: true, force: true }); });
@@ -127,6 +127,9 @@ test('CLI validator and MCP status expose the same ready assessment', () => {
   // tools/call results carry MCP content blocks (dsh 0.2.0-rc.2 contract):
   // the payload rides JSON-escaped inside the text block.
   const reply = JSON.parse(mcp.stdout);
+  assert.equal(reply.result.isError ?? false, false);
+  assert.ok(Array.isArray(reply.result.content));
+  assert.equal(reply.result.content.length, 1);
   const block = reply.result.content.find((b) => b.type === 'text');
   const assessment = JSON.parse(block.text).completion_assessment;
   assert.deepEqual([assessment.status, assessment.reason_code], ['ready', 'READY']);

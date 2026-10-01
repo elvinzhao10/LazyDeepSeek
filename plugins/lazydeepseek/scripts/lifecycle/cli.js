@@ -111,7 +111,7 @@ function offboard(options, paths) {
     };
   }
   offboardProduct(paths, 'offboard-product');
-  return { code: 0, output: envelope(options, { status: 'removed', packageReadiness: { status: 'absent' } }) };
+  return { code: 0, output: envelope(options, { status: 'removed', packageReadiness: { status: 'absent' }, extra: { generated_runtime_removal: { status: 'pending', scope: 'separate-selected-profile-runtime-receipt', prerequisite: 'remove selected host bundle and observe rows/processes absent before native-runtime-offboard.mjs', preserved: ['host profiles', 'generated runtimes', 'shared caches', 'project evidence'] } } }) };
 }
 
 function status(options, paths) {

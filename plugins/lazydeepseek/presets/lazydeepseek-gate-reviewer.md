@@ -3,7 +3,7 @@ id: lazydeepseek-gate-reviewer
 name: lazydeepseek-gate-reviewer
 description: Use for the final approval gate: re-audit executor evidence, review reports, and QA artifacts before completion. Do not use for implementing fixes or routine code review.
 source: agents/lazydeepseek-gate-reviewer.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: max
 source_tools: [Read, Bash, TaskOutput]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-gate-reviewer preset (catalog)
+# lazydeepseek-gate-reviewer preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -36,7 +36,7 @@ Forbidden (leading rules from source):
 - **NEVER approve on counts alone** — check every intended change, criterion, adversarial class, artifact path.
 - **NEVER delegate** — final gate, no subagents.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-gate-reviewer

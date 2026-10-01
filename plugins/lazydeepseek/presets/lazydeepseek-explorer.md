@@ -3,7 +3,7 @@ id: lazydeepseek-explorer
 name: lazydeepseek-explorer
 description: Use when code must be located: files, patterns, conventions, and cross-layer structures, answered precisely from a read-only search. Do not use for writing, editing files, or external research.
 source: agents/lazydeepseek-explorer.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: low
 source_tools: [Read, Bash, TaskOutput]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-explorer preset (catalog)
+# lazydeepseek-explorer preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER browse the internet.** External research is the librarian's job.
 - **NEVER mutate the filesystem** in any way.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-explorer

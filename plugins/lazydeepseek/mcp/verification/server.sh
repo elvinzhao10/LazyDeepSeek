@@ -172,8 +172,9 @@ while IFS= read -r INPUT || [ -n "$INPUT" ]; do
   ID_JSON=$(python3 -c "import sys,json; d=json.load(sys.stdin); print(json.dumps(d.get('id',None)))" 2>/dev/null <<<"$INPUT" || echo "null")
 
 case "$METHOD" in
+  ping) reply '{}' ;;
   initialize)
-    reply '{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"verification","version":"1.3.3"}}' ;;
+    reply '{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"verification","version":"1.3.4"}}' ;;
   tools/list) reply "$TOOL_LIST" ;;
   tools/call)
     if ! python3 -c "import json, sys; params=json.load(sys.stdin).get('params'); assert isinstance(params, dict) and isinstance(params.get('name'), str) and isinstance(params.get('arguments', {}), dict)" 2>/dev/null <<<"$INPUT"; then
@@ -182,6 +183,10 @@ case "$METHOD" in
     fi
     TNAME=$(python3 -c "import sys,json; print(json.load(sys.stdin)['params']['name'])" 2>/dev/null <<<"$INPUT")
     ARGS=$(python3 -c "import sys,json; d=json.load(sys.stdin); print(json.dumps(d['params'].get('arguments',{})))" 2>/dev/null <<<"$INPUT")
+    if ! VALIDATION=$(python3 "$PLUGIN_ROOT/mcp/validate-tool.py" "$TOOL_LIST" "$TNAME" "$ARGS" 2>&1); then
+      invalid_params "$VALIDATION"
+      continue
+    fi
     RID=$(arg run_id)
     case "$TNAME" in
       discover_checks)
@@ -194,19 +199,20 @@ case "$METHOD" in
       run_check)
         resolve_run_state "$RID" >/dev/null || { err "invalid or unsafe run_id"; continue; }
         TID=$(arg_req task_id); EMSG=$(arg_req error_message)
-        CLASS=$(run_script loop/classify-failure.sh "$TID" "$EMSG")
+        if ! CLASS=$(run_script loop/classify-failure.sh "$TID" "$EMSG" 2>&1); then
+          err "$CLASS"
+          continue
+        fi
         reply_tool "$(result_object status ok classification "$CLASS")" ;;
       record_gate_result)
         resolve_run_state "$RID" >/dev/null || { err "invalid or unsafe run_id"; continue; }
         require_run_events "$RID" || { err "invalid or unsafe run_id"; continue; }
-        export STATE_RUN_DIR
-        GNAME=$(arg_req gate_name); GST=$(arg_req status); GRES=$(arg result); NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-        export RID GNAME GST GRES NOW
-        python3 -c "
-import json, os; cwd=os.environ['CWD']; rid=os.environ['RID']
-ev=dict(ts=os.environ['NOW'], run_id=rid, event='gate_result', gate=os.environ['GNAME'], status=os.environ['GST'], result=os.environ.get('GRES',''))
-with open(os.environ['STATE_RUN_DIR'] + '/events.jsonl','a') as f: f.write(json.dumps(ev)+'\n')
-"
+        GNAME=$(arg_req gate_name); GST=$(arg_req status); GRES=$(arg result)
+        PAYLOAD=$(result_object gate "$GNAME" status "$GST" result "$GRES")
+        if ! RECORDED=$(CWD="$CWD" bash "$PLUGIN_ROOT/scripts/state/append-event.sh" "$RID" gate_result "$PAYLOAD" 2>&1); then
+          err "$RECORDED"
+          continue
+        fi
         reply_tool "$(result_object status ok gate "$GNAME" gate_result "$GST")" ;;
       record_criterion_result)
         EVIDENCE_ROOT="$CWD/.lazydeepseek/evidence/runtime"
@@ -250,7 +256,7 @@ if os.path.exists(ef):
                     raise SystemExit(f"malformed events.jsonl line {line_number}")
 tasks=state.get('tasks',[])
 s=dict(run_id=rid, status=state.get('status','unknown'), task_count=len(tasks),
-    completed_tasks=sum(1 for t in tasks if t.get('status')=='completed'),
+    completed_tasks=sum(1 for t in tasks if t.get('status')=='done'),
     failed_tasks=sum(1 for t in tasks if t.get('status')=='failed'),
     event_count=len(events), gates=state.get('verification_gates',[]), updated_at=state.get('updated_at',''))
 print(json.dumps(s))

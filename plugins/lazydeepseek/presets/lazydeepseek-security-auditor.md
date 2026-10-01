@@ -3,7 +3,7 @@ id: lazydeepseek-security-auditor
 name: lazydeepseek-security-auditor
 description: Use as the security lane of a review: secrets, unsafe commands, permission issues, overreach, and injection risks in diffs. Do not use for style, naming, or architecture feedback without a security angle.
 source: agents/lazydeepseek-security-auditor.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: high
 source_tools: [Read, Bash, TaskOutput]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-security-auditor preset (catalog)
+# lazydeepseek-security-auditor preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER implement fixes** — report findings with severity and remediation.
 - **NEVER expose secrets** in report — summarize with lengths, hashes, non-sensitive prefixes.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-security-auditor

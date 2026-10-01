@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.3.3",
+  "version": "1.3.4",
   "identity": {
     "package": "lazydeepseek",
     "product": "LazyDeepSeek",
@@ -16,8 +16,8 @@
     "entry": "lib/index.mjs (prebuilt, committed; no install-time build scripts)"
   },
   "artifacts": {
-    "package.json": "d92bd9796c4b75b4496662c7e339aa742005920ae0069e0a381d1f9a9c12711b",
-    "cordis.patch.yml": "26f25882ecfd13f010e1f2ab3dc40ebfb54d5ff1b1c4583f8189a263531f7231"
+    "package.json": "11bd02f85e23837db18f2cef0e12f07d3f5e817e3dd0571058f4467a7af21bad",
+    "cordis.patch.yml": "318bd40ac56917fb9ed4153c7e7c793480e15e6347caccdf16d288ee2dcc88c5"
   },
   "payload": {
     "method": "Deterministic inventory: walk each payload root (skills, commands, agents, presets, hooks, mcp) recursively from the plugin root; reject symlinks and non-regular files; skip entries named .gitkeep, __pycache__ directories, and .pyc bytecode; include only regular files with st_nlink == 1. Record {path, sha256} per file with the POSIX path relative to plugins/lazydeepseek and sha256 over the file bytes. Append policy.files entries the same way. Sort records byte-wise (Buffer.compare) by path. file_count is the record count; inventory_sha256 is the SHA-256 of the UTF-8 JSON serialization of the sorted record array (JSON.stringify with default separators, no whitespace, insertion order = sorted path order).",
@@ -32,8 +32,8 @@
     "files": [
       ".mcp.json"
     ],
-    "file_count": 88,
-    "inventory_sha256": "9ccac90a59768f83edc3acaf8bbf76c39880c7198751eefb727c8f3d72cbcbb4"
+    "file_count": 89,
+    "inventory_sha256": "90a9159c36350ed8f92eb7366f12ea152326dcb46a8f625be19eddf2ae4e8092"
   },
   "default_routes": {
     "dsh": "dsh-plugin-git-sha"

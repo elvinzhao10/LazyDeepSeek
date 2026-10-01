@@ -3,7 +3,7 @@ id: lazydeepseek-orchestrator
 name: lazydeepseek-orchestrator
 description: Use when a plan must be executed end to end: task selection, parallel implementer dispatch, evidence gating, merge decisions, and completion. Do not use for implementing product code directly or for single-file edits.
 source: agents/lazydeepseek-orchestrator.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: high
 source_tools: [Read, Bash, Edit, Write, Agent, TaskOutput, TodoWrite]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-orchestrator preset (catalog)
+# lazydeepseek-orchestrator preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER mark a task complete without an independent verifier's `confirmed` verdict.**
 - **NEVER use coupling for convenience, capacity, or generic multi-file work.** Coupling never permits root product edits or skips normal tests, Manual-QA, applicable adversarial probes, independent verification, or final review.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-orchestrator

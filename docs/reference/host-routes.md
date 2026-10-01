@@ -1,8 +1,8 @@
 # Host routes
 
-## v1.3.3 candidate route and host readiness
+## v1.3.4 candidate route and host readiness
 
-This guide describes the v1.3.3 release candidate for the DeepSeek Harness
+This guide describes the v1.3.4 release candidate for the DeepSeek Harness
 (dsh) host. Native-host readiness remains pending per component until
 observed live. The git-spec install route (`dsh-plugin-git-sha`) is the
 default full-plugin route (GitHub-only distribution: the npm registry is not
@@ -90,11 +90,11 @@ once per session, so a hooks regeneration applies after a session restart.
   and so on) from the command sources. Slash-command registrations
   (20 `ctx.commands.register` rows in the shim) serve interactive adapters
   only; headless surfaces have no user command surface.
-- 13 agent presets as a catalog (`plugins/lazydeepseek/presets/`); the
-  persona/toolFilter row shape is proven but full row mounting is the
-  native-ize phase.
-- 7 hook events (5 bridged — `SessionStart`, `UserPromptSubmit`,
-  `PreToolUse`, `PostToolUse`, `Stop` — plus 2 synthesized inside the
+- 13 native `dsh-tool-subagent` rows in `cordis.patch.yml`, each with the full
+  canonical agent persona and native tool allowlist. Installed SDK schema
+  validation passes; fresh-session role dispatch remains pending.
+- 9 declared package events (7 bridged — `SessionStart`, `UserPromptSubmit`,
+  `PreToolUse`, `PostToolUse`, `Stop`, `SubagentStart`, `SubagentStop` — plus 2 synthesized inside the
   PreToolUse/PostToolUse handlers: PermissionRequest audit and
   PostToolUseFailure; both marked degraded).
 - 6 MCP stdio servers declared as `dsh-mcp-client` rows in
@@ -261,3 +261,36 @@ any run evidence you need) and, if fully uninstalling, the durable lifecycle
 tree under `LazySeries` in Application Support plus the generated
 `$DSH_HOME/lazydeepseek/` runtime dir. Never scan or guess host paths; report
 package removal separately from the user-observed host result.
+
+### Generated runtime ownership
+
+The shim provides `lazydeepseekRuntime` after generating one immutable runtime
+under `$DSH_HOME/lazydeepseek/runtimes/<identity>/`. The identity hashes the
+canonical package root, payload/shim/patch/package bytes, and selected profile
+directory. Consumer rows declare a dependency on this service; hooks and MCP
+launchers use that runtime's absolute paths. Same-version relocation, content
+changes, and different profiles create distinct directories. Existing runtime
+content must match its receipt exactly before reuse or removal. Unknown,
+modified, linked, legacy/shared artifacts and dependency caches are preserved.
+Copied skill bundles keep their relative resources. The ten command-only
+projections supplement existing native skill twins; all twenty service commands
+forward verbatim arguments in identified user messages. The fixture tests
+service handlers; the interactive UI and desktop-selected project binding need
+fresh-session acceptance.
+
+Before package offboard, remove the selected DSH host bundle and observe its
+rows and MCP processes absent. Then remove only its exact generated runtime:
+
+```bash
+node plugins/lazydeepseek/scripts/native-runtime-offboard.mjs \
+  "<absolute-runtime-directory>" --host-bundle-removed
+```
+
+The flag records the operator's prerequisite confirmation; it does not inspect
+private host settings or prove host removal itself. Durable package offboard
+removes its own package receipt assets and leaves host readiness pending.
+Project evidence, other profile runtimes, shared caches, credentials and unknown
+content remain outside generated-runtime removal. PreCompact, TaskCreated,
+TaskCompleted and Notification hooks are unsupported. Child start/stop records
+are advisory. Native Ralph's bounded rounds do not independently verify a
+report; completion still requires current independent verification evidence.

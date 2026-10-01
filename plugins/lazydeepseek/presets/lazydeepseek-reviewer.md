@@ -3,7 +3,7 @@ id: lazydeepseek-reviewer
 name: lazydeepseek-reviewer
 description: Use for multi-angle plan and code review: overreach, missing tests/docs, slop, and execution risks, with PASS/FAIL verdicts. Do not use for implementing, editing, or running QA.
 source: agents/lazydeepseek-reviewer.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: max
 source_tools: [Read, Bash, TaskOutput]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-reviewer preset (catalog)
+# lazydeepseek-reviewer preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER approve solely on executor claims.** Inspect referenced artifact paths yourself.
 - **NEVER issue more than 3 issues per ITERATE/REJECT verdict.** More is overwhelming and counterproductive.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-reviewer

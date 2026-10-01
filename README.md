@@ -6,10 +6,10 @@ LazyDeepSeek helps you use structured, evidence-based workflows in **DeepSeek Ha
 and guidance; a host is only considered ready after it is observed in a fresh
 session.
 
-The current local release candidate is v1.3.3. Publication and fresh host
+The current local release candidate is v1.3.4. Publication and fresh host
 activation remain pending.
 
-## v1.3.3
+## v1.3.4
 
 This candidate repairs versioned-cache readiness, restricted-role hooks,
 wrapped shell policy, and deferred MCP behavior. See [release notes](RELEASE_NOTES.md)
@@ -93,7 +93,7 @@ in DeepSeek Harness after reviewing the source.
    local development checkout). The npm registry is not used for this package.
    Installed plugins are enabled by default; no build scripts run because the
    prebuilt `lib/` is committed.
-   If you installed an earlier v1.3.3 candidate, reinstall the new pinned sha
+   If you installed an earlier v1.3.4 candidate, reinstall the new pinned sha
    into the same profile and restart the session so the regenerated hooks
    config is parsed fresh.
 3. You need **Node.js LTS 24 (recommended) or 22 (supported alternative)** —
