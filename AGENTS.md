@@ -9,7 +9,7 @@ separate authorities.
 
 ## Current documentation release: v1.3.4
 
-The current local package candidate is v1.3.4. The v1.3.4 tag and release asset are pending publication; fresh DeepSeek Harness host readiness requires direct observation.
+The package version is v1.3.4; fresh DeepSeek Harness host readiness requires direct observation.
 This guide names current
 human-facing boundaries only and does not
 promote package evidence to host proof. The route IDs are
@@ -69,14 +69,14 @@ route wins.
 
 If the host or operation is still ambiguous, ask one focused question and take
 no action. The supported host is **DeepSeek Harness**; detect it via
-**Settings → Plugins** (the Personal catalog and Manage installed view). Keep host
+the profile-scoped `dsh plugin` CLI and `dsh --version`. Keep host
 authority and proof boundaries unchanged.
 
 ## `onboard` protocol
 
 When the user types `onboard`:
 
-1. Confirm the host is DeepSeek Harness (open **Settings → Plugins**). Do not
+1. Confirm the host is DeepSeek Harness using `dsh --version`. Do not
    run a host route while the environment is ambiguous.
 2. Run `status` through the durable `launcher.js`. If absent, use the verified
    source entrypoint to run `onboard`; if blocked, preserve the state and report
@@ -90,8 +90,8 @@ When the user types `onboard`:
    and `bash plugins/lazydeepseek/scripts/lazydeepseek-plugin-doctor.sh`; these validate
    package manifests, skills, declarations, and local contracts without
    installing a host plugin, changing host settings, or contacting providers.
-   During development, `dsh plugins validate plugins/lazydeepseek` validates the
-   manifest without installing anything.
+   The pinned SDK schema and composed configuration checks validate the native
+   package adapter without claiming a loaded host session.
 5. Report **package readiness** separately. Package checks do not prove plugin
    discovery, command/skill loading, hooks, agents, SessionStart, or an MCP
    connection.
@@ -109,7 +109,7 @@ When the user types `onboard`:
    from package readiness; without observation, **HOST READINESS: PENDING**
    remains the only honest result.
 
-Route status is explicit: the DeepSeek Harness plugin marketplace (`dsh-plugin-git-sha`)
+Route status is explicit: the DeepSeek Harness pinned git-spec install (`dsh-plugin-git-sha`)
 is the **default full-plugin route**. The `manual-skills-mcp-fallback` is a
 recovery-only route. Neither label proves the current host session:
 without current observation, **HOST READINESS: PENDING**.
@@ -121,34 +121,26 @@ without current observation, **HOST READINESS: PENDING**.
 | **dsh plugin route (`dsh-plugin-git-sha`)** | The repo IS the npm-style package: root `package.json` (`dsh` key + exact `0.2.0-rc.2` peer pin), `cordis.patch.yml` rows, prebuilt `lib/`; payload under `plugins/lazydeepseek/` declares 19 skills, 20 commands, 13 agents, 7 bridged hook events (+2 synthesized), and 6 MCP rows. | `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git spec pinned; GitHub-only, the npm registry is not used) as a separate approved action, then confirm our rows with `dsh --profile <name> --dump-config` and verify a fresh session. |
 | **Manual fallback (`manual-skills-mcp-fallback`)** | Skills import/copy from `plugins/lazydeepseek/skills/` only, plus six individual manual local MCP connectors. | Use only after the full-plugin route is removed with receipt-scoped ownership. Observe one imported skill and all six connector statuses; commands, agents, and hooks remain excluded. |
 
-## DeepSeek Harness plugin marketplace handoff
+## DeepSeek Harness native plugin handoff
 
-DeepSeek Harness manages plugins through **Settings → Plugins**. The supported handoff is
-one action at a time. The public repository is the package source of truth;
-for an offline checkout, use the directory containing the local manifest
-(`<repo>/plugins`), not the nested plugin directory:
+DeepSeek Harness uses profile-scoped `dsh plugin` commands. There is no
+marketplace route. The repository root is the native npm-style package;
+`plugins/lazydeepseek` is its payload, not the native install root.
 
-1. **Action 1 — add marketplace:** after approval, open
-   **Settings → Plugins → Create → Add marketplace**, enter
-   `https://github.com/elvinzhao10/LazyDeepSeek` (or local `<repo>/plugins`), and wait for the catalog to
-   appear. Do not install yet.
-2. **Action 2 — install:** after a separate approval, open the **Personal**
-   tab, open the `lazydeepseek` plugin card, and click **Install**. Installed
-   plugins are enabled by default; enabling grants code-execution trust.
-   Wait for the install result.
-3. **Action 3 — observe:** as a later action, start a fresh session for the
-   project, then inspect one real skill (Skill tool / **Settings → Skills**,
-   Plugin Skills group) or command (a slash menu entry such as
-   `/lazy-ulw-plan`) plus all six MCP connections
-   (`plugin:lazydeepseek:<server>`).
+1. **Preflight:** check the pinned SDK `0.2.0-rc.2` and inspect
+   `dsh --profile <name> --dump-config` without mutation.
+2. **Install:** after approval, run
+   `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<full-sha>`.
+   Wait for installation before starting a fresh project session.
+3. **Observe:** verify one real skill, interactive command, native role and
+   hook, plus all six `mcp__<server>__*` connections in that session.
 
-**Updates:** bump the `version` in
-the root `package.json` and regenerate
-`plugins/lazydeepseek/contracts/dsh-route-contract.v1.json`, then remove and re-add the plugin →
-plugin details → **Update**.
+**Updates:** install the new pinned release commit into the same profile and
+restart the session. See [Host routes](docs/reference/host-routes.md) for the
+runtime identity and receipt-scoped removal contract.
 
 Do not combine these actions, pre-approve trust, or claim host readiness from
-marketplace JSON alone. Repeating safe package checks preserves existing
+package configuration alone. Repeating safe package checks preserves existing
 project configuration.
 
 ## Read-only preflight
@@ -219,8 +211,9 @@ plugin, or manually imported skills/connectors). Run durable `offboard` without
 after confirmation. Inspect the selected package receipt first, remove only
 exact receipt-owned local assets, and preserve unknown, modified, linked,
 caller-owned, project, and host-managed paths. For host state, use
-**Settings → Plugins → Manage installed → lazydeepseek → Uninstall** (or the
-disable toggle) and remove only connectors the user added. Report the package
+the profile-scoped `dsh plugin --profile <name> remove <installed-package-name>`
+command, with the exact name observed in that profile, and remove only
+connectors the user added. Report the package
 result separately from the user-observed host result in a new session; never
 scan or guess host directories and never remove another host's settings. An
 upgrade rollback must likewise remove only the selected release's
