@@ -1,8 +1,8 @@
 # Host routes
 
-## v1.3.3 candidate route and host readiness
+## v1.3.4 package route and host readiness
 
-This guide describes the v1.3.3 release candidate for the DeepSeek Harness
+This guide describes the v1.3.4 package for the DeepSeek Harness
 (dsh) host. Native-host readiness remains pending per component until
 observed live. The git-spec install route (`dsh-plugin-git-sha`) is the
 default full-plugin route (GitHub-only distribution: the npm registry is not
@@ -60,7 +60,8 @@ for this package. One approved action at a time:
 
 1. **Preflight (read-only):** confirm `dsh --version` reports the pinned
    `0.2.0-rc.2` and inspect the composed surface with
-   `dsh --profile <name> --dump-config`; the LazyDeepSeek rows must appear.
+   `dsh --profile <name> --dump-config`; record the current profile before adding the bundle. Confirm LazyDeepSeek
+   rows after installation, not as a prerequisite for a new install.
 2. **Install:** after a separate approval, run the profile install with the
    git spec `<repository URL>#<full-commit-sha>` (or the release tarball
    path, or `./lazydeepseek` for a local development checkout). The package
@@ -72,11 +73,11 @@ for this package. One approved action at a time:
    `mcp__status-dashboard__*`, `mcp__context-graph__*`,
    `mcp__code-intel__*`, `mcp__docs__*`).
 
-**Updates:** bump `version` in the root `package.json`, regenerate the route
-contract inventory, and reinstall the new pinned sha (or tarball) into the
-same profile. The generated runtime artifacts (`hooks.dsh.json`, MCP
-launchers, bundled skills under `$DSH_HOME/lazydeepseek/`) are rewritten on
-version change at the next plugin start; the hooks bridge parses its config
+**Updates:** reinstall the verified release SHA or archive into the same
+profile. Version bumps and route-contract regeneration are maintainer steps. The generated runtime artifacts (`hooks.dsh.json`, MCP
+launchers, bundled skills under `$DSH_HOME/lazydeepseek/`) are immutable receipt-owned entries under `runtimes/<identity>/`; identity
+includes package root/content and profile, so same-version changes get distinct
+directories; the hooks bridge parses its config
 once per session, so a hooks regeneration applies after a session restart.
 
 **Validation (development only):** the local-dir form
@@ -90,11 +91,11 @@ once per session, so a hooks regeneration applies after a session restart.
   and so on) from the command sources. Slash-command registrations
   (20 `ctx.commands.register` rows in the shim) serve interactive adapters
   only; headless surfaces have no user command surface.
-- 13 agent presets as a catalog (`plugins/lazydeepseek/presets/`); the
-  persona/toolFilter row shape is proven but full row mounting is the
-  native-ize phase.
-- 7 hook events (5 bridged — `SessionStart`, `UserPromptSubmit`,
-  `PreToolUse`, `PostToolUse`, `Stop` — plus 2 synthesized inside the
+- 13 native `dsh-tool-subagent` rows in `cordis.patch.yml`, each with the full
+  canonical agent persona and native tool allowlist. Installed SDK schema
+  validation passes; fresh-session role dispatch remains pending.
+- 9 declared package events (7 bridged — `SessionStart`, `UserPromptSubmit`,
+  `PreToolUse`, `PostToolUse`, `Stop`, `SubagentStart`, `SubagentStop` — plus 2 synthesized inside the
   PreToolUse/PostToolUse handlers: PermissionRequest audit and
   PostToolUseFailure; both marked degraded).
 - 6 MCP stdio servers declared as `dsh-mcp-client` rows in
@@ -103,6 +104,7 @@ once per session, so a hooks regeneration applies after a session restart.
   gate).
 - The native `ralph` loop tool enabled through an overlay row
   (`disabled: false`, `maxRounds: 64`); `workflow` is registered by dsh-base.
+  Reaching that round ceiling is not task completion or independent verification.
 
 Project memory is `AGENTS.md` (workspace scope); there is no
 rules-injection mechanism, no daemon/serve/prewarm CLI, and no
@@ -111,14 +113,14 @@ rules-injection mechanism, no daemon/serve/prewarm CLI, and no
 ### Telemetry and privacy
 
 DeepSeek Harness uploads session logs by default when the official API route
-is used, and OpenTelemetry defaults to feedback-only. The documented
-`lazydeepseek` profile ships both opt-outs applied: the session-log upload
-setting is set to disabled in the profile patch, and
-`DSH_TELEMETRY_MODE=DISABLED` is exported by the lifecycle and acceptance
-tooling. The plugin doctor warns whenever session-log upload is detected as
-enabled. LazyDeepSeek itself performs no network I/O: hooks, MCP servers,
-and scripts do pure local file I/O under the workspace `.lazydeepseek/`
-state directory and the `$DSH_HOME/lazydeepseek/` runtime dir.
+is used, and OpenTelemetry defaults to feedback-only. Historical acceptance profiles applied session-log opt-outs and
+`DSH_TELEMETRY_MODE=DISABLED`; the shipped plugin does not configure those
+host settings. Review the selected host's supported privacy controls before
+using a provider. The plugin doctor warns whenever session-log upload is detected as
+enabled. Package-only checks perform no network I/O. Explicit durable onboarding
+fetches the official origin; the docs MCP can query fixed npm/PyPI HTTPS
+endpoints, and optional provider/tooling operations may use the network. Local
+state and generated runtime ownership do not imply network isolation.
 
 ## Read-only preflight
 
@@ -218,7 +220,8 @@ host proof must be recorded separately.
   `plugins/lazydeepseek/` payload directory) and that the profile name in
   the command matches the installed profile.
 - **Hooks not firing after a config edit:** the bridge parses its config file
-  once per session and the generated artifacts rewrite on version change;
+  once per session; generated artifact identity changes with package
+  root/content or profile, including same-version changes;
   restart the session after any hooks regeneration.
 - **Update not offered:** the installed version is compared against the
   pinned spec; reinstall the new sha/tarball into the same profile rather
@@ -261,3 +264,36 @@ any run evidence you need) and, if fully uninstalling, the durable lifecycle
 tree under `LazySeries` in Application Support plus the generated
 `$DSH_HOME/lazydeepseek/` runtime dir. Never scan or guess host paths; report
 package removal separately from the user-observed host result.
+
+### Generated runtime ownership
+
+The shim provides `lazydeepseekRuntime` after generating one immutable runtime
+under `$DSH_HOME/lazydeepseek/runtimes/<identity>/`. The identity hashes the
+canonical package root, payload/shim/patch/package bytes, and selected profile
+directory. Consumer rows declare a dependency on this service; hooks and MCP
+launchers use that runtime's absolute paths. Same-version relocation, content
+changes, and different profiles create distinct directories. Existing runtime
+content must match its receipt exactly before reuse or removal. Unknown,
+modified, linked, legacy/shared artifacts and dependency caches are preserved.
+Copied skill bundles keep their relative resources. The ten command-only
+projections supplement existing native skill twins; all twenty service commands
+forward verbatim arguments in identified user messages. The fixture tests
+service handlers; the interactive UI and desktop-selected project binding need
+fresh-session acceptance.
+
+Before package offboard, remove the selected DSH host bundle and observe its
+rows and MCP processes absent. Then remove only its exact generated runtime:
+
+```bash
+node plugins/lazydeepseek/scripts/native-runtime-offboard.mjs \
+  "<absolute-runtime-directory>" --host-bundle-removed
+```
+
+The flag records the operator's prerequisite confirmation; it does not inspect
+private host settings or prove host removal itself. Durable package offboard
+removes its own package receipt assets and leaves host readiness pending.
+Project evidence, other profile runtimes, shared caches, credentials and unknown
+content remain outside generated-runtime removal. PreCompact, TaskCreated,
+TaskCompleted and Notification hooks are unsupported. Child start/stop records
+are advisory. Native Ralph's bounded rounds do not independently verify a
+report; completion still requires current independent verification evidence.

@@ -3,7 +3,7 @@ set -euo pipefail
 
 PLUGIN_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 export LAZYDEEPSEEK_MCP_MODE="${LAZYDEEPSEEK_MCP_MODE:-orchestrated}"
-EXPECTED_VERSION="1.3.3"
+EXPECTED_VERSION="1.3.4"
 REQUEST='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}'
 
 for server in run-ledger verification status-dashboard context-graph code-intel docs lsp; do
@@ -54,15 +54,15 @@ for relative in (
 contract = json.loads((root / "contracts/automatic-tooling-contract.v1.json").read_text(encoding="utf-8"))
 assert contract["provenance"]["release"] == "0.18.0", "shared protocol snapshot must remain byte-stable at 0.18.0"
 
-profile_config = pathlib.Path.home() / ".dsh" / "profiles"
-if profile_config.is_dir():
-    # dsh profiles carry the installed package manifest; version agreement is
-    # asserted when a profile-installed copy is present on this machine.
-    import os
-    for name in os.listdir(profile_config):
-        installed = profile_config / name / "node_modules" / "lazydeepseek" / "package.json"
-        if installed.is_file():
-            value = json.loads(installed.read_text(encoding="utf-8"))
-            assert value["version"] == expected, f"profile {name} reported {value['version']!r}"
+# The release verifier never inspects ambient host profiles. Model a profile
+# installation in a temporary DSH_HOME and validate the candidate manifest.
+import tempfile
+with tempfile.TemporaryDirectory(prefix="lazydeepseek-version-profile-") as host_home:
+    installed = pathlib.Path(host_home) / "profiles" / "candidate" / "node_modules" / "lazydeepseek" / "package.json"
+    installed.parent.mkdir(parents=True)
+    installed.write_bytes((root / "../../package.json").read_bytes())
+    value = json.loads(installed.read_text(encoding="utf-8"))
+    assert value["version"] == expected, f"isolated profile reported {value['version']!r}"
+
 PY
-printf 'v1.3.3 runtime version regression: PASS\n'
+printf 'v1.3.4 runtime version regression: PASS\n'

@@ -304,7 +304,7 @@ import sys
 
 status = json.loads(sys.argv[1])
 assert status.get("schema_version") == 2
-assert status.get("version") == "1.3.3"
+assert status.get("version") == "1.3.4"
 assert status.get("package_readiness") == {"status": "ready", "scope": "package"}
 assert status.get("host_readiness") == {"status": "pending"}
 hosts = status.get("hosts")
@@ -497,6 +497,8 @@ expected_events = [
     "PostToolUse",
     "PostToolUseFailure",
     "Stop",
+    "SubagentStart",
+    "SubagentStop",
 ]
 errors = []
 
@@ -567,9 +569,9 @@ if errors:
 print("ok")
 PY
 ); then
-    check "Hook command targets (7 executable)" ok
+    check "Hook command targets (9 executable)" ok
 else
-    check "Hook command targets (7 executable)" "${hook_result}"
+    check "Hook command targets (9 executable)" "${hook_result}"
 fi
 
 if mcp_result=$("$PYTHON_BIN" - "${PLUGIN_ROOT}" <<'PY' 2>&1

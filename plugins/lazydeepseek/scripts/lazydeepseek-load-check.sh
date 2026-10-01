@@ -78,9 +78,11 @@ EXPECTED_HOOK_EVENTS = (
     "PostToolUse",
     "PostToolUseFailure",
     "Stop",
+    "SubagentStart",
+    "SubagentStop",
 )
 EXPECTED_MCP_SERVERS = 6
-EXPECTED_VERSION = "1.3.3"
+EXPECTED_VERSION = "1.3.4"
 LAZYDEEPSEEK_HOOK_EVENTS = set(EXPECTED_HOOK_EVENTS)
 
 def result(state, label, detail):
@@ -318,19 +320,19 @@ if hooks is not None:
     else:
         result("PASS", "hooks", f"{len(events)}/{len(EXPECTED_HOOK_EVENTS)} DeepSeek Harness hook events")
 
-# Bridge template: the generated hooks.dsh.json carries exactly the five
+# Bridge template: the generated hooks.dsh.json carries exactly the seven
 # bridged events with lowercase dsh matcher subjects.
 bridge_template = load_json(os.path.join(root, "hooks", "hooks.dsh.json"), "bridge hooks template")
 if bridge_template is not None:
     bridged = bridge_template.get("hooks")
     bridged_events = sorted(bridged) if isinstance(bridged, dict) and bridged else []
-    expected_bridged = sorted(["SessionStart", "UserPromptSubmit", "PreToolUse", "PostToolUse", "Stop"])
+    expected_bridged = sorted(["SessionStart", "UserPromptSubmit", "PreToolUse", "PostToolUse", "Stop", "SubagentStart", "SubagentStop"])
     if bridged_events != expected_bridged:
         result("FAIL", "bridge template events", f"{bridged_events} != {expected_bridged}")
     elif bridge_template["hooks"]["PreToolUse"][0].get("matcher") != "write|edit|bash":
         result("FAIL", "bridge template matchers", "PreToolUse matcher must be lowercase 'write|edit|bash' (dsh tool names)")
     else:
-        result("PASS", "bridge template", "5 bridged events; lowercase matcher subjects")
+        result("PASS", "bridge template", "7 bridged events; lowercase matcher subjects")
 
 # Canonical typed MCP declarations: .mcp.json is the declaration source the
 # validators consume; the six dsh-mcp-client rows in cordis.patch.yml are the

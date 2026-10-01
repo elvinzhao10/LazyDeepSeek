@@ -3,7 +3,7 @@ id: lazydeepseek-planner
 name: lazydeepseek-planner
 description: Use when a vague or large request must become ONE decision-complete work plan under .lazydeepseek/plans/ before any implementation. Do not use for executing, implementing, or editing code.
 source: agents/lazydeepseek-planner.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: max
 source_tools: [Read, Bash, TaskOutput, WebSearch, WebFetch]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-planner preset (catalog)
+# lazydeepseek-planner preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER start execution.** "Just do it" from the user means "plan it" — execution requires explicit `/lazy-start-work`.
 - **NEVER plan blind.** Always run parallel context-gathering before drafting any plan section.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-planner

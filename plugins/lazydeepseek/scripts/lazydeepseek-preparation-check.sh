@@ -82,7 +82,7 @@ if [ ! -f "$PACKAGE_ROOT/package.json" ] \
     || [ ! -f "$PACKAGE_ROOT/lib/index.mjs" ] \
     || [ ! -f "$PLUGIN_ROOT/.mcp.json" ]; then
     printf '%s\n' \
-        'ERROR: LazyDeepSeek plugin root is unavailable; keep this script under the v1.3.3 plugins/lazydeepseek/scripts directory.' >&2
+        'ERROR: LazyDeepSeek plugin root is unavailable; keep this script under the v1.3.4 plugins/lazydeepseek/scripts directory.' >&2
     exit 1
 fi
 
@@ -110,7 +110,7 @@ release_root = Path(sys.argv[2]).resolve()
 project_root = Path(sys.argv[3]).resolve()
 home_root = Path(os.path.abspath(sys.argv[4]))
 package_root = Path(sys.argv[5]).resolve()
-version = "1.3.3"
+version = "1.3.4"
 server_names = (
     "run-ledger",
     "verification",
@@ -141,7 +141,7 @@ try:
         "dsh package manifest",
     )
     if work_manifest.get("name") != "lazydeepseek" or work_manifest.get("version") != version:
-        raise ValueError("dsh package manifest must identify lazydeepseek version 1.3.3")
+        raise ValueError("dsh package manifest must identify lazydeepseek version 1.3.4")
     if work_manifest.get("dsh", {}).get("bundle", {}).get("patch") != "./cordis.patch.yml":
         raise ValueError("package dsh.bundle.patch must be ./cordis.patch.yml")
     if work_manifest.get("peerDependencies", {}).get("@deepseek-ai/dsh") != "0.2.0-rc.2":
@@ -152,7 +152,7 @@ try:
         "dsh route contract",
     )
     if route_contract.get("version") != version:
-        raise ValueError("route contract must carry version 1.3.3")
+        raise ValueError("route contract must carry version 1.3.4")
     if route_contract.get("identity", {}).get("package") != "lazydeepseek":
         raise ValueError("route contract must identify the lazydeepseek package")
 

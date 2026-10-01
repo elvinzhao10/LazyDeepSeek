@@ -3,7 +3,7 @@ id: lazydeepseek-context-miner
 name: lazydeepseek-context-miner
 description: Use as the context-mining lane of the 5-agent review: git history, docs, and cross-references the other lanes missed. Do not use for correctness review or implementation.
 source: agents/lazydeepseek-context-miner.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: medium
 source_tools: [Read, Bash, TaskOutput]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-context-miner preset (catalog)
+# lazydeepseek-context-miner preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -36,7 +36,7 @@ Forbidden (leading rules from source):
 - **NEVER review the diff for code quality or correctness.** That is the Reviewer's responsibility.
 - **NEVER suggest fixes.** Your output is contextual findings only.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-context-miner

@@ -15,7 +15,7 @@ flowchart TB
 
 ## Policy is not execution
 
-Skills and commands describe how an agent should approach planning, debugging, review, or completion. Agent files narrow that guidance to a role. They do not gain authority merely by existing: a host must select and load them, and an agent must still perform the described work. On DeepSeek Harness, the host surfaces a skill through the Skill tool, a command as a slash menu entry, and an agent through the Agent dispatcher — each is a separate loading fact to observe.
+Skills and commands describe how an agent should approach planning, debugging, review, or completion. Agent files narrow that guidance to a role. They do not gain authority merely by existing: a host must select and load them, and an agent must still perform the described work. On DeepSeek Harness, the host surfaces a skill through the Skill tool, a command as a slash menu entry, and an agent through native role tools — each is a separate loading fact to observe.
 
 ## Execution is not proof
 

@@ -2,13 +2,13 @@
 
 This page explains the deployment boundary in code terms. A plugin package contains files a host may load; it does not contain the host's profile registry, session state, or connector process table.
 
-## v1.3.3 candidate route and host readiness
+## v1.3.4 package route and host readiness
 
-LazyDeepSeek v1.3.3 is prepared as a native DeepSeek Harness plugin: `plugins/lazydeepseek/`
-is the npm-style package boundary: the root `package.json` (`dsh` key plus the
+LazyDeepSeek v1.3.4 is prepared as a native DeepSeek Harness plugin: `plugins/lazydeepseek/`
+is the payload directory. The repository root is the npm-style package boundary: its `package.json` (`dsh` key plus the
 exact `0.2.0-rc.2` peer pin) and `cordis.patch.yml` rows, with the payload under
-`plugins/lazydeepseek/`. v1.3.2 remains the published stable
-release until the v1.3.3 release workflow completes. The supported route IDs
+`plugins/lazydeepseek/`. The public repository is the source for pinned-SHA
+installation; fresh host readiness still requires observation. The supported route IDs
 are `dsh-plugin-git-sha` (the full-plugin route) and `manual-skills-mcp-fallback` (recovery only, mutually exclusive
 with a full-plugin route in the same project). v2 records native mode as
 `invoke-documented`, `observe-only`, `descriptor-only`, or `unavailable`;
@@ -87,17 +87,19 @@ bash plugins/lazydeepseek/scripts/lazydeepseek-load-check.sh
 
 That is a package validation, not an install and not host proof.
 
-**Update flow:** bump the `version` in the root `package.json` and the
-regenerated route-contract inventory, then reinstall the new pinned sha (or
-tarball) into the same profile. Source edits are not hot reload; a catalog
-refresh is not a plugin update. The generated runtime artifacts
-(`$DSH_HOME/lazydeepseek/`) rewrite on version change at the next plugin
-start; the hooks bridge parses its config once per session, so restart the
+**Update flow:** select the published release commit or verified archive and
+reinstall that pinned spec into the same profile. Maintainers update versions
+and regenerate the route contract before publishing; users do not edit them. Source edits are not hot reload; a catalog
+refresh is not a plugin update. Generated hooks, launchers, and skills live in immutable receipt-owned
+`$DSH_HOME/lazydeepseek/runtimes/<identity>/` directories. Identity includes
+package location, runtime content, and profile, so a same-version change gets a
+separate directory; the hooks bridge parses its config once per session, so restart the
 session after a hooks regeneration.
 
 **Removal flow:** `dsh plugin --profile <name> remove lazydeepseek`, then
-remove the project `.lazydeepseek/` state directory (after archiving run
-evidence). See [Safe removal](08-safe-removal.md) for the receipt-scoped
+confirm the selected bundle rows and processes are absent in a fresh session.
+Preserve project `.lazydeepseek/` evidence by default; generated-runtime removal
+is a separate exact receipt-owned operation. See [Safe removal](08-safe-removal.md) for the receipt-scoped
 protocol.
 
 ## Host onboarding
@@ -139,12 +141,13 @@ The first channel supports claims about package contents. The second supports cl
 
 ## Delivery surfaces
 
-The **full plugin route** uses the DeepSeek Harness git-spec install flow above. The
-plugin manifest declares 19 skills, 20 commands, 13 agents, 7 hook events,
-and 6 MCP server declarations; DeepSeek Harness mounts skills via the Skill tool,
-commands as slash menu entries (`/lazy-ulw-plan`, `/lazy-start-work`, ...),
-agents through the Agent dispatcher, hooks automatically on 7 events, and MCP
-servers automatically from the plugin `.mcp.json`.
+The **full plugin route** uses the DeepSeek Harness git-spec install flow above. The root
+`cordis.patch.yml` composes 19 canonical skills plus ten command-only skill
+projections, twenty service command registrations, thirteen full-persona
+`dsh-tool-subagent` role tools, seven supported bridge events, and six MCP rows.
+PermissionRequest and PostToolUseFailure are degraded synthesized observations.
+Interactive command visibility and role dispatch require fresh-session proof;
+`.mcp.json` is the package/manual template, not the native registration source.
 
 The recovery-only **`manual-skills-mcp-fallback`** imports
 `plugins/lazydeepseek/skills/` only and adds six manual local MCP connectors; it
@@ -167,7 +170,7 @@ It prints `HOST_PREPARATION=not-applied`, `HOST_MUTATION=none`, and
 
 Automated package verification is defined by the product CI workflows (Ubuntu
 and macOS jobs). Supplied host observations are historical macOS reports; they
-do not establish a current v1.3.1 host session. A host that has not been
+do not establish a current v1.3.4 host session. A host that has not been
 observed in a fresh session remains **HOST READINESS: PENDING** regardless of
 package evidence.
 The fallback's exact non-mutating six-entry JSON — with absolute

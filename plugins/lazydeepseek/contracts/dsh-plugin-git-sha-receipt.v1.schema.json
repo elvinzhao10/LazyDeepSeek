@@ -17,7 +17,7 @@
         "manifest": { "const": "package.json" },
         "manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
         "plugin": { "const": "lazydeepseek" },
-        "version": { "const": "1.3.3" }
+        "version": { "const": "1.3.4" }
       }
     },
     "host": { "const": "dsh" },

@@ -6,18 +6,21 @@ LazyDeepSeek helps you use structured, evidence-based workflows in **DeepSeek Ha
 and guidance; a host is only considered ready after it is observed in a fresh
 session.
 
-The current local release candidate is v1.3.3. Publication and fresh host
-activation remain pending.
+The current package version is v1.3.4. Fresh host activation requires
+observation in the selected session.
 
-## v1.3.3
+## v1.3.4
 
-This candidate repairs versioned-cache readiness, restricted-role hooks,
-wrapped shell policy, and deferred MCP behavior. See [release notes](RELEASE_NOTES.md)
+This release repairs run integrity, snapshot recovery, MCP response envelopes,
+and native integration. It registers thirteen full-persona native roles, seven
+bridge events, and twenty argument-forwarding commands, with immutable
+profile/package-content runtime directories and receipt-aware removal. See [release notes](RELEASE_NOTES.md)
 for the changes and verification scope; fresh native-host testing is pending.
 
-## From v1.3.0: work the way you talk
+## Workflow guidance
 
-The published v1.3.0 release is a major workflow release. You no longer need
+The package carries the shared workflow design developed in the local v1.3.0 baseline;
+a prior public LazyDeepSeek release is not established. You no longer need
 to remember commands —
 the harness meets you at the level of your request.
 
@@ -93,26 +96,27 @@ in DeepSeek Harness after reviewing the source.
    local development checkout). The npm registry is not used for this package.
    Installed plugins are enabled by default; no build scripts run because the
    prebuilt `lib/` is committed.
-   If you installed an earlier v1.3.3 candidate, reinstall the new pinned sha
+   If you installed an earlier v1.3.4 candidate, reinstall the new pinned sha
    into the same profile and restart the session so the regenerated hooks
    config is parsed fresh.
 3. You need **Node.js LTS 24 (recommended) or 22 (supported alternative)** —
    the lifecycle also accepts Node.js LTS 20 for compatibility — and **Git**
    on `PATH` for the local
    launchers. Try it in a new task: skills appear via the Skill tool
-   (and under **Settings → Skills**, Plugin Skills group); commands appear as
-   slash menu entries such as `/lazy-ulw-plan`.
+   when the model invokes a loaded skill; registered commands may appear as
+   interactive entries such as `/lazy-ulw-plan` where supported; observe them
+   rather than inferring visibility from registration.
 
 ## Native onboarding
 
 `bash scripts/install.sh` verifies Node.js LTS 20+ and
-Git, validates both marketplace manifests, runs the package load-check and
-plugin doctor, and prints the current DeepSeek Harness UI steps with the GitHub URL
-(copied to the clipboard on macOS) and the local market root. With
+Git, validates the root dsh bundle manifest and route contract, runs the package load-check and
+plugin doctor, and prints the profile-scoped `dsh plugin` install steps with
+the GitHub URL (copied to the clipboard on macOS). With
 `--project <absolute-project-root>` it additionally runs the durable lifecycle
 onboard. Inside DeepSeek Harness, the `/lazy-onboard`, `/lazy-update`, and
 `/lazy-offboard` commands walk onboarding, update, and receipt-safe removal
-step by step. The marketplace steps above stay canonical, and package checks
+step by step. The git-spec profile steps above stay canonical, and package checks
 never prove host readiness — the script ends with **HOST READINESS: PENDING**
 until a fresh session shows one real skill/command and all six MCP
 connections.
@@ -132,7 +136,7 @@ installation; after that, use the stable launcher for `update`, `status`, and
 safe `offboard`:
 
 ```text
-node "<install-root>/LazyDeepSeek/launcher.js" status
+node "<install-root>/LazyDeepSeek/launcher.js" status --project "<absolute-project-root>"
 ```
 
 ## What “ready” means
@@ -157,8 +161,8 @@ The release verifier runs classified shell regressions serially, all package
 Pick one route per project:
 
 - **DeepSeek Harness git-spec install** (`dsh-plugin-git-sha`) is the default
-  full-plugin route: skills, commands, agents, 7 hook events, and 6 MCP
-  declarations load together from one install.
+  full-plugin route: skills, commands, native role tools, seven bridged hook events, and six MCP
+  rows are composed from one bundle; fresh-session loading is observed separately.
 
 Skills plus manual MCP connectors are a recovery-only
 (`manual-skills-mcp-fallback`) option. Do not run that fallback beside a
@@ -185,7 +189,7 @@ memorize. The dual-entry routing introduced in v1.3.0 picks one of these for you
 
 LazyDeepSeek does not automate credentials, OAuth values, private registries, or
 trust settings. It asks for approval before any host-managed action and keeps
-safe package checks separate from marketplace and connector changes.
+safe package checks separate from native plugin installation and connector changes.
 
 ## Package inventory
 
@@ -194,7 +198,7 @@ safe package checks separate from marketplace and connector changes.
 | Skills | 19 | Host-facing workflow policies for planning, execution, review, and verification. |
 | Commands | 20 | Named host entry points (slash menu entries) for those workflow policies. |
 | Agents | 13 | Specialist role definitions for planning, implementation, QA, security, and context. |
-| Hook events | 7 | Advisory local-policy hooks on DeepSeek Harness's SessionStart, UserPromptSubmit, PreToolUse, PermissionRequest, PostToolUse, PostToolUseFailure, and Stop events. |
+| Hook events | 9 declared / 7 bridged | SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop, SubagentStart, SubagentStop bridge natively. PermissionRequest and PostToolUseFailure are degraded synthesis; child events are advisory. |
 | MCP declarations | 6 | Local services for ledger, verification, status, context, code intelligence, and docs. |
 
 ## Technical reference and evaluation
@@ -207,9 +211,8 @@ For a capability-by-capability comparison with the original LazyZCodex design,
 including what LazyDeepSeek implements and where it intentionally differs, see
 [lazydeepseek-evaluation.md](lazydeepseek-evaluation.md).
 
-LazyDeepSeek is primarily inspired by LazyZCodex
-([upstream project](https://github.com/code-yeongyu/@@lazydeepseekx@@)). Its
-relationship to OmO and upstream sources is recorded in [NOTICE](NOTICE).
+LazyDeepSeek is primarily inspired by LazyCodex. Attribution and its
+relationship to OmO are recorded in [NOTICE](NOTICE).
 It is an independent implementation and does not require LazyZCodex or OmO at
 runtime.
 
@@ -217,7 +220,7 @@ runtime.
 
 - [Install and verify a host](docs/03-install-and-host-verification.md)
 - [Historical v1.3.0 route](docs/v1.3.0-supported-route.md)
-- [Published v1.3.0 release notes](docs/v1.3.0-release-notes.md)
+- [Historical local v1.3.0 release notes](docs/v1.3.0-release-notes.md)
 - [Workflow playbooks — how the modes pick work](docs/04-workflow-playbooks.md)
 - [Evidence and completion — what "done" proves](docs/05-evidence-and-completion.md)
 - [Host routes and recovery](docs/reference/host-routes.md)

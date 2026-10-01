@@ -26,9 +26,9 @@ Scripts and MCP endpoints operate only on their defined package/project
 boundaries. Host state is deliberately outside those boundaries. On DeepSeek Harness,
 the harness primitives map to native surfaces: project memory in `AGENTS.md`
 (init-deep), planning via the `lazy-ulw-plan` skill/command, execution via
-`lazy-start-work` with Agent-tool subagents, review via parallel Agent
-dispatch (5 lanes), per-agent `model`/`thoughtLevel` routing, the 7 hook
-events, and the 6 auto-connected local MCP servers. The
+`lazy-start-work` with Agent-tool subagents, review through five policy lanes, thirteen native role tools with inherited
+host model/reasoning defaults, seven bridged hook events, and six MCP rows
+whose current connections require observation. The
 [DeepSeek Harness integration reference](reference/dsh-integration.md) is the
 concise map.
 

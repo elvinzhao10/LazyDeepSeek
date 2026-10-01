@@ -13,7 +13,7 @@ acceptance criteria: observable pass/fail conditions
 proof surface: test, CLI, API, browser, or host session
 ```
 
-`skills/lazy-ulw-plan/` teaches the planning role to preserve uncertainty as a decision rather than silently inventing it. It runs as a slash menu entry (`/lazy-ulw-plan`) or a Skill-tool invocation in DeepSeek Harness, producing a technical design/spec for the stated goal. `skills/lazy-start-work/` assumes that a plan has already identified the acceptance criteria and delegates implementation through DeepSeek Harness's Agent dispatcher. This is why planning and execution are separate files and separate host actions.
+`skills/lazy-ulw-plan/` teaches the planning role to preserve uncertainty as a decision rather than silently inventing it. It runs as a slash menu entry (`/lazy-ulw-plan`) or a Skill-tool invocation in DeepSeek Harness, producing a technical design/spec for the stated goal. `skills/lazy-start-work/` assumes that a plan has already identified the acceptance criteria and delegates implementation through DeepSeek Harness's native role tools. This is why planning and execution are separate files and separate host actions.
 
 ## From request to records
 

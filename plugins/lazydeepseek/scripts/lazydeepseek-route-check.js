@@ -15,7 +15,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const EXPECTED_VERSION = '1.3.3';
+const EXPECTED_VERSION = '1.3.4';
 const MCP_SERVERS = ['run-ledger', 'verification', 'status-dashboard', 'context-graph', 'code-intel', 'docs'];
 
 function fail(code, message) {

@@ -3,7 +3,7 @@ id: lazydeepseek-verifier
 name: lazydeepseek-verifier
 description: Use when an implementer's DoneClaim must be independently confirmed from artifacts: reproduce tests, Manual-QA, adversarial probes, and return a verdict with confidence. Do not use for implementing or repairing code.
 source: agents/lazydeepseek-verifier.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: max
 source_tools: [Read, Bash, Write, TaskOutput]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-verifier preset (catalog)
+# lazydeepseek-verifier preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER trust the executor's evidence without independent reproduction.** A passing test stdout in the claim is not enough; run the test yourself.
 - **NEVER accept a DoneClaim that lacks artifact paths.** Missing or empty evidence is automatic `needs-fix`.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-verifier

@@ -5,11 +5,10 @@ It is not evidence that a specific DeepSeek Harness session has loaded the
 plugin. Automated package checks run in CI on Ubuntu and macOS; host readiness
 requires a separate current-session observation.
 
-## Current documentation status: v1.3.1 published
+## Current documentation status: v1.3.4 package
 
-The latest published stable release is v1.3.2; native-host readiness remains
-pending. The published stable v1.3.1 documentation targets the DeepSeek Harness host. The
-DeepSeek Harness plugin marketplace route (`dsh-plugin-git-sha`)
+The public repository contains the current v1.3.4 package.
+Current native-host acceptance remains pending. The DeepSeek Harness git-spec route (`dsh-plugin-git-sha`)
 is the default full-plugin route. The `manual-skills-mcp-fallback` route is
 recovery-only and mutually exclusive with the full-plugin route for one
 project. Package readiness does not prove a live host.
@@ -22,16 +21,16 @@ v2 receipts use `invoke-documented`, `observe-only`, `descriptor-only`, and
 ## Project purpose and attribution
 
 LazyDeepSeek is a learning project for evidence-led agent workflows. It is
-primarily inspired by LazyZCodex
-([upstream project](https://github.com/code-yeongyu/@@lazydeepseekx@@)). OmO upstream
+primarily inspired by LazyCodex; upstream attribution is recorded in [NOTICE](NOTICE). OmO upstream
 attribution is recorded in [NOTICE](NOTICE). The package is an independent
 implementation and does not require LazyZCodex or OmO at runtime.
 
 ## Implemented package behavior
 
-LazyDeepSeek packages 19 `lazy-` skills, 20 command workflows, 13 agents, 7
-hook-event declarations (`SessionStart`, `UserPromptSubmit`, `PreToolUse`,
-`PermissionRequest`, `PostToolUse`, `PostToolUseFailure`, `Stop`), and six
+LazyDeepSeek packages 19 `lazy-` skills, 20 command workflows, 13 full-persona native role tools, 9
+hook-event declarations (7 bridged: SessionStart, UserPromptSubmit, PreToolUse,
+PostToolUse, Stop, SubagentStart, SubagentStop; PermissionRequest and
+PostToolUseFailure are degraded synthesis), and six
 local MCP declarations: `run-ledger`, `verification`, `status-dashboard`,
 `context-graph`, `code-intel`, and `docs`. The package checks validate
 manifests, component inventory, JSON, executable MCP scripts, internal
@@ -84,7 +83,7 @@ a target manifest, lockfile, global tool, or host configuration.
 | Surface | Package evidence | Required user observation |
 |---|---|---|
 | dsh plugin route (`dsh-plugin-git-sha`) | Root `package.json` (`dsh` key), `cordis.patch.yml` rows, prebuilt `lib/`, local checks, and six MCP rows. | Install via `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git-spec pinned; the npm registry is not used for this package), then confirm the lazydeepseek rows in `dsh --profile <name> --dump-config` and a LazyDeepSeek skill/command plus MCP status in a new session. |
-| Manual fallback (`manual-skills-mcp-fallback`) | `plugins/lazydeepseek/skills/` is the verified no-package-manager import source. | Import skills through **Settings → Skills** and add each compatible MCP connector manually in Settings. |
+| Manual fallback (`manual-skills-mcp-fallback`) | `plugins/lazydeepseek/skills/` is the verified no-package-manager import source. | Copy skills into the selected project skill directory and add six receipt-scoped local MCP profile rows; observe each connection. |
 
 The copied repository is not a verified DeepSeek Harness plugin installer. Package
 readiness cannot prove SessionStart, hook execution, marketplace activation, a
@@ -157,8 +156,7 @@ and release-evidence vocabulary.
 
 ## Host-specific exclusions
 
-- **Host integration:** DeepSeek Harness uses its plugin marketplace flow
-  (Settings → Plugins); the recovery-only fallback uses local skills
+- **Host integration:** DeepSeek Harness uses its profile-scoped `dsh plugin` CLI flow; the recovery-only fallback uses local skills
   with manual connectors.
 - **State/path:** tooling roots are package receipt-owned; host plugin
   locations, host MCP entries, workspace host configuration, and credentials
@@ -169,7 +167,7 @@ and release-evidence vocabulary.
 
 ## Known unverified host behavior
 
-Live plugin discovery, marketplace behavior, hook execution, SessionStart, and
+Live plugin discovery, interactive command exposure, hook execution, SessionStart, and
 MCP connection remain user-observed host behavior. DeepSeek Harness plugin loading from a
 copied repository is not verified; the manual import fallback intentionally
 requires manual MCP configuration.
@@ -203,7 +201,7 @@ comparison, not a compatibility or drop-in replacement claim.
 | Hooks and lifecycle | Declared hook events plus structured pre/post-tool policy scripts. | Hooks are host-governed and are not an enforcement boundary until the host reports them loaded. |
 | Local development tooling | Local-first ripgrep, ast-grep, LSP, repository-native verification, and optional CodeGraph lifecycle. | Remote Context7 and grep_app remain explicit opt-in exports; filesystem and Playwright are not bundled local MCP servers. |
 | Diagnostics and removal | Load-check, doctor, aggregate verifier, receipts, and conservative removal. | Results establish package readiness, not marketplace activation, live session behavior, or MCP connection. |
-| Installation model | A self-contained DeepSeek Harness plugin package with a host marketplace route. | It intentionally does not reproduce the reference harness's installer, managed global configuration, provisioning, model routing, or automatic host mutation. |
+| Installation model | A self-contained DeepSeek Harness plugin package with a profile-scoped git-spec route. | It intentionally does not reproduce the reference harness's installer, managed global configuration, provisioning, model routing, or automatic host mutation. |
 
 The upstream project is a useful architectural reference, but LazyDeepSeek keeps a
 smaller ownership model: package-owned assets are verifiable and removable;

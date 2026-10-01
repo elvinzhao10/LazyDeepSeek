@@ -4,9 +4,9 @@ LazyDeepSeek deliberately aligns policy and package safety across hosts while ke
 
 ## Onboarding baseline
 
-## Published v1.3.1 evidence boundary
+## v1.3.4 package evidence boundary
 
-The published v1.3.1 documentation targets the **DeepSeek Harness** host; no current
+The current v1.3.4 package targets the **DeepSeek Harness** host; no current
 host activation is claimed. The DeepSeek Harness git-spec install
 route (`dsh-plugin-git-sha`) is the default full-plugin route. The
 `manual-skills-mcp-fallback` route is recovery-only and mutually exclusive
@@ -50,7 +50,7 @@ route** through the `dsh plugin` verb set. The
 
 | Route | Safe package artifact | Required host proof |
 | --- | --- | --- |
-| **dsh plugin route (`dsh-plugin-git-sha`)** | Root `package.json` (`dsh` key + exact peer pin), `cordis.patch.yml` rows, prebuilt `lib/`; payload declares 19 skills, 20 commands, 13 agents, 5 bridged hook events (+2 synthesized), and 6 MCP rows. Install via `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git-spec pinned; GitHub-only distribution, the npm registry is not used for this package); inspect with `dsh --profile <name> --dump-config`. | A fresh session showing one real skill/command and all six MCP connections. |
+| **dsh plugin route (`dsh-plugin-git-sha`)** | Root `package.json` (`dsh` key + exact peer pin), `cordis.patch.yml` rows, prebuilt `lib/`; payload declares 19 skills, 20 commands, 13 agents, 7 bridged hook events (+2 synthesized), and 6 MCP rows. Install via `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git-spec pinned; GitHub-only distribution, the npm registry is not used for this package); inspect with `dsh --profile <name> --dump-config`. | A fresh session showing one real skill/command and all six MCP connections. |
 | **Manual fallback (`manual-skills-mcp-fallback`)** | Import/copy `plugins/lazydeepseek/skills/` only, then configure each of six local MCP connectors manually. | Use only after receipt-scoped removal of the full-plugin route. Observe one imported skill and each connector; commands, agents, and hooks remain excluded. |
 
 Before requesting that host mutation, run this read-only preflight from the
@@ -69,22 +69,23 @@ proves host readiness.
 
 DeepSeek Harness has no rules-injection mechanism, no daemon/serve/prewarm CLI, and no
 IDE plan directories. Project memory is `AGENTS.md` (workspace scope, plus
-`~/.dsh/AGENTS.md` for user scope), and model routing is per-agent
-`model`/`thoughtLevel` frontmatter. LazyDeepSeek maps its harness primitives onto
+`~/.dsh/AGENTS.md` for user scope), Native role rows inherit host model/reasoning defaults; canonical agent
+frontmatter is policy metadata and does not apply effective child settings. LazyDeepSeek maps its harness primitives onto
 the native surfaces DeepSeek Harness actually provides:
 
 | Harness primitive | LazyDeepSeek asset | DeepSeek Harness native surface |
 | --- | --- | --- |
 | Project memory | `lazy-init-deep` + managed AGENTS.md block | `AGENTS.md` (workspace and user scope) |
 | Planning | `lazy-ulw-plan` skill + command | Slash menu entry / Skill-tool invocation |
-| Execution | `lazy-start-work` with Agent-tool subagents | Agent dispatcher |
-| Review | `lazy-review-work` five lanes | Parallel Agent dispatch (5 lanes) |
-| Model routing | Agent frontmatter | `model` / `thoughtLevel` per agent |
-| Automation | `hooks/hooks.json` | 7 hook events: 5 bridged (`SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`) + 2 synthesized inside the PreToolUse/PostToolUse handlers (PermissionRequest audit, PostToolUseFailure — both degraded); the bridge reads `additionalContext` only from `hookSpecificOutput`, and an advisory Stop reminder does not continue the turn (only exit-2 deny steers) |
+| Execution | `lazy-start-work` plus thirteen full-persona roles | `dsh-tool-subagent` role tools with native allowlists; live dispatch pending |
+| Review | `lazy-review-work` five policy lanes | Role-tool dispatch where the host supports it; five lanes are workflow guidance |
+| Model routing | Frontmatter and read-only recommendations | Host defaults inherited; no effective child override established |
+| Automation | `hooks/hooks.json` | 9 declared package events: 7 bridged (`SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`, `SubagentStart`, `SubagentStop`) + 2 synthesized inside the PreToolUse/PostToolUse handlers (PermissionRequest audit, PostToolUseFailure — both degraded); the bridge reads `additionalContext` only from `hookSpecificOutput`, and an advisory Stop reminder does not continue the turn (only exit-2 deny steers) |
 | Local services | `cordis.patch.yml` MCP rows | 6 MCP servers as `dsh-mcp-client` stdio rows, surfaced as `mcp__<server>__<tool>`, gated by `LAZYDEEPSEEK_MCP_MODE` (unset = `orchestrated`); tools must return MCP content blocks |
 
 Commands run inside a DeepSeek Harness session as natural language or through the slash
-menu; LazyDeepSeek mounts skills, and command files surface as slash menu entries
+menu; LazyDeepSeek mounts skills, and twenty service registrations forward exact arguments and unregister on unload;
+interactive adapters may expose slash menu entries
 named `lazy-ulw-plan` and so on. Skill auto-triggering is decided by the model
 from each skill's `name`/`description` frontmatter via the Skill tool.
 

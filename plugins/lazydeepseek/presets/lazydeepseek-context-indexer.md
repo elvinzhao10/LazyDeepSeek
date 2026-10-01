@@ -3,7 +3,7 @@ id: lazydeepseek-context-indexer
 name: lazydeepseek-context-indexer
 description: Use when .lazydeepseek/context/ must be built or refreshed: project map, discovered commands, and structure index. Do not use for product-code changes or plan review.
 source: agents/lazydeepseek-context-indexer.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: low
 source_tools: [Read, Bash, TaskOutput]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-context-indexer preset (catalog)
+# lazydeepseek-context-indexer preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER write outside** `.lazydeepseek/context/`.
 - **NEVER delete or overwrite user files** beyond `.lazydeepseek/context/`.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-context-indexer

@@ -3,8 +3,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const RELEASE_VERSION = '1.3.3';
-const PREVIOUS_VERSION = '1.3.2';
+const RELEASE_VERSION = '1.3.4';
+const PREVIOUS_VERSION = '1.3.3';
 const VERSION_JSON_PATHS = [
   ['package.json', ['version']],
   ['plugins/lazydeepseek/contracts/dsh-route-contract.v1.json', ['version']],
@@ -79,7 +79,9 @@ function classify(root) {
   else {
     const notes = fs.readFileSync(notesPath, 'utf8');
     if (!notes.startsWith(`# ${'LazyDeepSeek'} v${RELEASE_VERSION}`)) failures.push('CURRENT_VERSION_DRIFT_TEXT RELEASE_NOTES.md:1');
-    const currentNotes = notes.split('## Prior release notes')[0];
+    // Historical headings must not satisfy a missing current-release section.
+    // Accept renamed Prior separators and stop at the next top-level document.
+    const currentNotes = notes.split(/^## Prior\b.*$/m)[0].split(/\n# /)[0];
     for (const section of REQUIRED_RELEASE_NOTE_SECTIONS) {
       if (!currentNotes.includes(`## ${section}`)) failures.push(`MISSING_RELEASE_NOTE_SECTION ${section}`);
     }

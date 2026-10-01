@@ -3,7 +3,7 @@ id: lazydeepseek-qa-executor
 name: lazydeepseek-qa-executor
 description: Use when the application must actually be run: execute test scenarios and capture real-surface evidence artifacts. Do not use for speculative analysis or product-code implementation.
 source: agents/lazydeepseek-qa-executor.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: medium
 source_tools: [Read, Bash, TodoWrite]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-qa-executor preset (catalog)
+# lazydeepseek-qa-executor preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER write outside** `.lazydeepseek/evidence/` or the specified evidence directory.
 - **NEVER accept skipped, inferred, partial, or not_applicable adversarial cases** — if a case cannot run, return failure with the blocker and missing prerequisite.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-qa-executor

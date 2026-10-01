@@ -3,7 +3,7 @@ id: lazydeepseek-implementer
 name: lazydeepseek-implementer
 description: Use for executing one bounded, atomic task from a plan: the smallest correct change, self-verification, evidence capture, and a DoneClaim. Do not use for orchestration, planning, or code review.
 source: agents/lazydeepseek-implementer.md
-phase: catalog (phase-A; rows mount in the native-ize phase)
+phase: mounted-native (package configuration; live dispatch pending)
 reasoning: high
 source_tools: [Read, Bash, Edit, Write, TodoWrite]
 toolFilter:
@@ -11,7 +11,7 @@ toolFilter:
   unmapped_source_tools: []
 ---
 
-# lazydeepseek-implementer preset (catalog)
+# lazydeepseek-implementer preset (native row)
 
 Persona summary derived from the agent source; the phase-B row mounts this as
 a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
@@ -37,7 +37,7 @@ Forbidden (leading rules from source):
 - **NEVER revert or modify changes you did not make.** Report conflicts in the DoneClaim.
 - **NEVER claim completion without captured evidence artifacts.** A claim without an artifact path is invalid.
 
-## Phase-B row template
+## Native row schema example
 
 ```yaml
 - id: tool-subagent-lazydeepseek-implementer
