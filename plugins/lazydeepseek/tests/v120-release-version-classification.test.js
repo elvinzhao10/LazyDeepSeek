@@ -40,7 +40,12 @@ test('classifier rejects a current 1.3.0 claim even when migration wording is pr
 
 for (const [name, relativePath, transform, failure] of [
   ['current 1.3.1 drift', 'README.md', text => `${text}\nCurrent release version is 1.3.1.\n`, 'CURRENT_VERSION_DRIFT_TEXT'],
-  ['missing release-note section', 'RELEASE_NOTES.md', text => text.replace('## Rollback', '## Recovery'), 'MISSING_RELEASE_NOTE_SECTION'],
+  ['missing release-note section', 'RELEASE_NOTES.md', text => {
+    assert.match(text, /^## Rollback[ \t]*$/m, 'fixture needs the current Rollback heading');
+    const changed = text.replace(/^## Rollback[ \t]*$/m, '## Recovery');
+    assert.notEqual(changed, text, 'missing-section mutation must change the fixture');
+    return changed;
+  }, 'MISSING_RELEASE_NOTE_SECTION Rollback'],
   ['package/runtime mismatch', 'package.json', text => text.replace('"version": "1.3.4"', '"version": "1.3.0"'), 'CURRENT_VERSION_DRIFT'],
   ['superseded versioned release note', 'RELEASE_NOTES.md', text => text, 'VERSIONED_RELEASE_NOTE_PRESENT'],
 ]) {
@@ -51,3 +56,21 @@ for (const [name, relativePath, transform, failure] of [
     finally { fs.rmSync(root, { recursive: true, force: true }); }
   });
 }
+
+// Renaming the history separator cannot make an old section current evidence.
+test('historical section cannot mask a missing current heading after separator rename', () => {
+  const root = mutate('RELEASE_NOTES.md', text => {
+    const changed = text.replace(/^## Rollback[ \t]*$/m, '## Recovery')
+      .replace(/^## Prior\b.*$/m, '## Archived local notes');
+    assert.notEqual(changed, text);
+    assert.match(changed, /^## Rollback[ \t]*$/m, 'historical Rollback must remain as the masking probe');
+    return changed;
+  });
+  try {
+    const result = spawnSync(process.execPath, [path.resolve(__dirname, '../scripts/release-version-classifier.js'), root], { encoding: 'utf8' });
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.ok(JSON.parse(result.stdout).failures.includes('MISSING_RELEASE_NOTE_SECTION Rollback'));
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
