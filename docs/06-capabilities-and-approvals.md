@@ -3,10 +3,9 @@
 LazyDeepSeek is local-first. Its automatic broker selects the lightest eligible
 capability for the task and keeps that selection task-scoped and nonpersistent.
 It does not write target dependencies, lockfiles, host configuration, or a
-host MCP registration. Model routing recommends a task class to DeepSeek Harness's
-per-agent `model` and `thoughtLevel` frontmatter (in
-`agents/lazydeepseek-*.md`), but the package does not reconfigure host-side model
-selection. See [the model-routing guide](reference/model-routing.md)
+host MCP registration. Model routing returns task-class recommendations. Native role rows inherit
+host model/reasoning defaults; agent frontmatter is advisory metadata and does
+not reconfigure effective child settings. See [the model-routing guide](reference/model-routing.md)
 for catalog, custom-model, cost, and host-observation boundaries.
 
 ## Capability ladder

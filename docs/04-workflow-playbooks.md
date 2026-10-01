@@ -11,9 +11,9 @@ before assuming a command is available.
 | --- | --- | --- |
 | Need a map of an unfamiliar repository | `lazy-init-deep` | Hierarchical project memory and a `.lazydeepseek/context/` knowledge base. Maintains a managed block in DeepSeek Harness's `AGENTS.md` project memory. |
 | Request is vague, large, or has design choices | `lazy-ulw-plan` | One decision-complete plan; it does not implement product code. |
-| An approved plan is ready to execute | `lazy-start-work` | Orchestrated delegation, evidence, and review gates. Delegates through DeepSeek Harness's Agent dispatcher. |
+| An approved plan is ready to execute | `lazy-start-work` | Orchestrated delegation, evidence, and review gates. Delegates through DeepSeek Harness's native role tools. |
 | Completion must stay open until criteria have proof | `lazy-ulw-loop` | Goals with binding success criteria and recorded evidence. |
-| A completed change needs independent review | `lazy-review-work` | Five review lanes: goal, QA, code, security, and context — run as parallel Agent dispatches. |
+| A completed change needs independent review | `lazy-review-work` | Five review lanes: goal, QA, code, security, and context — run as role-tool dispatch when supported by the current host. |
 | A bug has uncertain runtime cause | `lazy-debugging` | Hypotheses tested against observed runtime state. |
 | A bounded cleanup follows green regression tests | `lazy-remove-ai-slops` | Behavior-preserving cleanup. |
 | You need a high-precision, evidence-led pass | `lazy-ultrawork` | Tiered work with manual-QA discipline. |

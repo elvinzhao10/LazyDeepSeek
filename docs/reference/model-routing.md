@@ -4,8 +4,9 @@ LazyDeepSeek describes task intent. DeepSeek Harness chooses and bills the model
 alias or recommendation is not proof of a concrete backing model, account
 availability, host loading, or a particular price.
 
-The package's declared agents omit `model` and inherit the current session
-model; each role pins a `thoughtLevel` for reasoning effort. Before dispatch,
+Native `dsh-tool-subagent` rows inherit host model and reasoning defaults.
+Canonical agent frontmatter contains policy metadata, but the bundle does not
+apply its `model`/`thoughtLevel` values as effective child settings. Before dispatch,
 propose delegation and any model switches in the plan, remind the user that
 switching can change quality, latency, and cost, and record the decision. If
 the plan is silent, keep the same model across all subagents and retries.
@@ -20,7 +21,7 @@ These are the plan options when switching is enabled:
 `performance` is a provisional tier choice for those roles. It does not claim a
 specific model or a quality guarantee. On DeepSeek Harness the routing surface is the
 per-agent `model` / `thoughtLevel` frontmatter in `agents/lazydeepseek-*.md`,
-applied by the Agent dispatcher. The tier names above are plan-level intents,
+recorded as advisory metadata; effective child selection is unverified. The tier names above are plan-level intents,
 not host model IDs: package metadata alone does not prove the host applied
 them, and they remain advisory until the current session visibly shows the
 selection.
@@ -48,8 +49,8 @@ and profile mapping. Supported task classes are
 `inherit`. With switching enabled, the helper may return a documented host
 alias (for example `performance`) or a qualified catalog `chosenModel` with an
 `agent-frontmatter` dispatch value, but it never edits agent files or host
-settings: applying the verdict is a plan/human action through the
-`agents/lazydeepseek-*.md` frontmatter. A recommendation remains **unobserved**
+settings: applying a verdict requires a supported host configuration action and current
+observation; editing Markdown alone does not configure the native role. A recommendation remains **unobserved**
 until the current host visibly offers and accepts a selection. The
 orchestrator consults it once before a task's first dispatch, records the
 result in the handoff, and reuses it for retries. Re-evaluate only when the

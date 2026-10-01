@@ -24,7 +24,11 @@ Native host acceptance is still separate from package readiness. Token/cost budg
 
 Keep the prior local 1.3.3 checkout and ownership receipts; a prior public release is not established. Remove only receipt-owned, unmodified assets and use a fresh host session to verify removal.
 
-## Prior release notes
+## Prior local-port notes (historical)
+
+The notes below preserve earlier local candidates and build-specific observations.
+They are not public release or current v1.3.4 host evidence; native counts,
+runtime ownership, and install/removal guidance above supersede them.
 
 # LazyDeepSeek v1.3.3 — the DeepSeek Harness port release
 

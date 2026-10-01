@@ -16,7 +16,7 @@ flowchart LR
     MCP --> Run
 ```
 
-The arrows are not all automatic. Skills and commands are instructions that a host or agent may invoke; the host decides whether it loads them. Hook scripts receive host-provided structured input. MCP declarations merely tell a host how to start a local process. The package can validate every file in that path, but only a host observation proves loading or connection. On DeepSeek Harness, skills load through the Skill tool (auto-triggered from frontmatter), commands surface as slash menu entries, agents are dispatched through the Agent dispatcher, the 7 hook events auto-run while the plugin is enabled, and the 6 local MCP servers auto-connect from the plugin `.mcp.json` (see the [DeepSeek Harness integration reference](reference/dsh-integration.md)).
+The arrows are not all automatic. Skills and commands are instructions that a host or agent may invoke; the host decides whether it loads them. Hook scripts receive host-provided structured input. MCP declarations merely tell a host how to start a local process. The package can validate every file in that path, but only a host observation proves loading or connection. On DeepSeek Harness, the root bundle mounts skills, registers twenty interactive service commands, configures thirteen native role tools and seven supported bridge events, and declares six native MCP rows. Current loading and connections require observation (see the [DeepSeek Harness integration reference](reference/dsh-integration.md)).
 
 ## Package boundary
 

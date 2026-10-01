@@ -59,13 +59,13 @@ not-applicable, or skipped with a reason.
 
 `lazy-ulw-loop` turns open-ended work into goals with explicit success
 criteria. `lazy-start-work` coordinates plan execution, evidence, verification,
-and review by delegating through DeepSeek Harness's Agent dispatcher. `lazy-review-work` passes only
+and review by delegating through DeepSeek Harness's native role tools. `lazy-review-work` passes only
 when all five lanes pass. These are workflow gates; they do not erase the
 host-boundary requirement above.
 
 ## Scope and limits
 
-Current verification scope is macOS. Normal CI does not require a sibling
+Package CI covers Ubuntu and macOS; historical live host observations are macOS only. Normal CI does not require a sibling
 repository. A release-only paired parity check may receive explicitly supplied
 sibling roots for comparison, but that is neither a runtime nor installation
 dependency. Do not describe a copied repository as a verified DeepSeek Harness plugin
@@ -96,7 +96,7 @@ reference separately from verifier output. This lets a reviewer distinguish
 “the package check passed,” “the requested surface was observed,” and “the
 claim remains limited by an unverified host fact.”
 
-## v1.3.1 measurement boundary
+## Measurement boundary
 
 Cost-outcome records may identify `measurement_scope` as `fixture-validation`
 or `execution`. An absent scope is unspecified. The family baseline runners

@@ -17,30 +17,27 @@ verb set (there is no marketplace):
    spec. The npm registry is not used for this package. Installed plugins
    are enabled by default, and no build scripts run (prebuilt `lib/` is
    committed).
-2. Updates: bump the root `package.json` version and regenerate
-   `contracts/dsh-route-contract.v1.json`, then reinstall the new pinned sha
-   into the same profile.
-   A previously installed same-version candidate needs an explicit reinstall;
-   uninstall it through **Manage installed**, refresh the marketplace, and
-   install again after the fixed commit reaches `main`.
-4. Removal: **Manage installed** → `lazydeepseek` → **Uninstall** (or the disable
-   toggle).
-5. Development-only validation: `dsh plugins validate plugins/lazydeepseek`.
+2. Updates: reinstall the verified release SHA/archive into the same profile.
+   Maintainers update versions and regenerate the route contract before publication.
+   A same-version candidate needs an explicit reinstall of the selected SHA.
+3. Removal: `dsh plugin --profile <name> remove lazydeepseek`, then observe
+   rows/processes absent. Generated runtime removal is separately receipt-scoped.
+4. Development-only validation: run the package load-check and installed SDK
+   config checker; neither installs the plugin.
 
-Prerequisites for local launchers: **Node.js LTS 20+** and **Git**.
+Prerequisites: **Node.js LTS 24 or 22** (20 accepted for compatibility),
+**Git**, and **Python 3.10+** for hooks/MCP scripts.
 
 ## Native onboarding and update experience
 
 `bash scripts/install.sh` (repository root) is the guided first step: it
-verifies prerequisites, validates the marketplace layout, runs the package
+verifies prerequisites, validates the root package and bundle layout, runs the package
 load-check and doctor, and prints the install steps above with the GitHub URL
-and local market root (URL clipboard-copied on macOS); `--project <absolute-project-root>`
-adds the durable lifecycle onboard. Inside a session, `/lazy-onboard` walks
-install plus fresh-session verification, `/lazy-update` compares the installed
-version (`$DSH_HOME/profiles/<name>/node_modules/lazydeepseek/package.json`,
-best-effort) with the repo manifest, points at `CHANGELOG.md`, and walks the
-gear → Refresh → Update flow, and `/lazy-offboard` walks the four
-independently-approved removal scopes. All three end with the readiness
+and profile install command (URL clipboard-copied on macOS); `--project <absolute-project-root>`
+adds the durable lifecycle onboard. Inside an observed interactive session, lifecycle command guidance covers
+install and fresh-session verification, pinned-SHA updates, and separately
+selected removal scopes. Use durable status/receipts or a user-supplied selected
+manifest for version evidence; never scan private profiles. All three end with the readiness
 discipline: **HOST READINESS: PENDING** until a fresh session observes one
 real skill/command and all six MCP connections.
 
@@ -48,15 +45,16 @@ real skill/command and all six MCP connections.
 
 | Plugin asset | Count | DeepSeek Harness native surface |
 | --- | --- | --- |
-| `skills/lazy-*/SKILL.md` | 19 | Skill tool, auto-triggered from frontmatter; listed under **Settings → Skills** (Plugin Skills group) |
-| `commands/lazy-*.md` | 20 | Slash menu entries named `lazy-ulw-plan`, `lazy-start-work`, ... (no plugin namespacing). Lifecycle entry points: `lazy-onboard` (guided install), `lazy-update` (guided update), `lazy-offboard` (receipt-safe removal) |
-| `agents/lazydeepseek-*.md` | 13 | Agent dispatcher (subagents) |
-| `hooks/hooks.json` | 7 events | Auto-run when the plugin is enabled: `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PermissionRequest`, `PostToolUse`, `PostToolUseFailure`, `Stop` |
-| `.mcp.json` | 6 servers | Auto-connected at session start, namespaced `plugin:lazydeepseek:<server>` |
+| `skills/lazy-*/SKILL.md` | 19 + 10 command-only projections | Generated bundle mounted through the native skill provider; current model invocation and interactive visibility require observation |
+| `commands/lazy-*.md` | 20 | Registered service commands forward exact arguments and unregister on unload; interactive slash acceptance remains pending. Lifecycle guidance: `lazy-onboard`, `lazy-update`, `lazy-offboard`. |
+| `agents/lazydeepseek-*.md` | 13 | Full canonical personas in native `dsh-tool-subagent` rows with tool allowlists |
+| Generated `hooks.dsh.json` | 7 bridged / 9 declared | SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop, SubagentStart, SubagentStop bridge natively. PermissionRequest and PostToolUseFailure are degraded synthesis. |
+| `cordis.patch.yml` MCP rows | 6 servers | `dsh-mcp-client` stdio rows; tools appear as `mcp__<server>__<tool>` when connected |
 
-DeepSeek Harness discovers the standard `hooks/hooks.json` automatically. The plugin
-manifest leaves `hooks` unset so each event is registered once; declaring that
-same file in the manifest causes a duplicate-hook diagnostic.
+The root bundle mounts `dsh-hooks-claude-code` with its generated hook config.
+`hooks/hooks.json` is canonical package policy, not an independently discovered
+native host registration. PreCompact, TaskCreated, TaskCompleted, and Notification
+are unsupported. Child start/stop events are advisory and cannot complete work.
 
 ## Variables and configuration
 
@@ -78,11 +76,11 @@ IDE plan directories. LazyDeepSeek therefore maps:
 
 - **Project memory** → `AGENTS.md` (workspace scope; `~/.dsh/AGENTS.md` for
   user scope). `lazy-init-deep` maintains a managed block.
-- **Model routing** → per-agent `model` / `thoughtLevel` frontmatter instead
-  of a host model selector.
+- **Model routing** → policy metadata and read-only recommendations. Native
+  role rows inherit host defaults; frontmatter is not an effective override.
 - **Planning / execution / review** → `lazy-ulw-plan` (plan),
   `lazy-start-work` (Agent-tool subagents), `lazy-review-work` (five review
-  lanes via parallel Agent dispatch).
+  lanes via native role-tool dispatch).
 
 ## Harness-primitive mapping
 
@@ -90,8 +88,8 @@ IDE plan directories. LazyDeepSeek therefore maps:
 | --- | --- | --- |
 | Project memory | `lazy-init-deep` + managed block | `AGENTS.md` |
 | Planning | `lazy-ulw-plan` skill + command | Slash menu / Skill-tool invocation |
-| Execution | `lazy-start-work` + subagents | Agent dispatcher |
-| Review | `lazy-review-work` (5 lanes) | Parallel Agent dispatch |
-| Model routing | Agent frontmatter | `model` / `thoughtLevel` |
+| Execution | `lazy-start-work` + subagents | Native `dsh-tool-subagent` role tools |
+| Review | `lazy-review-work` (5 policy lanes) | Native role-tool dispatch where observed in the selected host |
+| Model routing | Agent frontmatter recommendations | Host defaults inherited; effective child overrides unverified |
 | Automation | hooks (7 events) | Hook runner, auto-enabled |
 | Local services | 6 MCP servers | Plugin MCP, auto-connect |

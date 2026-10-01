@@ -4,8 +4,9 @@ LazyDeepSeek describes task intent. DeepSeek Harness chooses and bills the model
 alias or recommendation is not proof of a concrete backing model, account
 availability, host loading, or a particular rate.
 
-The package's declared agents omit `model` and inherit the current model;
-each agent instead pins a `thoughtLevel` budget. Before dispatch, propose
+Native `dsh-tool-subagent` rows inherit host model and reasoning defaults.
+Canonical agent frontmatter contains policy metadata, but the bundle does not
+apply its `model`/`thoughtLevel` values as effective child settings. Before dispatch, propose
 delegation and any model switches in the plan, remind the user that switching
 can change quality, latency, and cost, and record the decision. If the plan is
 silent, keep the same model across all subagents and retries. Plans can use
@@ -18,9 +19,8 @@ these task-class options when switching is enabled:
 | Quality-focused work | `performance` with high or max thoughtLevel | Planning, review, security review, final gates, and verification. |
 
 `performance` is a provisional tier choice for those roles. It does not claim
-a specific model or a quality guarantee. DeepSeek Harness exposes model selection and
-per-agent `model`/`thoughtLevel` frontmatter through its own UI and agent
-definitions; package metadata alone does not prove the host applied a tier.
+a specific model or a quality guarantee. Native role rows inherit host defaults; canonical frontmatter remains advisory
+metadata, and supported host configuration must be observed separately; package metadata alone does not prove the host applied a tier.
 The routing policy declares the `dsh` host profiles (economy → `efficient`,
 balanced → `auto`, strong → `performance`) as documented-host-alias bindings;
 they are advisory until the current session visibly honors them.

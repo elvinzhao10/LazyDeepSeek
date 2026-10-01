@@ -8,13 +8,16 @@ tooling only when its receipt proves ownership. These are separate operations.
 | Route | Safe action | Preserve |
 | --- | --- | --- |
 | DeepSeek Harness plugin (git-spec install) | Run `dsh plugin --profile <name> remove lazydeepseek`, then confirm the rows are gone from `--dump-config`. | Other plugins, host installation paths, credentials, and host state. |
-| Manual fallback (imported skills + manual connectors) | Remove imported `skills/` entries through **Settings → Skills** and the manually configured connectors through the MCP settings UI. | Other imported skills, connectors, and Settings entries. |
+| Manual fallback (imported skills + manual connectors) | Remove only the selected receipt-owned imported skill files and the six manually added profile MCP rows; preserve shared or modified entries. | Other imported skills, connectors, and Settings entries. |
 | Receipt-owned tooling root | Run the package uninstall command only for the exact owned root. | Modified, foreign, linked, caller-owned, project, global, and host-managed paths. |
 
-Removing the plugin is receipt-safe: LazyDeepSeek keeps no host-side state. Run
+Host-managed bundle removal and generated runtime removal are separate.
+LazyDeepSeek generates receipt-owned directories under
+`$DSH_HOME/lazydeepseek/runtimes/<identity>/`; host profile/package state remains
+host-managed. Run
 state, evidence, and the decision ledger live in the project-local
-`.lazydeepseek/` directory, so after uninstalling you may delete `.lazydeepseek/`
-from individual projects if you no longer need their run history.
+`.lazydeepseek/` directory, and are preserved by offboard. Deleting that project evidence requires a
+separate deliberate decision after archiving it.
 
 For a package-owned tooling root:
 
@@ -27,6 +30,23 @@ The command removes only an unmodified, receipt-owned installation. It checks
 for an exact ownership receipt and owned contents; it does not use a path name
 as proof of ownership. If a root is modified, linked, foreign, or caller-owned,
 it is preserved rather than removed.
+
+## Generated native runtime removal
+
+After removing the selected host bundle and observing its rows/processes absent,
+run only the exact generated-directory removal:
+
+```bash
+node plugins/lazydeepseek/scripts/native-runtime-offboard.mjs \
+  "<DSH_HOME>/lazydeepseek/runtimes/<identity>" --host-bundle-removed
+```
+
+The flag confirms an operator prerequisite; it does not observe the host. The
+helper checks the exact receipt inventory and refuses modified, foreign,
+linked, or unknown contents. It preserves other profile runtimes, shared
+`dependencies/` and `cache/`, legacy shared files, and project evidence. Durable
+`offboard` reports this generated-runtime step separately as pending; it does
+not recursively remove `$DSH_HOME/lazydeepseek/`.
 
 ## What not to remove
 

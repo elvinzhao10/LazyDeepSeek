@@ -52,7 +52,7 @@ or product `staging/`/`locks/` artifact is recoverable; never remove or replace
 caller workspace files.
 
 Route status is explicit: `dsh-plugin-git-sha` is the default full-plugin route
-through **Settings → Plugins**. `manual-skills-mcp-fallback` is
+through the profile-scoped `dsh plugin` CLI. `manual-skills-mcp-fallback` is
 recovery-only and mutually exclusive with the full-plugin route. Neither
 route is current host proof until observed.
 
@@ -120,8 +120,8 @@ files, and leaves the run eligible for retry.
 | `skills/` | 19 workflow skills | Full-plugin content; manual fallback imports Skills only |
 | `commands/` | 20 current slash-command workflows | DeepSeek Harness CLI; DeepSeek Harness app only after a verified plugin session |
 | `agents/` | 13 agent role definitions | DeepSeek Harness CLI; DeepSeek Harness app only after a verified plugin session |
-| `hooks/hooks.json` | 7 hook events | Full-plugin declaration; host activation requires observation |
-| `mcp/` and `.mcp.json` | 6 local MCP server declarations | DeepSeek Harness CLI declarations; manual connector configuration is the verified DeepSeek Harness app fallback |
+| `hooks/hooks.json` | 9 declared / 7 bridged events | Seven native bridge events plus degraded PermissionRequest/PostToolUseFailure synthesis; host delivery requires observation |
+| `mcp/` and `.mcp.json` | 6 local MCP server declarations | Native bundle uses `cordis.patch.yml` rows; manual fallback connections still require observation |
 | `scripts/` | state, loop, hooks, and validation utilities | Used by package readiness and workflow checks |
 | `templates/AGENTS.md` | reusable onboarding guide | A template; no installer claims it was generated |
 
@@ -152,13 +152,13 @@ individual MCP rows only; it does not load commands, agent presets, or hooks.
 ## Telemetry and privacy
 
 DeepSeek Harness uploads session logs by default when the official API route
-is used. The documented `lazydeepseek` profile ships the opt-outs applied:
-session-log upload set to disabled in the profile patch and
-`DSH_TELEMETRY_MODE=DISABLED` exported by the lifecycle and acceptance
-tooling; the plugin doctor warns whenever session-log upload is detected as
-enabled. LazyDeepSeek itself performs no network I/O — hooks, MCP servers,
-and scripts do pure local file I/O under the workspace `.lazydeepseek/`
-state directory and the `$DSH_HOME/lazydeepseek/` runtime directory.
+is used. Historical acceptance profiles set session-log opt-outs and
+`DSH_TELEMETRY_MODE=DISABLED`; the shipped bundle does not apply those host
+settings. Review privacy controls through the selected host; the plugin doctor warns whenever session-log upload is detected as
+enabled. Package-only checks perform no network I/O. Explicit durable onboarding
+fetches the official origin; docs MCP requests fixed npm/PyPI HTTPS endpoints
+and optional tooling/providers can use the network. Local state ownership is
+not network isolation.
 
 ## DeepSeek Harness CLI project-local configuration
 
@@ -181,14 +181,17 @@ and verify it in a fresh session.
 
 ## Uninstall
 
-Use DeepSeek Harness CLI's plugin removal flow for a DeepSeek Harness CLI or CLI installation,
-then remove or disable only the LazyDeepSeek MCP servers that were manually
-registered. Use DeepSeek Harness's documented plugin removal flow for a
-verified DeepSeek Harness IDE plugin installation. For the local-import fallback, remove
-the imported `skills/` entries through DeepSeek Harness IDE's Skills UI and remove the
-manually configured connectors through Settings. Never guess, scan for, or
-delete host-managed installation paths, legacy manifest compatibility
-metadata, `.dsh` state, or MCP configuration belonging to another host.
+For the full bundle, run `dsh plugin --profile <name> remove lazydeepseek`,
+then observe the selected rows/processes absent in a fresh session. For the
+manual fallback, remove only the exact imported skill files and the six profile
+MCP rows the user added, preserving shared, modified, or unknown entries.
+Never scan or delete host-managed installation paths, private `.dsh` state,
+credentials, or another host's MCP configuration.
+Generated native runtimes are separate receipt-owned directories under
+`$DSH_HOME/lazydeepseek/runtimes/<identity>/`. After host bundle removal and
+observed row/process absence, use `scripts/native-runtime-offboard.mjs` for
+only the exact directory with `--host-bundle-removed`; modified/foreign/linked
+content, other profiles, shared caches, and project evidence are preserved.
 The copied repository is independent of host removal and may be deleted only
 after the host confirms the plugin/skills and connectors are gone. The root
 `offboard` protocol records this package result separately from the
