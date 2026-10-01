@@ -1,28 +1,72 @@
-# LazyDeepSeek v1.3.4 — runtime integrity and native adapter repairs
+# LazyDeepSeek v1.3.4 — safer runs, clearer host boundaries
+
+A small maintenance release for the LazySeries family. It repairs runtime and
+host-adapter boundaries while retaining the workflow foundation inherited from
+family versions v1.3.0–v1.3.3. Those inherited features are not new in this patch
+and do not imply prior public releases of the Kimi or DeepSeek ports.
 
 ## Eval-driven fixes
 
-The native bundle configures thirteen full-persona subagents and seven supported bridge events. Twenty commands forward arguments and unregister on unload. Profile/package-content runtime identities and receipts preserve foreign or shared files during generation and removal. Finalization requires all intended tasks done; persisted status is assessed separately from completion evidence.
+- Thirteen native role presets carry full personas; twenty commands forward arguments and unregister on unload.
+- Seven events bridge natively. Two synthesized observations remain explicitly degraded capabilities.
+- Profile and package-content identities bind runtime receipts, preserving foreign or shared files during generation and removal.
+- Finalization requires all intended tasks done; persisted status is assessed
+  separately from completion evidence.
+
+## Cumulative workflow experience
+
+Describe work in natural language or use explicit workflow entry points.
+Keep editable Markdown plans, durable decisions, evidence-bound completion
+and verification sized to the change. Planning-only requests remain separate
+from execution authority. The README presents these inherited features together
+with the 1.3.4 fixes; historical notes below retain the version-by-version record.
 
 ## Measured efficiency
 
-This maintenance release makes no new latency, token-saving or recall claim. Ledger append/compaction, learned routing and shared-core migration are deferred.
+No new latency, token-saving, cost or recall improvement is measured for this
+patch. Ledger append/compaction, learned routing and shared-core migration are deferred.
 
 ## Host capability matrix
 
 Native configuration is checked against installed DSH 0.2.0-rc.2. Fresh-session acceptance, effective child settings and complete host removal remain pending. Only seven events bridge natively; additional synthesized observations do not create native host capabilities.
 
+Package and distribution checks do not prove a current native host session.
+**HOST READINESS: PENDING** until loading, command/skill behavior and the expected
+MCP connections are observed. The README links the selected host's setup guide.
+
 ## Migration and upgrade
 
 Use the receipt-aware upgrade route with an explicit project binding. Preserve project evidence and unknown host configuration. No credentials or production host settings are changed by package verification.
 
+Read [AGENTS.md](AGENTS.md) and [the install guide](docs/03-install-and-host-verification.md).
+Choose one route, check the installed package version, and restart the host.
+Source checkouts and release archives have different build requirements; follow
+the documented route. Do not reset populated runs merely to upgrade.
+
 ## Known risks
 
-Native host acceptance is still separate from package readiness. Token/cost budgets are metadata, and pending approval results are persisted observations without a live approval queue. Shell loop policy beyond its configured global cap requires orchestrator enforcement.
+Native acceptance is separate from package readiness. Token/cost budgets are
+metadata; pending approvals are persisted observations without a live approval
+queue. Shell loop policy beyond the configured global cap needs orchestrator enforcement.
 
 ## Rollback
 
 Keep the prior local 1.3.3 checkout and ownership receipts; a prior public release is not established. Remove only receipt-owned, unmodified assets and use a fresh host session to verify removal.
+
+## Documentation and family presentation
+
+Aligned sibling README structure, current setup navigation and a shared six-repo
+family table. Personal environment files and caches are ignored while example
+configuration and pinned fixture logs remain publishable. Earlier release notes
+remain below as historical evidence.
+
+## Post-publication repository maintenance
+
+The current main-branch dependency lock uses patched `fast-uri` 3.1.8.
+This addresses [host canonicalization](https://github.com/advisories/GHSA-hrr3-gc8f-f4qj).
+Existing published v1.3.4 archives retain their original tagged dependency
+contents. Use the current source lock for this fix; a refreshed archive needs
+a subsequent versioned release.
 
 ## Prior local-port notes (historical)
 

@@ -2,27 +2,45 @@
 
 ![LazyDeepSeek](lazydeepseek-banner.png)
 
+[![Package 1.3.4](https://img.shields.io/badge/package-1.3.4-7ce8d1)](RELEASE_NOTES.md)
+[![MIT License](https://img.shields.io/badge/license-MIT-silver)](LICENSE)
+[![LazySeries family](https://img.shields.io/badge/LazySeries-6_siblings-7ce8d1)](#lazyseries-family)
+
+**Describe the work. Keep the plan. Prove the result.**
+
 LazyDeepSeek helps you use structured, evidence-based workflows in **DeepSeek Harness**. It prepares local package assets
 and guidance; a host is only considered ready after it is observed in a fresh
 session.
 
-The current package version is v1.3.4. Fresh host activation requires
-observation in the selected session.
+[Get started](#recommended-install-with-ai-help) · [Host routes](#choose-one-route) ·
+[1.3.4 notes](RELEASE_NOTES.md) · [Family](#lazyseries-family) · [Docs](docs/)
 
-## v1.3.4
+> **Current package version: v1.3.4. HOST READINESS: PENDING.** Local checks and release
+> archives prove package behavior; a fresh host session must prove loading,
+> command/skill execution and MCP connections.
 
-This release repairs run integrity, snapshot recovery, MCP response envelopes,
-and native integration. It registers thirteen full-persona native roles, seven
-bridge events, and twenty argument-forwarding commands, with immutable
-profile/package-content runtime directories and receipt-aware removal. See [release notes](RELEASE_NOTES.md)
-for the changes and verification scope; fresh native-host testing is pending.
+## What's in 1.3.4
 
-## Workflow guidance
+- Thirteen native role presets carry full personas; twenty commands forward arguments and unregister on unload.
+- Seven events bridge natively. Two synthesized observations remain explicitly degraded capabilities.
+- Profile and package-content identities bind runtime receipts, preserving foreign or shared files during generation and removal.
+- Finalization requires all intended tasks to be done; persisted status is
+  assessed separately from completion evidence.
 
-The package carries the shared workflow design developed in the local v1.3.0 baseline;
-a prior public LazyDeepSeek release is not established. You no longer need
-to remember commands —
-the harness meets you at the level of your request.
+This is a maintenance release. It includes the workflow foundation introduced
+in the family since v1.3.0 and subsequent reliability work. For Kimi and DeepSeek,
+that describes inherited family behavior, not prior public releases of these
+ports. The details below describe the cumulative v1.3.4 experience; the
+[release notes](RELEASE_NOTES.md) distinguish this patch's fixes from inherited
+features. No new speed, token-saving or cost claim is made.
+
+| Family milestone | What you get in the current package |
+| --- | --- |
+| v1.3.0 foundation | Natural-language entry, editable plans, durable decisions and verification tiers. |
+| v1.3.1 reliability | Clearer execution intent, safer isolation and evidence comparisons. |
+| v1.3.2 handoff | Revision-bound verification-report contracts; generic completion APIs have separate limits. |
+| v1.3.3 hardening | Host-specific hook, MCP and publication repairs. |
+| v1.3.4 maintenance | The run-integrity and native-adapter fixes listed above. |
 
 ### Just ask, or use a command — both work
 
@@ -44,7 +62,7 @@ execution by itself.
 Plans are Markdown you own. Edit them mid-run; the harness reconciles your
 changes at execution boundaries instead of overwriting them:
 
-- Cosmetic edits (wording, reordering, checking a box) keep all evidence.
+- Cosmetic wording and ordering edits preserve existing evidence.
 - Semantic edits (acceptance, dependencies, verification commands) invalidate
   only the affected task and its dependents — unrelated work is untouched.
 - Your checkbox is an *assertion*, not a verdict: a checked box alone never
@@ -61,11 +79,11 @@ can override your current instructions.
 
 ### Verification sized to the change
 
-Checks run once, at the right tier: documentation edits get a light inspect
-(V0), small changes a focused check (V1), cross-module behavior an integration
-scenario (V2), and security/release boundaries the comprehensive gate (V3,
-normally in CI). A green check is reused while its inputs are unchanged — the
-same test is never rerun just because a phase changed.
+The workflow calls for verification sized to the change: a documentation
+inspection (V0), a focused check (V1), an integration scenario (V2), or a
+comprehensive security/release gate (V3, normally in CI). Valid evidence may be
+reused while its inputs match; affected, missing or stale checks must rerun.
+Native execution still needs acceptance in the selected host.
 
 Milestones, decision gates, and full state/version semantics are shared
 byte-identically with LazyBuddy, LazyTrae, and LazyQoder (see
@@ -88,7 +106,9 @@ The assistant can run local checks and guide the host steps. Installing or
 enabling the plugin grants it code-execution trust, so approve those actions
 in DeepSeek Harness after reviewing the source.
 
-## Direct profile setup
+## Manual setup
+
+### Direct profile setup
 
 1. Confirm the pinned host: `dsh --version` reports exact `0.2.0-rc.2`.
 2. After approval, run the git-spec install with the repository URL pinned to
@@ -107,7 +127,7 @@ in DeepSeek Harness after reviewing the source.
    interactive entries such as `/lazy-ulw-plan` where supported; observe them
    rather than inferring visibility from registration.
 
-## Native onboarding
+### Native onboarding
 
 `bash scripts/install.sh` verifies Node.js LTS 20+ and
 Git, validates the root dsh bundle manifest and route contract, runs the package load-check and
@@ -121,11 +141,11 @@ never prove host readiness — the script ends with **HOST READINESS: PENDING**
 until a fresh session shows one real skill/command and all six MCP
 connections.
 
-## Manual setup
+### Durable lifecycle
 
 Manual setup is available when you prefer complete control. You need
 **Node.js LTS 24 (recommended) or 22 (supported alternative)** — the lifecycle
-also accepts Node.js LTS 20 for compatibility — and **Git**. Start from the
+also accepts Node.js LTS 20 for compatibility — and **Git**, plus **Python 3.10+** available as `python3`. Start from the
 verified origin
 `https://github.com/elvinzhao10/LazyDeepSeek` and follow the
 [installation guide](docs/03-install-and-host-verification.md).
@@ -201,26 +221,44 @@ safe package checks separate from native plugin installation and connector chang
 | Hook events | 9 declared / 7 bridged | SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop, SubagentStart, SubagentStop bridge natively. PermissionRequest and PostToolUseFailure are degraded synthesis; child events are advisory. |
 | MCP declarations | 6 | Local services for ledger, verification, status, context, code intelligence, and docs. |
 
+## LazySeries family
+
+**One workflow philosophy. Six host integrations.** Choose the sibling for the
+host you use; each keeps its own native adapters, installation route and
+acceptance evidence. These packages run independently.
+
+| Sibling | Target host |
+| --- | --- |
+| [LazyBuddy](https://github.com/elvinzhao10/LazyBuddy) | CodeBuddy CLI / IDE · WorkBuddy |
+| [LazyTrae](https://github.com/elvinzhao10/LazyTrae) | TraeCode / TraeWork / TraeCode CLI |
+| [LazyQoder](https://github.com/elvinzhao10/LazyQoder) | Qoder CLI / IDE / app |
+| [LazyZCode](https://github.com/elvinzhao10/LazyZCode) | ZCode |
+| [LazyKimi](https://github.com/elvinzhao10/LazyKimi) | Kimi Code CLI · Kimi Work (experimental) |
+| [LazyDeepSeek](https://github.com/elvinzhao10/LazyDeepSeek) **← you are here** | DeepSeek Harness 0.2.0-rc.2 |
+
+The family shares planning, evidence, decision-memory and completion contracts.
+Matching contracts do not make host capabilities interchangeable. In particular,
+Kimi Work remains experimental for LazyKimi, and DeepSeek's synthesized events
+are not native hooks. Use each sibling's host guide before installation.
+
 ## Technical reference and evaluation
 
 The source-level explanation lives in [docs/README.md](docs/README.md). It
 maps the package structure, request flow, state model, security boundaries,
 MCP lifecycle, and release checks with diagrams tied to the implementation.
 
-For a capability-by-capability comparison with the original LazyZCodex design,
+For a capability-by-capability comparison with the original LazyCodex design,
 including what LazyDeepSeek implements and where it intentionally differs, see
 [lazydeepseek-evaluation.md](lazydeepseek-evaluation.md).
 
 LazyDeepSeek is primarily inspired by LazyCodex. Attribution and its
 relationship to OmO are recorded in [NOTICE](NOTICE).
-It is an independent implementation and does not require LazyZCodex or OmO at
+It is an independent implementation and does not require LazyCodex or OmO at
 runtime.
 
 ## Learn more
 
 - [Install and verify a host](docs/03-install-and-host-verification.md)
-- [Historical v1.3.0 route](docs/v1.3.0-supported-route.md)
-- [Historical local v1.3.0 release notes](docs/v1.3.0-release-notes.md)
 - [Workflow playbooks — how the modes pick work](docs/04-workflow-playbooks.md)
 - [Evidence and completion — what "done" proves](docs/05-evidence-and-completion.md)
 - [Host routes and recovery](docs/reference/host-routes.md)
