@@ -22,14 +22,14 @@ cp -R "$PLUGIN_ROOT" "$PACKAGE_SOURCE_ROOT/plugins/lazydeepseek"
 printf '%s\n' \
     '{' \
     '  "name": "lazydeepseek",' \
-    '  "version": "1.3.4",' \
+    '  "version": "1.3.5",' \
     '  "dsh": {"bundle": {"patch": "./cordis.patch.yml"}},' \
     '  "peerDependencies": {"@deepseek-ai/dsh": "0.2.0-rc.2"}' \
     '}' > "$PACKAGE_SOURCE_ROOT/package.json"
 cp "$REPOSITORY_ROOT/cordis.patch.yml" "$PACKAGE_SOURCE_ROOT/cordis.patch.yml"
 cp "$REPOSITORY_ROOT/lib/index.mjs" "$PACKAGE_SOURCE_ROOT/lib/index.mjs"
 
-SPACE_RELEASE="$TMP/package copies/Lazy Buddy v1.3.4"
+SPACE_RELEASE="$TMP/package copies/Lazy Buddy v1.3.5"
 PROJECT_ROOT="$TMP/consumer projects/Project With Spaces"$'\nHOST_READINESS=ready'
 FIXTURE_HOME="$TMP/Home With Spaces"
 mkdir -p "$(dirname -- "$SPACE_RELEASE")" "$PROJECT_ROOT" "$FIXTURE_HOME/.dsh/plugins"

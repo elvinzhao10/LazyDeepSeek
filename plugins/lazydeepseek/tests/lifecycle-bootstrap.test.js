@@ -30,7 +30,7 @@ function git(cwd, args) {
   return result.stdout.trim();
 }
 
-function writeFixtureFiles(root, selfTest = "process.stdout.write('self-test-ok\\n');\n", version = '1.3.4') {
+function writeFixtureFiles(root, selfTest = "process.stdout.write('self-test-ok\\n');\n", version = '1.3.5') {
   const packageRoot = path.join(root, 'plugins/lazydeepseek');
   const contracts = path.join(packageRoot, 'contracts');
   fs.mkdirSync(path.join(packageRoot, 'tooling'), { recursive: true });
@@ -50,7 +50,7 @@ function writeFixtureFiles(root, selfTest = "process.stdout.write('self-test-ok\
   }
 }
 
-function fixture(version = '1.3.4') {
+function fixture(version = '1.3.5') {
   const sandbox = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'lazydeepseek bootstrap '));
   const remote = path.join(sandbox, 'official fixture.git');
   const source = path.join(sandbox, 'source');
@@ -128,8 +128,8 @@ function treeSnapshot(root) {
 
 test('parses only canonical official HTTPS source forms for the selected product', () => {
   const accepted = [
-    ['https://github.com/elvinzhao10/LazyDeepSeek', 'v1.3.4'],
-    ['https://github.com/elvinzhao10/LazyDeepSeek.git', 'v1.3.4'],
+    ['https://github.com/elvinzhao10/LazyDeepSeek', 'v1.3.5'],
+    ['https://github.com/elvinzhao10/LazyDeepSeek.git', 'v1.3.5'],
     ['https://github.com/elvinzhao10/LazyDeepSeek/tree/release/v1.3.0', 'release/v1.3.0'],
   ];
   const rejected = [
@@ -175,7 +175,7 @@ test('resolves, verifies, self-tests, and promotes a local fixture under an offi
     commit_sha: expectedSha,
     status: 'ready',
     test_status: 'passed',
-    version: '1.3.4',
+    version: '1.3.5',
   });
   assert.equal(launched.status, 0, launched.stderr);
   assert.equal(launched.stdout.trim(), 'fixture-launch-ok');
@@ -186,7 +186,7 @@ test('resolves, verifies, self-tests, and promotes a local fixture under an offi
 test('repo, tag, branch, and full-SHA sources resolve through Git to the same immutable commit', () => {
   const sources = [
     'https://github.com/elvinzhao10/LazyDeepSeek',
-    'https://github.com/elvinzhao10/LazyDeepSeek/tree/v1.3.4',
+    'https://github.com/elvinzhao10/LazyDeepSeek/tree/v1.3.5',
     'https://github.com/elvinzhao10/LazyDeepSeek/tree/main',
   ];
   for (const sourceUrl of sources) {
@@ -222,7 +222,7 @@ test('same version at a different SHA requires an exact revision confirmation', 
 });
 
 for (const priorVersion of ['1.3.2', '1.3.3']) {
-test(`v${priorVersion} upgrades to v1.3.4 while retaining the prior release`, () => {
+test(`v${priorVersion} upgrades to v1.3.5 while retaining the prior release`, () => {
   const f = fixture(priorVersion);
   const priorSha = git(f.source, ['rev-parse', 'HEAD']);
   const priorSource = path.join(f.sandbox, 'prior package');
@@ -235,19 +235,19 @@ test(`v${priorVersion} upgrades to v1.3.4 while retaining the prior release`, ()
   });
   const manifestPath = path.join(f.source, 'package.json');
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-  manifest.version = '1.3.4';
+  manifest.version = '1.3.5';
   fs.writeFileSync(manifestPath, `${JSON.stringify(manifest)}\n`);
   // tooling/package.json is version-bearing too: every manifest in the package
   // must agree on the release version or staged verification fails closed.
   const toolingManifestPath = path.join(f.source, 'plugins/lazydeepseek', 'tooling', 'package.json');
   const toolingManifest = JSON.parse(fs.readFileSync(toolingManifestPath, 'utf8'));
-  toolingManifest.version = '1.3.4';
+  toolingManifest.version = '1.3.5';
   fs.writeFileSync(toolingManifestPath, `${JSON.stringify(toolingManifest)}\n`);
   git(f.source, ['add', 'package.json', 'plugins/lazydeepseek']);
-  git(f.source, ['commit', '-m', 'fixture v1.3.4']);
+  git(f.source, ['commit', '-m', 'fixture v1.3.5']);
   git(f.source, ['push', f.remote, 'main']);
   const upgraded = bootstrap(f);
-  assert.equal(upgraded.version, '1.3.4');
+  assert.equal(upgraded.version, '1.3.5');
   assert.notEqual(upgraded.release_id, prior.releaseId);
   assert.equal(fs.existsSync(path.join(f.paths.releases, prior.releaseId)), true);
   assert.equal(JSON.parse(fs.readFileSync(f.paths.active, 'utf8')).active_release, upgraded.release_id);

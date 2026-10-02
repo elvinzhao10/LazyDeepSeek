@@ -64,19 +64,19 @@ expect_status full-package-readiness 0 env CLAUDE_PLUGIN_ROOT="$INSTALLED_PLUGIN
 expect_contains full-package-readiness '^PACKAGE_READINESS=full$'
 expect_contains full-package-readiness '^PASS commands: 20/20$'
 expect_contains full-package-readiness '^PASS MCP servers: 6/6$'
-mkdir -p "$TMP/cache/lazydeepseek/1.3.4/plugins" "$TMP/cache/lazydeepseek/1.3.4/lib"
-cp "$REPOSITORY_ROOT/package.json" "$TMP/cache/lazydeepseek/1.3.4/package.json"
-cp "$REPOSITORY_ROOT/cordis.patch.yml" "$TMP/cache/lazydeepseek/1.3.4/cordis.patch.yml"
-cp "$REPOSITORY_ROOT/lib/index.mjs" "$TMP/cache/lazydeepseek/1.3.4/lib/index.mjs"
-cp -R "$PLUGIN_ROOT" "$TMP/cache/lazydeepseek/1.3.4/plugins/lazydeepseek"
-VERSIONED_PLUGIN="$TMP/cache/lazydeepseek/1.3.4/plugins/lazydeepseek"
+mkdir -p "$TMP/cache/lazydeepseek/1.3.5/plugins" "$TMP/cache/lazydeepseek/1.3.5/lib"
+cp "$REPOSITORY_ROOT/package.json" "$TMP/cache/lazydeepseek/1.3.5/package.json"
+cp "$REPOSITORY_ROOT/cordis.patch.yml" "$TMP/cache/lazydeepseek/1.3.5/cordis.patch.yml"
+cp "$REPOSITORY_ROOT/lib/index.mjs" "$TMP/cache/lazydeepseek/1.3.5/lib/index.mjs"
+cp -R "$PLUGIN_ROOT" "$TMP/cache/lazydeepseek/1.3.5/plugins/lazydeepseek"
+VERSIONED_PLUGIN="$TMP/cache/lazydeepseek/1.3.5/plugins/lazydeepseek"
 expect_status versioned-package-readiness 0 env LAZYDEEPSEEK_PLUGIN_ROOT="$VERSIONED_PLUGIN" bash "$VERSIONED_PLUGIN/scripts/lazydeepseek-load-check.sh"
 expect_contains versioned-package-readiness '^PACKAGE_READINESS=full$'
 expect_status native-root-precedence 0 env LAZYDEEPSEEK_PLUGIN_ROOT="$VERSIONED_PLUGIN" CLAUDE_PLUGIN_ROOT="$TMP/missing-plugin" bash "$VERSIONED_PLUGIN/scripts/lazydeepseek-load-check.sh"
 expect_status relative-native-root-rejected 1 env LAZYDEEPSEEK_PLUGIN_ROOT=relative/path bash "$VERSIONED_PLUGIN/scripts/lazydeepseek-load-check.sh"
-expect_status traversing-native-root-rejected 1 env LAZYDEEPSEEK_PLUGIN_ROOT="$TMP/cache/../cache/lazydeepseek/1.3.4" bash "$VERSIONED_PLUGIN/scripts/lazydeepseek-load-check.sh"
+expect_status traversing-native-root-rejected 1 env LAZYDEEPSEEK_PLUGIN_ROOT="$TMP/cache/../cache/lazydeepseek/1.3.5" bash "$VERSIONED_PLUGIN/scripts/lazydeepseek-load-check.sh"
 ln -s "$TMP/cache" "$TMP/cache-link"
-expect_status symlinked-native-root-rejected 1 env LAZYDEEPSEEK_PLUGIN_ROOT="$TMP/cache-link/lazydeepseek/1.3.4" bash "$VERSIONED_PLUGIN/scripts/lazydeepseek-load-check.sh"
+expect_status symlinked-native-root-rejected 1 env LAZYDEEPSEEK_PLUGIN_ROOT="$TMP/cache-link/lazydeepseek/1.3.5" bash "$VERSIONED_PLUGIN/scripts/lazydeepseek-load-check.sh"
 expect_status full-package-doctor 0 env CLAUDE_PLUGIN_ROOT="$INSTALLED_PLUGIN" bash "$INSTALLED_PLUGIN/scripts/lazydeepseek-plugin-doctor.sh"
 expect_contains full-package-doctor '^  \[PASS\] Command definitions \(20\)$'
 

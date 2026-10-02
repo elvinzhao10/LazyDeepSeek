@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.3.4",
+  "version": "1.3.5",
   "identity": {
     "package": "lazydeepseek",
     "product": "LazyDeepSeek",
@@ -16,7 +16,7 @@
     "entry": "lib/index.mjs (prebuilt, committed; no install-time build scripts)"
   },
   "artifacts": {
-    "package.json": "11bd02f85e23837db18f2cef0e12f07d3f5e817e3dd0571058f4467a7af21bad",
+    "package.json": "456f7d1515f38bfb387927071818ef2f045514f74dd5ec04a643306a5002fe07",
     "cordis.patch.yml": "318bd40ac56917fb9ed4153c7e7c793480e15e6347caccdf16d288ee2dcc88c5"
   },
   "payload": {
@@ -33,7 +33,7 @@
       ".mcp.json"
     ],
     "file_count": 89,
-    "inventory_sha256": "90a9159c36350ed8f92eb7366f12ea152326dcb46a8f625be19eddf2ae4e8092"
+    "inventory_sha256": "3a4bc1cdf3ce5fe53321fc5351afee44f48f9a910e36f01a6b68d32f87c68fa3"
   },
   "default_routes": {
     "dsh": "dsh-plugin-git-sha"
