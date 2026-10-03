@@ -180,13 +180,13 @@ loaded session, record that observation before relying on any broader surface.
 This fallback explicitly excludes commands, Agents, and hooks.
 
 Before changing host settings, prepare the connector values without mutation
-from `plugins/lazydeepseek/.mcp.json`: replace `${CLAUDE_PLUGIN_ROOT}` with the
-absolute `<release-root>/plugins/lazydeepseek` and `${CLAUDE_PROJECT_DIR}` with
+from `plugins/lazydeepseek/.mcp.json`: replace `${LAZYDEEPSEEK_PLUGIN_ROOT}` with the
+absolute `<release-root>/plugins/lazydeepseek` and `${LAZYDEEPSEEK_PROJECT_DIR}` with
 the absolute `<project-root>`. Every entry must use `command: bash`, one
 absolute `args` path
 `<release-root>/plugins/lazydeepseek/mcp/<server>/server.sh`, `cwd: <project-root>`,
 and environment values `CWD=<project-root>` and
-`CLAUDE_PROJECT_DIR=<project-root>`. The six `<server>` values are exactly
+`LAZYDEEPSEEK_PROJECT_DIR=<project-root>`. The six `<server>` values are exactly
 `run-ledger`, `verification`, `status-dashboard`, `context-graph`,
 `code-intel`, and `docs`. Do not edit the shipped `.mcp.json`. The paste-ready
 six-entry template is in [Host routes](docs/reference/host-routes.md#manual-connector-specification).

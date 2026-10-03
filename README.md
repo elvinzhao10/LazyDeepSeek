@@ -116,9 +116,9 @@ in DeepSeek Harness after reviewing the source.
    local development checkout). The npm registry is not used for this package.
    Installed plugins are enabled by default; no build scripts run because the
    prebuilt `lib/` is committed.
-   If you installed an earlier v1.3.5 candidate, reinstall the new pinned sha
-   into the same profile and restart the session so the regenerated hooks
-   config is parsed fresh.
+   To upgrade an existing installation, install the new verified release SHA
+   into the same profile and restart the session so the generated hooks
+   configuration is parsed fresh.
 3. You need **Node.js LTS 24 (recommended) or 22 (supported alternative)** —
    the lifecycle also accepts Node.js LTS 20 for compatibility — and **Git**
    on `PATH` for the local

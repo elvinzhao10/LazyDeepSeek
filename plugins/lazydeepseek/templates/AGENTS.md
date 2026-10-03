@@ -6,9 +6,9 @@ precedence.
 
 ## When the user types `onboard`
 
-Require **Node.js LTS 20+** (the dsh npm manifest declares no `engines`
-field; the CI-verified floor is the Node line used for the pinned host) and
-**Git**. Bootstrap `onboard` only from
+Require **Node.js LTS 24 (recommended) or 22 (supported alternative)** and
+**Git**. The lifecycle also accepts Node.js LTS 20 for compatibility.
+Optional TypeScript LSP requires Node.js **22.22.2+**. Bootstrap `onboard` only from
 `https://github.com/elvinzhao10/LazyDeepSeek.git`, then use
 `node "<install-root>/LazyDeepSeek/launcher.js"` for `update`, `status`,
 `recover-bootstrap-lock`, and plan-first `offboard`. The exact durable tree is
