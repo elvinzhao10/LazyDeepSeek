@@ -7,9 +7,12 @@ established. Package
 files, host settings, credentials, marketplace state, and live sessions remain
 separate authorities.
 
-## Current documentation release: v1.3.4
+See [the current platform audit](docs/reference/platform-status-2026-10-02.md)
+for version-specific native features and legacy route limits.
 
-The package version is v1.3.4; fresh DeepSeek Harness host readiness requires direct observation.
+## Current documentation release: v1.3.5
+
+The package version is v1.3.5; fresh DeepSeek Harness host readiness requires direct observation.
 This guide names current
 human-facing boundaries only and does not
 promote package evidence to host proof. The route IDs are
@@ -36,6 +39,9 @@ and has readable artifacts. If run creation is interrupted before `state.json`,
 recover only its transaction material, preserve caller files, then retry.
 
 ## Durable onboarding (start here)
+
+Optional TypeScript LSP requires Node.js **22.22.2+**; core lifecycle compatibility
+with Node.js 20 does not imply compatibility with that optional provider.
 
 For new installations, use **Node.js LTS 24 (recommended)** or **Node.js
 LTS 22 (supported alternative)**, plus **Git**. Node.js LTS 20 is also
@@ -174,13 +180,13 @@ loaded session, record that observation before relying on any broader surface.
 This fallback explicitly excludes commands, Agents, and hooks.
 
 Before changing host settings, prepare the connector values without mutation
-from `plugins/lazydeepseek/.mcp.json`: replace `${CLAUDE_PLUGIN_ROOT}` with the
-absolute `<release-root>/plugins/lazydeepseek` and `${CLAUDE_PROJECT_DIR}` with
+from `plugins/lazydeepseek/.mcp.json`: replace `${LAZYDEEPSEEK_PLUGIN_ROOT}` with the
+absolute `<release-root>/plugins/lazydeepseek` and `${LAZYDEEPSEEK_PROJECT_DIR}` with
 the absolute `<project-root>`. Every entry must use `command: bash`, one
 absolute `args` path
 `<release-root>/plugins/lazydeepseek/mcp/<server>/server.sh`, `cwd: <project-root>`,
 and environment values `CWD=<project-root>` and
-`CLAUDE_PROJECT_DIR=<project-root>`. The six `<server>` values are exactly
+`LAZYDEEPSEEK_PROJECT_DIR=<project-root>`. The six `<server>` values are exactly
 `run-ledger`, `verification`, `status-dashboard`, `context-graph`,
 `code-intel`, and `docs`. Do not edit the shipped `.mcp.json`. The paste-ready
 six-entry template is in [Host routes](docs/reference/host-routes.md#manual-connector-specification).

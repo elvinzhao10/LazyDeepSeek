@@ -32,8 +32,8 @@ function fixture() {
   for (const name of ['lazydeepseek-lifecycle.js', 'lifecycle-self-test.js']) {
     fs.copyFileSync(path.join(PLUGIN_ROOT, 'scripts', name), path.join(scripts, name));
   }
-  fs.writeFileSync(path.join(source, 'package.json'), '{"name":"lazydeepseek","version":"1.3.4"}\n');
-  fs.writeFileSync(path.join(packageRoot, 'tooling', 'package.json'), '{"name":"@lazyseries/lazydeepseek-tooling","version":"1.3.4"}\n');
+  fs.writeFileSync(path.join(source, 'package.json'), '{"name":"lazydeepseek","version":"1.3.5"}\n');
+  fs.writeFileSync(path.join(packageRoot, 'tooling', 'package.json'), '{"name":"@lazyseries/lazydeepseek-tooling","version":"1.3.5"}\n');
   fs.cpSync(path.join(PLUGIN_ROOT, 'contracts'), path.join(packageRoot, 'contracts'), { recursive: true });
   fs.writeFileSync(path.join(source, 'README.md'), 'first\n');
   git(source, ['init']);

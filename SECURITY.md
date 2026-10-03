@@ -7,5 +7,5 @@ affected version, impact, and any suggested mitigation. Do not include live
 credentials or personal data.
 
 We will acknowledge reports, assess severity, and coordinate a fix before
-public disclosure where practical. Reports may target the current v1.3.4 package. Released-version support follows
+public disclosure where practical. Reports may target the current candidate package. Released-version support follows
 the latest published stable release line.

@@ -61,7 +61,7 @@ test('installed-only package load check validates machine status without release
   assert.match(result.stdout, /machine status v2/i);
 });
 
-test('machine status publishes authoritative v1.3.4 DeepSeek Harness route boundaries', () => {
+test('machine status publishes authoritative v1.3.5 DeepSeek Harness route boundaries', () => {
   // Given: the checked-in v1.3.4 package and its dsh route declarations.
   const expectedHosts = [
     ['dsh', 'dsh-plugin-git-sha', 'invoke-documented', 'documented-tested'],
@@ -75,7 +75,7 @@ test('machine status publishes authoritative v1.3.4 DeepSeek Harness route bound
   const report = JSON.parse(result.stdout);
   assert.equal(report.schema_version, 2);
   assert.equal(report.contract_version, '2.0.0');
-  assert.equal(report.version, '1.3.4');
+  assert.equal(report.version, '1.3.5');
   assert.deepEqual(report.package_readiness, { status: 'ready', scope: 'package' });
   assert.deepEqual(report.host_readiness, { status: 'pending' });
   assert.deepEqual(report.hosts.map((row) => [row.host, row.route, row.native_mode, row.public_label]), expectedHosts);
@@ -110,7 +110,7 @@ test('authoritative version fields advance without rewriting historical v1.0.3 f
   });
 
   // Then: every current authority is v1.3.4 and the historical receipt remains v1.0.3.
-  assert.deepEqual(versions, Array(currentFiles.length).fill('1.3.4'));
+  assert.deepEqual(versions, Array(currentFiles.length).fill('1.3.5'));
   assert.equal(historical.manifest.version, '1.0.3');
   assert.match(historical.release.id, /^1\.0\.3-/);
 });
