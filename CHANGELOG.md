@@ -2,6 +2,10 @@
 
 Sections before v1.3.4 record inherited family history, not previous public releases of this port.
 
+## [1.4.0] - 2026-10-05
+
+Vendor the family's shared dashboard core and document the DeepSeek Harness-native adapter: an authenticated loopback service behind `cli.mjs start|status|open|stop`, a browser UI with Work/Verification/Plan-edit views, task inspector, evidence preview and queue planning (queue edits never start work), six status-dashboard MCP tools (`dashboard_service`, `copy_task_context`), and honest capability labels (embedding/chat handoff/wake unobserved; host readiness pending). Synthesized hook events remain non-native and distribution stays git-spec/GitHub-only; the npm registry is not used for this package. This is this port's first dashboard release. See RELEASE_NOTES.md.
+
 ## [1.3.5] - 2026-10-02
 
 Execute real runtime-floor and provider checks, bound hook input while preserving host refusal contracts, and update current platform guidance. Optional TypeScript LSP requires Node 22.22.2; the core lifecycle retains its separate Node 20 floor. See RELEASE_NOTES.md for patch details and pending native host acceptance.

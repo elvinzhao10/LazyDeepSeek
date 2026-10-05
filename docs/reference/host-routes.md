@@ -1,8 +1,8 @@
 # Host routes
 
-## v1.3.5 package route and host readiness
+## v1.4.0 package route and host readiness
 
-This guide describes the v1.3.5 package for the DeepSeek Harness
+This guide describes the v1.4.0 package for the DeepSeek Harness
 (dsh) host. Native-host readiness remains pending per component until
 observed live. The git-spec install route (`dsh-plugin-git-sha`) is the
 default full-plugin route (GitHub-only distribution: the npm registry is not

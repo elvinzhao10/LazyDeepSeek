@@ -1,5 +1,12 @@
 # LazyDeepSeek Plugin Changelog
 
+## [1.4.0] - Shared dashboard surface and honest capability labels
+
+- Vendor the family's shared dashboard core with hash-pinned metadata; vendored bytes are never edited per package.
+- Add the DeepSeek Harness-native dashboard-host adapter: authenticated loopback service, browser entry, transactional edits with exact-revision consumption and distinct verifier proof, queue persistence without execution.
+- Extend status-dashboard MCP to six tools with `dashboard_service` and `copy_task_context`.
+- Report honest capability labels; embedding, chat handoff and wake stay unobserved and host readiness stays pending. Synthesized hook events remain non-native; the dashboard service does not change that boundary, and distribution stays git-spec/GitHub-only.
+
 ## [1.3.5] - Runtime verification and platform clarity
 
 - Execute real runtime-floor exercises and check optional LSP requirements separately.

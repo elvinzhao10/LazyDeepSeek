@@ -2,9 +2,9 @@
 
 This page explains the deployment boundary in code terms. A plugin package contains files a host may load; it does not contain the host's profile registry, session state, or connector process table.
 
-## v1.3.5 package route and host readiness
+## v1.4.0 package route and host readiness
 
-LazyDeepSeek v1.3.5 is prepared as a native DeepSeek Harness plugin: `plugins/lazydeepseek/`
+LazyDeepSeek v1.4.0 is prepared as a native DeepSeek Harness plugin: `plugins/lazydeepseek/`
 is the payload directory. The repository root is the npm-style package boundary: its `package.json` (`dsh` key plus the
 exact `0.2.0-rc.2` peer pin) and `cordis.patch.yml` rows, with the payload under
 `plugins/lazydeepseek/`. The public repository is the source for pinned-SHA
@@ -170,7 +170,7 @@ It prints `HOST_PREPARATION=not-applied`, `HOST_MUTATION=none`, and
 
 Automated package verification is defined by the product CI workflows (Ubuntu
 and macOS jobs). Supplied host observations are historical macOS reports; they
-do not establish a current v1.3.5 host session. A host that has not been
+do not establish a current v1.4.0 host session. A host that has not been
 observed in a fresh session remains **HOST READINESS: PENDING** regardless of
 package evidence.
 The fallback's exact non-mutating six-entry JSON — with absolute

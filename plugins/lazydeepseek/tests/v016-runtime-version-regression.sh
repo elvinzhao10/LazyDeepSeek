@@ -3,7 +3,7 @@ set -euo pipefail
 
 PLUGIN_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 export LAZYDEEPSEEK_MCP_MODE="${LAZYDEEPSEEK_MCP_MODE:-orchestrated}"
-EXPECTED_VERSION="1.3.5"
+EXPECTED_VERSION="1.4.0"
 REQUEST='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}'
 
 for server in run-ledger verification status-dashboard context-graph code-intel docs lsp; do
@@ -65,4 +65,4 @@ with tempfile.TemporaryDirectory(prefix="lazydeepseek-version-profile-") as host
     assert value["version"] == expected, f"isolated profile reported {value['version']!r}"
 
 PY
-printf 'v1.3.5 runtime version regression: PASS\n'
+printf 'v1.4.0 runtime version regression: PASS\n'

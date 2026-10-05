@@ -1,6 +1,6 @@
 {
   "name": "lazydeepseek",
-  "version": "1.3.5",
+  "version": "1.4.0",
   "description": "LazyDeepSeek \u2014 the DeepSeek Harness (dsh) member of the LazySeries family: skills, hooks, MCP servers, commands, agents and the Ralph/ULW loop ported from LazyZCode.",
   "license": "MIT",
   "main": "lib/index.mjs",

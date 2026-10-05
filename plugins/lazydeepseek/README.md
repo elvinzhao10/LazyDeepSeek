@@ -1,6 +1,6 @@
 # LazyDeepSeek Plugin
 
-## v1.3.5 release candidate installation
+## v1.4.0 release candidate installation
 
 **Node.js LTS 24 (recommended) or 22 (supported alternative)** and **Git** are recommended. The lifecycle also accepts Node.js LTS 20 for compatibility. Bootstrap `onboard` only
 from `https://github.com/elvinzhao10/LazyDeepSeek.git`, then use

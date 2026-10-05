@@ -25,7 +25,7 @@ function fixture() {
   fs.mkdirSync(projectRoot);
   const paths = prepareProductRoot({ installRoot, product: 'LazyDeepSeek' });
   const commitSha = 'c'.repeat(40);
-  const staged = stageRelease(paths, { sourceRoot, version: '1.3.5', commitSha });
+  const staged = stageRelease(paths, { sourceRoot, version: '1.4.0', commitSha });
   const promoted = promoteRelease(paths, {
     ...staged,
     commitSha,
@@ -33,7 +33,7 @@ function fixture() {
     manifestRelativePath: 'package.json',
     origin: 'https://github.com/elvinzhao10/LazyDeepSeek.git',
     runtimePath: process.execPath,
-    version: '1.3.5',
+    version: '1.4.0',
   });
   const releaseRoot = path.join(paths.releases, promoted.releaseId);
   const manifest = path.join(releaseRoot, 'package.json');
@@ -50,7 +50,7 @@ function receipt(f) {
       manifest: 'package.json',
       manifest_sha256: crypto.createHash('sha256').update(fs.readFileSync(f.manifest)).digest('hex'),
       plugin: 'lazydeepseek',
-      version: '1.3.5',
+      version: '1.4.0',
     },
     host: 'dsh',
     build: 'build:current',
