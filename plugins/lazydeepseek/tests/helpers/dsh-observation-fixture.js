@@ -50,7 +50,7 @@ function fixture(t) {
     source: {
       route: 'dsh-plugin-git-sha', release_root: RELEASE_ROOT,
       manifest: 'package.json',
-      manifest_sha256: sha(fs.readFileSync(MANIFEST)), plugin: 'lazydeepseek', version: '1.3.5',
+      manifest_sha256: sha(fs.readFileSync(MANIFEST)), plugin: 'lazydeepseek', version: '1.4.0',
     },
     host: 'dsh', build: 'build:current', session_id: 'session:current', observed_at: OBSERVED_AT,
     capabilities: {

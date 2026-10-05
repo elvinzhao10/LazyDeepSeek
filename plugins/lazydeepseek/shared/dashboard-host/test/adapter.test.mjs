@@ -25,7 +25,7 @@ async function http(origin, path, options = {}) {
 }
 const completion = (planRevision, sourceRevision, criterionVersion = 2) => ({ task_id: 'A', criterion_id: 'C1', criterion_version: criterionVersion, plan_revision: planRevision,
   source_revision: sourceRevision, artifact_path: '.lazydeepseek/runs/probe/actual.txt', executor_id: 'worker:deepseek-executor',
-  executor_attempt_id: 'executor:deepseek', verifier_id: 'worker:deepseek-verifier', verifier_attempt_id: 'verifier:deepseek', package_version: '1.3.5' });
+  executor_attempt_id: 'executor:deepseek', verifier_id: 'worker:deepseek-verifier', verifier_attempt_id: 'verifier:deepseek', package_version: '1.4.0' });
 
 test('DeepSeek native edit stays pending until an exact revision is consumed and a distinct verifier proves it', async () => {
   const f = await fixture();
