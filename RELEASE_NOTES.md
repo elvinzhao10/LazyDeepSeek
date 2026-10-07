@@ -7,6 +7,24 @@ boundary. This is this port's first dashboard release; sections before v1.3.4
 in the changelog record inherited family history, not previous public releases
 of this port.
 
+## Project platform (2026-10-07)
+
+- The persistent project record is vendored as the family's second pinned
+  tree: `plugins/lazydeepseek/shared/project/` + `project.vendor.json` re-pin
+  to family tree `1feb5646…` (source revision `537f393`). DeepSeek's adapter
+  keeps its own authority — the dsh lifecycle, git-spec distribution, and
+  synthesized-versus-observed labeling — over the shared runtime's
+  init/read/command/observe routes, registered original-source editing,
+  reconciliation, and telemetry.
+- The project-adapter suite now asserts no capability key ever claims observed
+  host adoption (mutation-proven), and the project context summary states the
+  git-observation boundary explicitly: the vendored collectors are
+  byte-pinned but wired to no DeepSeek-exposed route, and commit links stay
+  run-side (`repo_head`/`content_revision`).
+- dsh host control stays `unavailable` (dsh owns host sessions; no daemon is
+  invented), host wake and embedding stay unobserved, and the package's
+  distribution stays git-spec/GitHub-only.
+
 ## Eval-driven fixes
 
 - A portable dashboard core is vendored under

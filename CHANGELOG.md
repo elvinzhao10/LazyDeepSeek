@@ -2,6 +2,10 @@
 
 Sections before v1.3.4 record inherited family history, not previous public releases of this port.
 
+## [1.4.0] - 2026-10-07 — project platform
+
+Adopt the family's persistent project platform through the DeepSeek-native adapter: the vendored `plugins/lazydeepseek/shared/project/` family re-pins to tree `1feb5646…` (source revision `537f393`; its README no longer links files the family selection excludes and its CLI entry guard resolves symlinked invocation paths instead of silently no-oping), while the dsh lifecycle, git-spec distribution, and synthesized-versus-observed labeling remain the owning surfaces. Add the no-observed-host-adoption assertion to the project-adapter suite (mutation-proven) and state the git-observation boundary explicitly in the project context summary: the vendored collectors are byte-pinned but wired to no DeepSeek-exposed route, and commit links stay run-side (`repo_head`/`content_revision`). dsh host control stays `unavailable`, host wake/embedding stay unobserved, and no daemon or npm distribution is invented. See RELEASE_NOTES.md.
+
 ## [1.4.0] - 2026-10-05
 
 Vendor the family's shared dashboard core and document the DeepSeek Harness-native adapter: an authenticated loopback service behind `cli.mjs start|status|open|stop`, a browser UI with Work/Verification/Plan-edit views, task inspector, evidence preview and queue planning (queue edits never start work), six status-dashboard MCP tools (`dashboard_service`, `copy_task_context`), and honest capability labels (embedding/chat handoff/wake unobserved; host readiness pending). Synthesized hook events remain non-native and distribution stays git-spec/GitHub-only; the npm registry is not used for this package. This is this port's first dashboard release. See RELEASE_NOTES.md.

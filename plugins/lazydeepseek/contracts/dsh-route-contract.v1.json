@@ -33,7 +33,7 @@
       ".mcp.json"
     ],
     "file_count": 89,
-    "inventory_sha256": "c62f03dbf2063aa1e88d9cb5714968fc1030224c5316e2323a966b446f37f535"
+    "inventory_sha256": "e4bce5dc5185fbed535e2d8ace19a3ec6972d63e9f8ad27b2ff42dd5e6f05ad8"
   },
   "default_routes": {
     "dsh": "dsh-plugin-git-sha"
