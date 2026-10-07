@@ -272,6 +272,7 @@ function contextSummary(snapshot) {
       dsh_host_control: 'unavailable through this package; dsh owns host sessions and no daemon is invented',
       distribution: 'git-spec/GitHub-only; no npm distribution exists for this package',
       mcp_mode_gate: 'status-dashboard profile gate applies before any project tool',
+      git_observation: 'vendored collectors byte-pinned but not wired to any DeepSeek-exposed route; commit links are run-side repo_head/content_revision only',
       consumption: 'reported by the native runtime only; never inferred from file writes' },
   };
 }

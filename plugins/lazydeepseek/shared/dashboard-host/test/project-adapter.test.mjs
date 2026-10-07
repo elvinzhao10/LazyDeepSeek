@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fixture, plugin, host, digest, testPython, pythonEnvironment } from './fixture.mjs';
+import { capabilities } from '../capabilities.mjs';
 
 const projectCli = join(host, '../project/cli.mjs');
 const projectHost = join(host, 'project.mjs');
@@ -308,4 +309,10 @@ test('status-dashboard MCP project tool round trip runs under /bin/bash 3.2 incl
     assert.match(gated.stderr.toString(), /MCP_PROFILE_INVALID/);
     assert.equal(gated.stdout.toString(), '', 'no project tool output escapes the gate');
   } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test('per-surface capability record claims no observed host adoption', () => {
+  for (const [capability, status] of Object.entries(capabilities)) {
+    assert.notEqual(status, 'observed', `${capability} must not claim observed host adoption`);
+  }
 });
