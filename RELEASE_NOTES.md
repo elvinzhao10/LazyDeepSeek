@@ -11,7 +11,7 @@ of this port.
 
 - The persistent project record is vendored as the family's second pinned
   tree: `plugins/lazydeepseek/shared/project/` + `project.vendor.json` re-pin
-  to family tree `95c0e0fc…` (source revision `7bf5bd8`). DeepSeek's adapter
+  to family tree `1feb5646…` (source revision `537f393`). DeepSeek's adapter
   keeps its own authority — the dsh lifecycle, git-spec distribution, and
   synthesized-versus-observed labeling — over the shared runtime's
   init/read/command/observe routes, registered original-source editing,
