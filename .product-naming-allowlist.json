@@ -118,6 +118,13 @@
       "count": 6,
       "classification": "source-identity",
       "reason": "Dated official-source platform comparison names actual sibling packages and native hosts; exact file and count scope."
+    },
+    {
+      "path": "plugins/lazydeepseek/shared/project/contract.mjs",
+      "text": "LazyQoder",
+      "count": 1,
+      "classification": "source-identity",
+      "reason": "Byte-pinned vendored family contract lists all six LazySeries runtime identifiers verbatim; byte parity with project.vendor.json forbids local edits."
     }
   ],
   "stableIdentityFiles": [
