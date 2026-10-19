@@ -16,6 +16,13 @@ evidence scope as `package`, `probe`, or `current-session`. A `package` result
 does not prove a live host, and a `probe` never substitutes for a
 current-session receipt.
 
+Official-source capability rescan of 2026-10-18
+(`platform-status-2026-10-18.md`) found no stable change to the pinned host:
+every upstream release after `dsh-v0.2.0-rc.2` — the entire 0.2.1 series
+through `dsh-v0.2.1-rc.2` of 2026-10-17 — remains prerelease. The exact peer
+pin, the seven native bridged events versus the two adapter-synthesized
+events, and the telemetry advisories are unchanged.
+
 Automatic workflow selection chooses the smallest sufficient existing workflow
 from task risk and complexity. Before a current host observation it is
 selection-only, not evidence that a host loaded or dispatched that workflow.
