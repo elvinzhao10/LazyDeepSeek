@@ -125,6 +125,13 @@
       "count": 1,
       "classification": "source-identity",
       "reason": "Byte-pinned vendored family contract lists all six LazySeries runtime identifiers verbatim; byte parity with project.vendor.json forbids local edits."
+    },
+    {
+      "path": "plugins/lazydeepseek/shared/project/artifacts/index.mjs",
+      "text": "LazyQoder",
+      "count": 1,
+      "classification": "source-identity",
+      "reason": "Byte-pinned vendored family module lists all six LazySeries runtime state-root identifiers verbatim in its NATIVE_STATE_ROOTS enum; byte parity with project.vendor.json forbids local edits."
     }
   ],
   "stableIdentityFiles": [
