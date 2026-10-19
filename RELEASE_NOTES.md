@@ -18,9 +18,12 @@ of this port.
   reconciliation, and telemetry.
 - The project-adapter suite now asserts no capability key ever claims observed
   host adoption (mutation-proven), and the project context summary states the
-  git-observation boundary explicitly: the vendored collectors are
-  byte-pinned but wired to no DeepSeek-exposed route, and commit links stay
-  run-side (`repo_head`/`content_revision`).
+  git-observation boundary explicitly: the served dashboard does expose a live
+  git view — a live probe saw `/api/project/git` answer 200 behind the
+  authenticated session and invoke the vendored `git-observation/local`
+  collector, reporting `observed` with the fixture's commit facts
+  (unauthenticated reads reject 401) — while run-side commit links stay
+  `repo_head`/`content_revision`.
 - dsh host control stays `unavailable` (dsh owns host sessions; no daemon is
   invented), host wake and embedding stay unobserved, and the package's
   distribution stays git-spec/GitHub-only.
