@@ -7,11 +7,42 @@ boundary. This is this port's first dashboard release; sections before v1.3.4
 in the changelog record inherited family history, not previous public releases
 of this port.
 
+## Completion pass (2026-10-19)
+
+A scoped completion pass over the 1.4.0 surfaces; every bullet cites the
+branch commit that delivers it.
+
+- Per-repo dashboard isolation: the family-wide per-repo store isolation and
+  foreign-runtime refusal matrix (bf113b8) — a foreign runtime's state and
+  event writes are refused, and each repository's dashboard stores stay
+  isolated to this package's own roots.
+- Served-project truth reconciled (81851a6): the DeepSeek served dashboard
+  does expose the live git view (`/api/project/git` answers 200 behind the
+  authenticated session and invokes the vendored `git-observation/local`
+  collector); run-side commit links stay `repo_head`/`content_revision`.
+- DeepSeek host-harness rescan, conservative adoption (35196c5): capability
+  observations refreshed against the live rescan; no unobserved capability
+  is claimed. The six-runtime family enum was allowlisted in the naming
+  guard ahead of the repin (c7fecd0).
+- Family repin (9d10905): both vendored families re-pinned at source
+  revision `bb696092` — dashboard tree `e55a9c00…`, project tree `16561f3…`
+  — carrying the family's completed project-dashboard UI (dark-first design
+  tokens v2, de-tabbed shell with the static retractable sidebar and
+  in-place navigation, six redesigned views, navigation guards,
+  measured-and-held performance budgets) into this package byte-identically.
+- Residuals, honestly: dsh host control stays `unavailable`, host embedding,
+  chat handoff, and host wake remain unobserved, synthesized hook events
+  remain non-native, and distribution stays git-spec/GitHub-only — no daemon
+  and no npm distribution is invented.
+
 ## Project platform (2026-10-07)
 
 - The persistent project record is vendored as the family's second pinned
-  tree: `plugins/lazydeepseek/shared/project/` + `project.vendor.json` re-pin
-  to family tree `1feb5646…` (source revision `537f393`). DeepSeek's adapter
+  tree: `plugins/lazydeepseek/shared/project/` + `project.vendor.json`
+  re-pinned at delivery prep to family tree `1feb5646…` (source revision
+  `537f393`) and in the completion repin to tree `16561f3…` at source
+  revision `bb696092` (9d10905, alongside the dashboard family at tree
+  `e55a9c00…`). DeepSeek's adapter
   keeps its own authority — the dsh lifecycle, git-spec distribution, and
   synthesized-versus-observed labeling — over the shared runtime's
   init/read/command/observe routes, registered original-source editing,
