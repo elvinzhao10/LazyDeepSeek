@@ -1,5 +1,11 @@
 # LazyDeepSeek Plugin
 
+The current platform audit is linked from the repository README.
+
+The package targets DeepSeek Harness 0.2.1-rc.3. Thirteen role presets preserve the existing personas and tool allowlists in isolated SDK checks; package and live host readiness are distinct.
+
+The status-dashboard declares seven tools, including `project`. The 85-file dashboard tree `b525d6786c8a2108a01f5c800a57e54faa36de50834381e57040815d9e0c948b` passed coordinated family checks.
+
 ## v1.4.0 release candidate installation
 
 **Node.js LTS 24 (recommended) or 22 (supported alternative)** and **Git** are recommended. The lifecycle also accepts Node.js LTS 20 for compatibility. Bootstrap `onboard` only

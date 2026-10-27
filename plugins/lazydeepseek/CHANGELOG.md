@@ -1,5 +1,9 @@
 # LazyDeepSeek Plugin Changelog
 
+## 2026-10-27 platform audit (unreleased)
+
+Latest upstream dsh is 0.2.1-rc.3 (2026-10-23). The package now targets rc.3 and replaces legacy subagent fields with 13 Agent Presets, preserving persona hashes and role tool allowlists in isolated rc.3 Agent composition checks. A scoped jobs facade exposes only `job_output`, and a scoped mask reconciles late global tools without changing the parent. Temporary profile boots do not establish current host readiness. The dashboard's 85-file b525d678 tree passed coordinated family checks. No live efficiency savings are claimed.
+
 ## [1.4.0] - Shared dashboard surface and honest capability labels
 
 - Vendor the family's shared dashboard core with hash-pinned metadata; vendored bytes are never edited per package.

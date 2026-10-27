@@ -16,12 +16,7 @@ evidence scope as `package`, `probe`, or `current-session`. A `package` result
 does not prove a live host, and a `probe` never substitutes for a
 current-session receipt.
 
-Official-source capability rescan of 2026-10-18
-(`platform-status-2026-10-18.md`) found no stable change to the pinned host:
-every upstream release after `dsh-v0.2.0-rc.2` — the entire 0.2.1 series
-through `dsh-v0.2.1-rc.2` of 2026-10-17 — remains prerelease. The exact peer
-pin, the seven native bridged events versus the two adapter-synthesized
-events, and the telemetry advisories are unchanged.
+The 2026-10-27 compatibility update targets rc.3. The former legacy role fields failed during rc.2 and rc.3 activation, despite a schema-only check passing. The 13 roles now select Agent Presets with the existing persona and tool allowlist, including an isolated `job_output` facade. Isolated rc.3 SDK checks and temporary profile boots are package evidence; host activation remains unobserved. See [platform status](platform-status-2026-10-27.md).
 
 Automatic workflow selection chooses the smallest sufficient existing workflow
 from task risk and complexity. Before a current host observation it is
@@ -54,20 +49,20 @@ or screenshot is observed evidence; otherwise **HOST READINESS: PENDING**.
 
 | Host route | Safe package artifact | Required host observation |
 | --- | --- | --- |
-| **dsh git-spec install route (`dsh-plugin-git-sha`)** | The repository IS the package: root `package.json` (`dsh` key + exact `0.2.0-rc.2` peer pin), `cordis.patch.yml` rows, committed prebuilt `lib/` (no build scripts, so the pnpm allowBuilds gate never applies); local package validation via the load-check and route-check scripts. | Run the pinned git-spec install below; after installation, observe one real skill (plus one user-invocable command entry on an interactive surface) and all six MCP connections in a fresh session. |
+| **dsh git-spec install route (`dsh-plugin-git-sha`)** | The repository IS the package: root `package.json` (`dsh` key + exact `0.2.1-rc.3` peer pin), `cordis.patch.yml` rows, committed prebuilt `lib/` (no build scripts, so the pnpm allowBuilds gate never applies); local package validation via the load-check and route-check scripts. | Run the pinned git-spec install below; after installation, observe one real skill (plus one user-invocable command entry on an interactive surface) and all six MCP connections in a fresh session. |
 | **Manual fallback (`manual-skills-mcp-fallback`)** | Copy `plugins/lazydeepseek/skills/` into the project's `.agents/skills/` (rank 200), then configure six local MCP rows manually. | Use only after receipt-scoped removal of the full-plugin route. Observe one imported skill and each connector; commands, agent presets, and hooks remain excluded. |
 
 ## DeepSeek Harness git-spec install route (default)
 
-DeepSeek Harness has no marketplace. Plugins are installed per profile with
+This package uses profile-scoped installation rather than a marketplace. Plugins can be installed with
 the `dsh plugin` verb set from a git spec (repository URL pinned to a full
 commit sha — the default route), a release tarball asset (the pinned
 alternate), or a local directory (development). The npm registry is not used
 for this package. One approved action at a time:
 
-1. **Preflight (read-only):** confirm `dsh --version` reports the pinned
-   `0.2.0-rc.2` and inspect the composed surface with
-   `dsh --profile <name> --dump-config`; record the current profile before adding the bundle. Confirm LazyDeepSeek
+1. **Preflight:** confirm `dsh --version` reports the pinned
+   `0.2.1-rc.3` and inspect the composed surface with
+   `dsh --profile <name> --dump-config`; this can initialize missing profile files, so do not call it as a read-only probe on an uninitialized profile. Record the current profile before adding the bundle. Confirm LazyDeepSeek
    rows after installation, not as a prerequisite for a new install.
 2. **Install:** after a separate approval, run the profile install with the
    git spec `<repository URL>#<full-commit-sha>` (or the release tarball

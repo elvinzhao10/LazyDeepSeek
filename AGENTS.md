@@ -1,5 +1,7 @@
 # AGENTS.md — LazyDeepSeek setup and removal guide
 
+**Platform audit 2026-10-27:** the package targets rc.3 and maps its 13 roles to Agent Presets; isolated SDK checks do not prove a live host session. See the current platform status before host actions. `--dump-config` may initialize a missing profile and is not a read-only probe in that case.
+
 LazyDeepSeek targets the **DeepSeek Harness** host. Automated package checks run in CI on
 Ubuntu and macOS as defined by the workflows; the supplied live-host reports
 are historical macOS observations, and no current-session host activation is
@@ -7,7 +9,7 @@ established. Package
 files, host settings, credentials, marketplace state, and live sessions remain
 separate authorities.
 
-See [the current platform audit](docs/reference/platform-status-2026-10-02.md)
+See [the current platform audit](docs/reference/platform-status-2026-10-27.md)
 for version-specific native features and legacy route limits.
 
 ## Current documentation release: v1.4.0
@@ -124,17 +126,16 @@ without current observation, **HOST READINESS: PENDING**.
 
 | Route | Safe package artifact | Host action and expected observation |
 | --- | --- | --- |
-| **dsh plugin route (`dsh-plugin-git-sha`)** | The repo IS the npm-style package: root `package.json` (`dsh` key + exact `0.2.0-rc.2` peer pin), `cordis.patch.yml` rows, prebuilt `lib/`; payload under `plugins/lazydeepseek/` declares 19 skills, 20 commands, 13 agents, 7 bridged hook events (+2 synthesized), and 6 MCP rows. | `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git spec pinned; GitHub-only, the npm registry is not used) as a separate approved action, then confirm our rows with `dsh --profile <name> --dump-config` and verify a fresh session. |
+| **dsh plugin route (`dsh-plugin-git-sha`)** | The repo IS the npm-style package: root `package.json` (`dsh` key + exact `0.2.1-rc.3` peer pin), `cordis.patch.yml` rows, prebuilt `lib/`; payload under `plugins/lazydeepseek/` declares 19 skills, 20 commands, 13 agents, 7 bridged hook events (+2 synthesized), and 6 MCP rows. | `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<sha>` (git spec pinned; GitHub-only, the npm registry is not used) as a separate approved action, then confirm our rows with `dsh --profile <name> --dump-config` and verify a fresh session. |
 | **Manual fallback (`manual-skills-mcp-fallback`)** | Skills import/copy from `plugins/lazydeepseek/skills/` only, plus six individual manual local MCP connectors. | Use only after the full-plugin route is removed with receipt-scoped ownership. Observe one imported skill and all six connector statuses; commands, agents, and hooks remain excluded. |
 
 ## DeepSeek Harness native plugin handoff
 
-DeepSeek Harness uses profile-scoped `dsh plugin` commands. There is no
-marketplace route. The repository root is the native npm-style package;
+This package uses profile-scoped `dsh plugin` commands for its git-spec route. The repository root is the native npm-style package;
 `plugins/lazydeepseek` is its payload, not the native install root.
 
-1. **Preflight:** check the pinned SDK `0.2.0-rc.2` and inspect
-   `dsh --profile <name> --dump-config` without mutation.
+1. **Preflight:** check the pinned SDK `0.2.1-rc.3` and inspect
+   `dsh --profile <name> --dump-config` only after accounting for its possible initialization of a missing profile.
 2. **Install:** after approval, run
    `dsh plugin --profile <name> add github:elvinzhao10/LazyDeepSeek#<full-sha>`.
    Wait for installation before starting a fresh project session.

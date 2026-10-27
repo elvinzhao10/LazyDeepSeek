@@ -12,20 +12,20 @@ LazyDeepSeek helps you use structured, evidence-based workflows in **DeepSeek Ha
 and guidance; a host is only considered ready after it is observed in a fresh
 session.
 
-[Platform status](docs/reference/platform-status-2026-10-02.md) · [Get started](#recommended-install-with-ai-help) · [Host routes](#choose-one-route) ·
+[Platform status](docs/reference/platform-status-2026-10-27.md) · [Get started](#recommended-install-with-ai-help) · [Host routes](#choose-one-route) ·
 [1.4.0 notes](RELEASE_NOTES.md) · [Family](#lazyseries-family) · [Docs](docs/)
 
 > **Current package version: v1.4.0. HOST READINESS: PENDING.** Local checks and release
 > archives prove package behavior; a fresh host session must prove loading,
-> command/skill execution and MCP connections.
+> command/skill execution and MCP connections. The 13 native roles use rc.3 Agent Presets; isolated package checks do not prove a live host session.
 
 ## What's in 1.4.0
 
 - A shared dashboard core is vendored in the package, with a native DeepSeek
   Harness adapter (`plugins/lazydeepseek/shared/dashboard-host/`) behind an
   authenticated loopback service and a browser UI.
-- The status-dashboard MCP server now exposes six tools: the four status views
-  plus `dashboard_service` and `copy_task_context`.
+- The status-dashboard MCP server exposes seven tools: four status views,
+  `dashboard_service`, `copy_task_context`, and `project`.
 - Capability labels are honest: `browser`, `transactional_edits`,
   `project_queue`, `context_copy` and `observations` are available;
   `embedding`, `chat_handoff` and `wake` are unobserved; native host readiness
@@ -33,7 +33,7 @@ session.
 - Synthesized hook events remain non-native; the dashboard service does not
   change that boundary. Distribution stays git-spec/GitHub-only; the npm
   registry is not used for this package.
-- The completion pass repinned both vendored families at `bb696092`
+- The historical completion pass repinned both vendored families at `bb696092`
   (dashboard tree `e55a9c00…`, project tree `16561f3…`), carrying the
   family's redesigned project dashboard — dark-first family design language,
   a de-tabbed shell with a static retractable sidebar and in-place
@@ -61,8 +61,10 @@ token-saving or cost claim is made.
 | v1.3.3 hardening | Host-specific hook, MCP and publication repairs. |
 | v1.3.4 maintenance | Transactional run integrity, safer lifecycle and native adapter repairs. |
 | v1.3.5 repairs | Real runtime exercises, bounded hooks, dependency updates and current platform guidance. |
-| v1.4.0 dashboard | Shared dashboard core vendored, native adapter with authenticated loopback service, six-tool status-dashboard MCP, honest capability labels. |
-| v1.4.0 completion | Repinned families at `bb696092` with the redesigned project dashboard (dark-first, sidebar shell, in-place navigation), per-repo isolation and refreshed capability observations. |
+| v1.4.0 dashboard | Shared dashboard core vendored, native adapter with authenticated loopback service, seven-tool status-dashboard MCP, honest capability labels. |
+| v1.4.0 historical completion | Previously repinned families at `bb696092` with the redesigned project dashboard (dark-first, sidebar shell, in-place navigation), per-repo isolation and refreshed capability observations. |
+
+The current vendored dashboard manifest records 85 files and tree `b525d6786c8a2108a01f5c800a57e54faa36de50834381e57040815d9e0c948b`; coordinated family checks verified this tree.
 
 ## Shared dashboard surface
 
@@ -93,7 +95,7 @@ capability labels above.
 - The status-dashboard MCP server exposes `dashboard_service` (start, inspect,
   stop, or return the local browser dashboard entry) and `copy_task_context`
   (copy a validated native producer context without executing or consuming it)
-  alongside the four status views.
+  and `project`, alongside the four status views.
 - Synthesized hook events remain non-native; the dashboard service does not
   change that boundary, and it does not make `embedding`, `chat_handoff` or
   `wake` observed. **HOST READINESS: PENDING** stays authoritative.
@@ -166,7 +168,7 @@ in DeepSeek Harness after reviewing the source.
 
 ### Direct profile setup
 
-1. Confirm the pinned host: `dsh --version` reports exact `0.2.0-rc.2`.
+1. Confirm the pinned host: `dsh --version` reports exact `0.2.1-rc.3`.
 2. After approval, run the git-spec install with the repository URL pinned to
    a full commit sha (or the GitHub release tarball, or `./lazydeepseek` for a
    local development checkout). The npm registry is not used for this package.
@@ -290,7 +292,7 @@ acceptance evidence. These packages run independently.
 | [LazyQoder](https://github.com/elvinzhao10/LazyQoder) | Qoder CLI / IDE / app |
 | [LazyZCode](https://github.com/elvinzhao10/LazyZCode) | ZCode |
 | [LazyKimi](https://github.com/elvinzhao10/LazyKimi) | Kimi Code CLI · Kimi Work (experimental) |
-| [LazyDeepSeek](https://github.com/elvinzhao10/LazyDeepSeek) **← you are here** | DeepSeek Harness 0.2.0-rc.2 |
+| [LazyDeepSeek](https://github.com/elvinzhao10/LazyDeepSeek) **← you are here** | DeepSeek Harness 0.2.1-rc.3 |
 
 The family shares planning, evidence, decision-memory and completion contracts.
 The first shared verification core and a shared dashboard core are vendored in
