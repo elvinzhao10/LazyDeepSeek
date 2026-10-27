@@ -1,200 +1,98 @@
-# LazyDeepSeek v1.4.0 - shared dashboard surface and honest capability labels
+# LazyDeepSeek v1.4.0
 
-## 2026-10-27 platform audit
+LazyDeepSeek 1.4.0 adds the shared local project dashboard and persistent project
+record to the existing planning, execution and verification workflows.
 
-Latest upstream dsh is 0.2.1-rc.3 (2026-10-23). The package now targets rc.3 and replaces legacy subagent fields with 13 Agent Presets, preserving persona hashes and role tool allowlists in isolated rc.3 Agent composition checks. A scoped jobs facade exposes only `job_output`, and a scoped mask reconciles late global tools without changing the parent. Temporary profile boots do not establish current host readiness. The current dashboard manifest pins 91 files at tree 9aa188df; the project manifest pins 31 files at tree 16561f3c. No live efficiency savings are claimed.
+## Dashboard and project work
 
-A documentation and surface release across the LazySeries siblings. It vendors
-the family's shared dashboard core and documents the DeepSeek Harness-native
-adapter without changing host-readiness boundaries or the synthesized-event
-boundary. This is this port's first dashboard release; sections before v1.3.4
-in the changelog record inherited family history, not previous public releases
-of this port.
+- An authenticated local dashboard with eight destinations: **Overview, Project,
+  Plans, Health, Execution, Git, Evidence and Research**.
+- A project record, editable plans, queue planning and research capture, with
+  source revisions and evidence references visible for review.
+- A run monitor that separates execution progress from verified completion,
+  plus reported token usage, resource activity and retained-run history.
+- A Health inventory of package components, separate from observed host activity.
 
-## Completion pass (2026-10-19)
+The collapsible sidebar, contextual Details and expandable pan/zoom maps keep
+navigation within the project. Source edits use authenticated native project
+binding and revision checks. Queue edits do not start work. Plans and research
+retain source revision and evidence references; these references are not
+immutable source copies or verification verdicts. Unknown usage stays unknown,
+and recorded comparisons do not establish efficiency savings.
 
-A scoped completion pass over the 1.4.0 surfaces; every bullet cites the
-branch commit that delivers it.
+The `status-dashboard` MCP server exposes seven tools, including
+`dashboard_service`, `copy_task_context` and typed `project` operations.
 
-- Per-repo dashboard isolation: the family-wide per-repo store isolation and
-  foreign-runtime refusal matrix (bf113b8) — a foreign runtime's state and
-  event writes are refused, and each repository's dashboard stores stay
-  isolated to this package's own roots.
-- Served-project truth reconciled (81851a6): the DeepSeek served dashboard
-  does expose the live git view (`/api/project/git` answers 200 behind the
-  authenticated session and invokes the vendored `git-observation/local`
-  collector); run-side commit links stay `repo_head`/`content_revision`.
-- DeepSeek host-harness rescan, conservative adoption (35196c5): capability
-  observations refreshed against the live rescan; no unobserved capability
-  is claimed. The six-runtime family enum was allowlisted in the naming
-  guard ahead of the repin (c7fecd0).
-- Family repin (9d10905): both vendored families re-pinned at source
-  revision `bb696092` — dashboard tree `e55a9c00…`, project tree `16561f3…`
-  — carrying the family's completed project-dashboard UI (dark-first design
-  tokens v2, de-tabbed shell with the static retractable sidebar and
-  in-place navigation, six redesigned views, navigation guards,
-  measured-and-held performance budgets) into this package byte-identically.
-- Residuals, honestly: dsh host control stays `unavailable`, host embedding,
-  chat handoff, and host wake remain unobserved, synthesized hook events
-  remain non-native, and distribution stays git-spec/GitHub-only — no daemon
-  and no npm distribution is invented.
-
-## Project platform (2026-10-07)
-
-- The persistent project record is vendored as the family's second pinned
-  tree: `plugins/lazydeepseek/shared/project/` + `project.vendor.json`
-  re-pinned at delivery prep to family tree `1feb5646…` (source revision
-  `537f393`) and in the completion repin to tree `16561f3…` at source
-  revision `bb696092` (9d10905, alongside the dashboard family at tree
-  `e55a9c00…`). DeepSeek's adapter
-  keeps its own authority — the dsh lifecycle, git-spec distribution, and
-  synthesized-versus-observed labeling — over the shared runtime's
-  init/read/command/observe routes, registered original-source editing,
-  reconciliation, and telemetry.
-- The project-adapter suite now asserts no capability key ever claims observed
-  host adoption (mutation-proven), and the project context summary states the
-  git-observation boundary explicitly: the served dashboard does expose a live
-  git view — a live probe saw `/api/project/git` answer 200 behind the
-  authenticated session and invoke the vendored `git-observation/local`
-  collector, reporting `observed` with the fixture's commit facts
-  (unauthenticated reads reject 401) — while run-side commit links stay
-  `repo_head`/`content_revision`.
-- dsh host control stays `unavailable` (dsh owns host sessions; no daemon is
-  invented), host wake and embedding stay unobserved, and the package's
-  distribution stays git-spec/GitHub-only.
-
-## Eval-driven fixes
-
-- A portable dashboard core is vendored under
-  `plugins/lazydeepseek/shared/dashboard/` with hash-pinned vendoring metadata
-  (`dashboard.vendor.json`); the vendored bytes are not edited per package.
-- The DeepSeek Harness-native adapter
-  (`plugins/lazydeepseek/shared/dashboard-host/`) is covered by an adapter
-  suite: edits stay pending until an exact revision is consumed, a distinct
-  independent verifier proves them, queue persistence never executes work, and
-  the owned loopback lifecycle emits signed receipts.
-- The status-dashboard MCP server exposes seven tools: four status views,
-  `dashboard_service` for the local browser entry, `copy_task_context` for
-  validated producer context, and `project` for the project platform.
-- The dashboard-host adapter suite, MCP test script, route contract,
-  publication regression, package verification, product-naming check and the
-  Node.js 20 supported-floor spot were re-run for this release.
-
-## Measured efficiency
-
-No latency, token, cost or native-host performance improvement is claimed.
-The dashboard service is a local loopback convenience surface; it does not
-change execution authority or add host capabilities.
+The dashboard and project cores are hash-pinned in the package's
+[vendor manifests](plugins/lazydeepseek/shared/dashboard.vendor.json), with a separate
+[project manifest](plugins/lazydeepseek/shared/project.vendor.json). See the
+[documentation index](docs/README.md) for package architecture and usage.
 
 ## Host capability matrix
 
-Adapter capabilities are reported explicitly: `browser`, `transactional_edits`,
-`project_queue`, `context_copy` and `observations` are `available`;
-`embedding`, `chat_handoff` and `wake` are `unobserved`;
-`native_host_readiness` is `pending`. The browser UI offers Work,
-Verification and Plan-edit views, a task inspector, an evidence preview
-dialog, and queue planning; queue edits can create, amend and reorder queued
-plans, and queue edits never start work.
+This release targets **DeepSeek Harness 0.2.1-rc.3**, an exact prerelease peer.
+The 13 native roles now use Agent Presets with preserved personas and scoped
+tool allowlists. A scoped jobs facade exposes only `job_output`; late inherited
+tools are filtered without changing the parent registry. The release gate
+exercises real isolated rc.3 Agent compositions. `sdk-minimal` is unsupported;
+model-backed delegation and a current user session remain unverified.
 
-Synthesized hook events remain non-native; the dashboard service does not
-change that boundary. Distribution stays git-spec/GitHub-only; the npm
-registry is not used for this package.
-
-See [the dated platform audit](docs/reference/platform-status-2026-10-02.md).
-That snapshot records the v1.3.5 review date and is preserved as a historical
-document; it does not describe the dashboard surface.
-**HOST READINESS: PENDING** until the selected current client demonstrates
-discovery, skill/command execution, relevant hooks and MCP connections.
-
-## Migration and upgrade
-
-Use the receipt-aware lifecycle update with an explicit project binding.
-Preserve populated run state, modified assets, unknown files and host settings.
-Read [AGENTS.md](AGENTS.md), [README.md](README.md) and the selected host
-guide.
+Seven hook events are bridged; PermissionRequest and PostToolUseFailure are
+synthesized. Install the repository root through a pinned git spec, not the
+payload subdirectory. The manual Skills/MCP route is recovery-only and excludes
+commands, hooks and roles. See the [platform audit](docs/reference/platform-status-2026-10-27.md).
 
 ## Known risks
 
-Authenticated current-client acceptance remains pending. The dashboard
-surface is a package capability: a copied configuration, manifest validation,
-or isolated lifecycle fixture cannot establish host loading. Embedding, chat
-handoff and wake remain unobserved, and nothing in this release claims host
-support for them. Synthesized hook events remain non-native. Vendored
-dashboard bytes are hash-pinned; local edits would break the pin, not extend
-the surface.
+**HOST READINESS: PENDING.** Package checks do not prove plugin loading, hook
+execution, model selection or live MCP connections. Browser embedding, chat
+handoff and host wake remain unobserved. No current-session model selection or provider entitlement is established.
+
+## Migration and upgrade
+
+Use Node.js 24 LTS (recommended) or Node.js 22 LTS, Git and Python 3.10+.
+Core lifecycle compatibility with Node.js 20 does not extend to the optional
+TypeScript language server, which requires Node.js **22.22.2+**. The optional
+provider pairs language-server 6.x with TypeScript 6.0.3 for its tsserver
+integration; a newer TypeScript package is not automatically compatible.
+
+Use the [installation guide](docs/03-install-and-host-verification.md) and
+[AGENTS.md](AGENTS.md) for the selected route. Update only receipt-owned assets
+and preserve modified or unknown files,
+project history and host settings. Do not combine a full-plugin route
+with its fallback. After updating, observe a fresh host session separately
+from package checks.
 
 ## Rollback
 
-Retain the previous release and receipts. Existing 1.3.5 tags and assets
-remain intact. Follow the scoped lifecycle removal or rollback plan,
-preserving user-modified and foreign assets. Host-managed registrations
-require their selected client's removal flow.
-
-## Prior release notes
-
-# LazyDeepSeek v1.3.5 - runtime verification and platform clarity
-
-A maintenance release across the six LazySeries siblings. It carries forward
-the workflow and run-integrity foundation from 1.3.0 through 1.3.4.
+Keep the previous release and its receipts. Rollback and removal remain
+receipt-scoped; follow the [removal guide](docs/08-safe-removal.md) instead of
+deleting host directories.
 
 ## Eval-driven fixes
 
-- Runtime-floor checks execute named package, installation and lifecycle tests.
-  Missing or unknown exercises and failed subprocesses cannot report PASS.
-- Optional TypeScript LSP installation is tested separately with engine-strict
-  dependency installation and the installed server executable.
-- Hook payloads are bounded before parsing and kept out of process arguments.
-  Invalid or oversized events preserve each adapter's exit and state contract.
-- Current product names, configuration scopes and native extension capabilities
-  are distinguished from legacy routes and unverified live integration.
+Source writes check the expected revision before mutation, and project stores
+reject a foreign runtime identity. Package verification covers these local
+boundaries separately from native host acceptance.
 
 ## Measured efficiency
 
-Hook boundary repairs avoid payload-sized process arguments and bound input
-memory. The first host-independent verification unit is vendored identically
-in sibling packages, with product-specific exercises in small adapters.
-No latency, token, cost or native-host performance improvement is claimed.
-Persistent LSP sessions and event-ledger compaction remain future measured work.
+Usage and retained-run comparisons display recorded inputs only. Missing usage
+is not zero, fixture measurements are not live host measurements, and this
+release makes no token, time, resource or cost-saving claim.
 
-## Host capability matrix
+## Release verification and distribution
 
-DeepSeek Harness remains pinned to the reviewed SDK. Native event bridges, synthesized observations and unsupported capabilities retain separate labels; installing the adapter is not proof of a current host session.
+The [release workflow](.github/workflows/release.yml) checks the tag against the
+package version and gates publication on isolated rc.3 SDK composition, package, lifecycle and Node/Python verification plus publication checks.
+It builds `lazydeepseek-v1.4.0.tar.gz` for the selected tag and publishes it as a GitHub Release
+asset. Archive checks are part of that workflow; existing published assets
+are retained. This workflow does not publish to npm.
 
-See [the dated platform audit](docs/reference/platform-status-2026-10-02.md).
-**HOST READINESS: PENDING** until the selected current client demonstrates
-discovery, skill/command execution, relevant hooks and MCP connections.
-Official feature documentation and package tests are separate evidence.
+Final CI and release-job outcomes belong to the tagged commit's Actions run;
+these notes do not substitute for that result or for current-session host
+acceptance. Reproduction commands are in the
+[test and release guide](docs/09-test-and-release-verification.md).
 
-## Dependencies and runtime requirements
-
-Node.js 24 is recommended. Core lifecycle compatibility remains Node.js 20;
-LazyTrae's standalone CLI also retains its separate Node.js 18 compatibility
-tier. Optional TypeScript language-server 6.x requires Node.js 22.22.2 or later;
-5.x providers retain their own Node.js 20 requirement.
-Python language-server providers are aligned at basedpyright 1.40.1.
-LazyTrae uses fast-uri 4.2.1 directly and the patched 3.1.8 Ajv edge, with
-security and normalization regressions preserved.
-
-## Migration and upgrade
-
-Use the receipt-aware lifecycle update with an explicit project binding.
-Preserve populated run state, modified assets, unknown files and host settings.
-Select the exact client and version before following a native installation route.
-Kimi Code clients can share configuration; Kimi Work is a separate target.
-
-Read [AGENTS.md](AGENTS.md), [README.md](README.md) and the selected host guide.
-Use a newly versioned archive; existing 1.3.4 tags and assets remain intact.
-
-## Known risks
-
-Authenticated current-client acceptance remains pending. A copied configuration,
-manifest validation, or isolated lifecycle fixture cannot establish host loading.
-Optional providers must satisfy their own runtime floor.
-Native features added upstream are not automatically wired into the adapter.
-
-## Rollback
-
-Retain the previous release and receipts. Follow the scoped lifecycle removal
-or rollback plan, preserving user-modified and foreign assets. Host-managed
-registrations require their selected client's removal flow; never remove
-credentials, sessions or entire shared configuration directories.
+Historical release entries remain in [CHANGELOG.md](CHANGELOG.md) and dated
+platform audit documents.
