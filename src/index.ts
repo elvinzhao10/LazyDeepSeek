@@ -102,7 +102,7 @@ function sourceDigest(root) {
     }
   }
   walk(join(root, 'plugins', 'lazydeepseek'));
-  for (const file of ['package.json', 'cordis.patch.yml', 'lib/index.mjs']) hash.update(readFileSync(join(root, file)));
+  for (const file of ['package.json', 'cordis.patch.yml', 'lib/index.mjs', 'lib/job-output.mjs', 'lib/role-tools.mjs', 'lib/preset-registry.mjs']) hash.update(readFileSync(join(root, file)));
   return hash.digest('hex');
 }
 function inventory(root) {

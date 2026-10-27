@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, feat/dashboard-1.4.0]
   workflow_dispatch:
 
 permissions:
@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: "20.0.0"
       - run: npm ci --prefix plugins/lazydeepseek/tooling --ignore-scripts --no-audit --no-fund
@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: "22.22.2"
       - run: node plugins/lazydeepseek/scripts/verify-supported-floor.mjs --expected-runtime 22.22.2 --exercise lsp-provider
@@ -55,10 +55,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: "3.13"
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: "22"
       - name: Install locked tooling dependencies
@@ -80,10 +80,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: "3.13"
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: "24"
       - name: Install locked tooling dependencies
@@ -103,10 +103,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: "3.13"
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: "22"
       - name: Install locked tooling dependencies
@@ -126,12 +126,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: "3.13"
       - name: Install Python test runner
         run: python -m pip install pytest==8.4.2
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: "22"
       - name: Install locked tooling dependencies
@@ -140,10 +140,26 @@ jobs:
       - name: Run Node and Python suites (includes contracts digest pins)
         run: bash plugins/lazydeepseek/scripts/lazydeepseek-verify.sh
 
+  native-sdk:
+    name: DeepSeek Harness rc.3 contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: "22"
+      - name: Install isolated SDK without lifecycle scripts
+        run: npm install --prefix "$RUNNER_TEMP/dsh-sdk" --ignore-scripts --no-audit --no-fund @deepseek-ai/dsh@0.2.1-rc.3 @deepseek-ai/dsh-hooks-claude-code@0.2.1-rc.3 @deepseek-ai/dsh-mcp-client@0.2.1-rc.3 @deepseek-ai/dsh-tool-subagent@0.2.1-rc.3
+      - name: Verify roles and scoped composition
+        run: node plugins/lazydeepseek/scripts/native-sdk-check.mjs "$RUNNER_TEMP/dsh-sdk"
+
   validate:
     name: Deterministic validation
     if: ${{ always() }}
-    needs: [supported-floor, lsp-supported-floor, core, core-current, lifecycle, language]
+    needs: [supported-floor, lsp-supported-floor, core, core-current, lifecycle, language, native-sdk]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -155,6 +171,7 @@ jobs:
           CORE_CURRENT_RESULT: ${{ needs.core-current.result }}
           LIFECYCLE_RESULT: ${{ needs.lifecycle.result }}
           LANGUAGE_RESULT: ${{ needs.language.result }}
+          NATIVE_SDK_RESULT: ${{ needs.native-sdk.result }}
         run: |
           test "$SUPPORTED_FLOOR_RESULT" = success
           test "$LSP_SUPPORTED_FLOOR_RESULT" = success
@@ -162,3 +179,4 @@ jobs:
           test "$CORE_CURRENT_RESULT" = success
           test "$LIFECYCLE_RESULT" = success
           test "$LANGUAGE_RESULT" = success
+          test "$NATIVE_SDK_RESULT" = success

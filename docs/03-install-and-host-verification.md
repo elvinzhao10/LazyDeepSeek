@@ -1,12 +1,14 @@
 # Package delivery
 
+**Platform audit 2026-10-27:** the package targets rc.3 and maps its 13 roles to Agent Presets; isolated SDK checks do not prove a live host session. See the current platform status before host actions. `--dump-config` may initialize a missing profile and is not a read-only probe in that case.
+
 This page explains the deployment boundary in code terms. A plugin package contains files a host may load; it does not contain the host's profile registry, session state, or connector process table.
 
 ## v1.4.0 package route and host readiness
 
 LazyDeepSeek v1.4.0 is prepared as a native DeepSeek Harness plugin: `plugins/lazydeepseek/`
 is the payload directory. The repository root is the npm-style package boundary: its `package.json` (`dsh` key plus the
-exact `0.2.0-rc.2` peer pin) and `cordis.patch.yml` rows, with the payload under
+exact `0.2.1-rc.3` peer pin) and `cordis.patch.yml` rows, with the payload under
 `plugins/lazydeepseek/`. The public repository is the source for pinned-SHA
 installation; fresh host readiness still requires observation. The supported route IDs
 are `dsh-plugin-git-sha` (the full-plugin route) and `manual-skills-mcp-fallback` (recovery only, mutually exclusive
@@ -62,10 +64,9 @@ entries guide the same flows on interactive surfaces.
 
 The manual walkthrough remains canonical:
 
-Install LazyDeepSeek into a dsh profile through the `dsh plugin` verb set —
-there is no marketplace UI:
+Install LazyDeepSeek into a dsh profile through the `dsh plugin` verb set:
 
-1. Confirm the pinned host: `dsh --version` reports exact `0.2.0-rc.2`, and
+1. Confirm the pinned host: `dsh --version` reports exact `0.2.1-rc.3`, and
    `dsh --profile <name> --dump-config` composes cleanly.
 2. After approval, run the git-spec install for the repository pinned to a
    full commit sha (the printed form is

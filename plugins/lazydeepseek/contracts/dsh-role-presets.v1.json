@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "roles": [
+    {
+      "name": "lazydeepseek-context-indexer",
+      "allow": [
+        "read",
+        "bash",
+        "job_output"
+      ],
+      "personaSha256": "96f0f7830c90ce1e546f3ac119ad254eaaf169972dc27d5e3766d5dc124b9fd7",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-context-miner",
+      "allow": [
+        "read",
+        "bash",
+        "job_output"
+      ],
+      "personaSha256": "abbd34b6b538426613766eac7a5766722ebfa181448a75863bcbeee305c99f33",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-explorer",
+      "allow": [
+        "read",
+        "bash",
+        "job_output"
+      ],
+      "personaSha256": "a5d99efadcc4c8c016562a540dd49b796ec19fa5f7303ca3bc19ae630dc2969c",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-gate-reviewer",
+      "allow": [
+        "read",
+        "bash",
+        "job_output"
+      ],
+      "personaSha256": "6d75ecf443872b583216f7166ad0f10e0562efb04b21de6bc7c7976a4690cb70",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-implementer",
+      "allow": [
+        "read",
+        "bash",
+        "edit",
+        "write",
+        "todo_write"
+      ],
+      "personaSha256": "e52a8f44693823f64ea0ee993533b19349205e673b379383d53363d736812481",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-librarian",
+      "allow": [
+        "read",
+        "bash",
+        "job_output",
+        "web_fetch",
+        "web_search"
+      ],
+      "personaSha256": "33b2cd19586bef68937c70850f9ce44d4e53d545e354637bcdb13f97f11e219b",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-migration-planner",
+      "allow": [
+        "read",
+        "bash",
+        "web_fetch",
+        "web_search",
+        "write"
+      ],
+      "personaSha256": "e22b8666ea43cd0bb5ae03d4d70cdcc8fce30049ee84090b61a1c8ceca35d139",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-orchestrator",
+      "allow": [
+        "read",
+        "bash",
+        "edit",
+        "write",
+        "lazydeepseek-context-indexer",
+        "lazydeepseek-context-miner",
+        "lazydeepseek-explorer",
+        "lazydeepseek-gate-reviewer",
+        "lazydeepseek-implementer",
+        "lazydeepseek-librarian",
+        "lazydeepseek-migration-planner",
+        "lazydeepseek-planner",
+        "lazydeepseek-qa-executor",
+        "lazydeepseek-reviewer",
+        "lazydeepseek-security-auditor",
+        "lazydeepseek-verifier",
+        "job_output",
+        "todo_write"
+      ],
+      "personaSha256": "37bac500f6b1ec3f39c248e203e73b8dafcb1d5254e75a197d634c7069c7b8fb",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-planner",
+      "allow": [
+        "read",
+        "bash",
+        "job_output",
+        "web_search",
+        "web_fetch"
+      ],
+      "personaSha256": "1a42fbf27c5614969619da53792aeccd3ff1d226c32de09b9894ec6239a8d263",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-qa-executor",
+      "allow": [
+        "read",
+        "bash",
+        "todo_write"
+      ],
+      "personaSha256": "44c96f3852330fe2b0525100d0d4156f6b9516062cf08131a7744b7d90666561",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-reviewer",
+      "allow": [
+        "read",
+        "bash",
+        "job_output"
+      ],
+      "personaSha256": "05e31e5badf57945e6b6d7817e06e3dd71eaa58ffd9de820eb95cf3171f16ff0",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-security-auditor",
+      "allow": [
+        "read",
+        "bash",
+        "job_output"
+      ],
+      "personaSha256": "18c0aec0c71d765fe881f3a762caa98cf26f1d457d8a010eac4657d1027b6800",
+      "maxDepth": 2
+    },
+    {
+      "name": "lazydeepseek-verifier",
+      "allow": [
+        "read",
+        "bash",
+        "write",
+        "job_output"
+      ],
+      "personaSha256": "a679bcdd033a243b1bc09639fcaf4be2744dde82041370bba8f64c3eb617d222",
+      "maxDepth": 2
+    }
+  ]
+}

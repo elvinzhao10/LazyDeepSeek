@@ -1,6 +1,18 @@
 # Changelog
 
+## 2026-10-27 platform audit
+
+Latest upstream dsh is 0.2.1-rc.3 (2026-10-23). The package now targets rc.3 and replaces legacy subagent fields with 13 Agent Presets, preserving persona hashes and role tool allowlists in isolated rc.3 Agent composition checks. A scoped jobs facade exposes only `job_output`, and a scoped mask reconciles late global tools without changing the parent. Temporary profile boots do not establish current host readiness. The current dashboard manifest pins 91 files at tree 9aa188df; the project manifest pins 31 files at tree 16561f3c. No live efficiency savings are claimed.
+
 Sections before v1.3.4 record inherited family history, not previous public releases of this port.
+
+## [1.4.0] - 2026-10-19 — completion pass (isolation, rescan, repin)
+
+Complete the 1.4.0 surfaces on the DeepSeek side: the family-wide per-repo store isolation and foreign-runtime refusal matrix (bf113b8); the reconciled served-project truth stating the live git view explicitly (`/api/project/git`, 200 behind the session, vendored local collector; run-side links stay `repo_head`/`content_revision`) (81851a6); the conservative DeepSeek rescan outcome — capability observations refreshed, no unobserved capability claimed (35196c5) — with the six-runtime family enum allowlisted in the naming guard for the byte-pinned vendored artifacts module (c7fecd0); and the family repin at source revision `bb696092` — dashboard tree `e55a9c00…`, project tree `16561f3…` — carrying the family's completed project-dashboard UI (dark-first tokens v2, de-tabbed sidebar shell with in-place navigation, six redesigned views, navigation guards, held performance budgets) into this package byte-identically (9d10905). dsh host control stays `unavailable`, host embedding/chat handoff/wake stay unobserved, synthesized events stay non-native, and distribution stays git-spec/GitHub-only. See RELEASE_NOTES.md "Completion pass (2026-10-19)".
+
+## [1.4.0] - 2026-10-07 — project platform
+
+Adopt the family's persistent project platform through the DeepSeek-native adapter: the vendored `plugins/lazydeepseek/shared/project/` family re-pins to tree `1feb5646…` (source revision `537f393`; its README no longer links files the family selection excludes and its CLI entry guard resolves symlinked invocation paths instead of silently no-oping), while the dsh lifecycle, git-spec distribution, and synthesized-versus-observed labeling remain the owning surfaces. Add the no-observed-host-adoption assertion to the project-adapter suite (mutation-proven) and state the git-observation boundary explicitly in the project context summary: the vendored collectors are byte-pinned but wired to no DeepSeek-exposed route, and commit links stay run-side (`repo_head`/`content_revision`). dsh host control stays `unavailable`, host wake/embedding stay unobserved, and no daemon or npm distribution is invented. See RELEASE_NOTES.md.
 
 ## [1.4.0] - 2026-10-05
 

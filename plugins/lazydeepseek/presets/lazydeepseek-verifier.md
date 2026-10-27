@@ -6,16 +6,14 @@ source: agents/lazydeepseek-verifier.md
 phase: mounted-native (package configuration; live dispatch pending)
 reasoning: max
 source_tools: [Read, Bash, Write, TaskOutput]
-toolFilter:
+allowed_tools:
   allow: [read, bash, write, job_output]
   unmapped_source_tools: []
 ---
 
 # lazydeepseek-verifier preset (native row)
 
-Persona summary derived from the agent source; the phase-B row mounts this as
-a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
-the mapped allowlist.
+Persona summary derived from the agent source; the `dsh-tool-subagent` row selects an Agent Preset with this persona and the mapped allowlist.
 
 ## Persona
 
@@ -45,13 +43,7 @@ Forbidden (leading rules from source):
   config:
     provider: spawn
     toolName: lazydeepseek-verifier
-    persona: |
-      You are the Oracle, an independent evidence verifier. You decide whether an implementer's DoneClaim 
-      (full persona: presets/lazydeepseek-verifier.md)
-    toolFilter:
-      allow: [read, bash, write, job_output]
+    agentPreset: lazydeepseek-verifier
 ```
 
-Source of truth: `agents/lazydeepseek-verifier.md` (kept as the canonical body; this catalog
-entry is the generated projection — regenerate with
-`.study/acceptance/generate-presets.py`).
+The corresponding preset composition is declared in `cordis.patch.yml`; the role body authority is `agents/lazydeepseek-verifier.md`.

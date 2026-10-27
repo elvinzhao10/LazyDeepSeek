@@ -6,16 +6,14 @@ source: agents/lazydeepseek-implementer.md
 phase: mounted-native (package configuration; live dispatch pending)
 reasoning: high
 source_tools: [Read, Bash, Edit, Write, TodoWrite]
-toolFilter:
+allowed_tools:
   allow: [read, bash, edit, write, todo_write]
   unmapped_source_tools: []
 ---
 
 # lazydeepseek-implementer preset (native row)
 
-Persona summary derived from the agent source; the phase-B row mounts this as
-a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
-the mapped allowlist.
+Persona summary derived from the agent source; the `dsh-tool-subagent` row selects an Agent Preset with this persona and the mapped allowlist.
 
 ## Persona
 
@@ -45,13 +43,7 @@ Forbidden (leading rules from source):
   config:
     provider: spawn
     toolName: lazydeepseek-implementer
-    persona: |
-      You are a bounded implementation executor. You own one atomic task end to end: read the task context
-      (full persona: presets/lazydeepseek-implementer.md)
-    toolFilter:
-      allow: [read, bash, edit, write, todo_write]
+    agentPreset: lazydeepseek-implementer
 ```
 
-Source of truth: `agents/lazydeepseek-implementer.md` (kept as the canonical body; this catalog
-entry is the generated projection — regenerate with
-`.study/acceptance/generate-presets.py`).
+The corresponding preset composition is declared in `cordis.patch.yml`; the role body authority is `agents/lazydeepseek-implementer.md`.

@@ -1,5 +1,11 @@
 # LazyDeepSeek Plugin
 
+The current platform audit is linked from the repository README.
+
+The package targets DeepSeek Harness 0.2.1-rc.3. Thirteen role presets preserve the existing personas and tool allowlists in isolated SDK checks; package and live host readiness are distinct.
+
+The status-dashboard declares seven tools, including `project`. The 85-file dashboard tree `b525d6786c8a2108a01f5c800a57e54faa36de50834381e57040815d9e0c948b` passed coordinated family checks.
+
 ## v1.4.0 release candidate installation
 
 **Node.js LTS 24 (recommended) or 22 (supported alternative)** and **Git** are recommended. The lifecycle also accepts Node.js LTS 20 for compatibility. Bootstrap `onboard` only
@@ -357,9 +363,9 @@ bash scripts/lazydeepseek-tooling.sh lsp-uninstall \
   --target "/absolute/project" --tooling-root "/absolute/lazydeepseek-lsp-tools"
 ```
 
-The locked TS/JS provider is `typescript-language-server@5.3.0` with
-`typescript@6.0.3`; it requires Node.js 20 or newer. The locked Python
-provider is `basedpyright@1.39.10`. Missing, unsupported, and incompatible
+The locked TS/JS provider is `typescript-language-server@6.0.1` with
+`typescript@6.0.3`; it requires Node.js 22.22.2 or newer. The locked Python
+provider is `basedpyright@1.40.1`. Missing, unsupported, and incompatible
 providers are non-blocking readiness states. No target manifest, lockfile,
 source file, global path, or host-managed configuration is modified.
 
@@ -370,7 +376,7 @@ cross-file relationship questions. It is disabled by default. LazyDeepSeek keeps
 `context-graph` available as a clearly labeled grep-based heuristic fallback;
 it is not represented as semantic CodeGraph analysis.
 
-CodeGraph is pinned to `@colbymchenry/codegraph@1.6.0` and can only be
+CodeGraph is pinned to `@colbymchenry/codegraph@1.6.2` and can only be
 provisioned in an explicit empty caller-owned tooling root. The lifecycle does
 not invoke upstream `codegraph install` or `codegraph uninstall`, download a
 fallback platform binary, enable CodeGraph telemetry, or change host MCP
