@@ -134,6 +134,13 @@
       "reason": "Byte-pinned vendored family module lists all six LazySeries runtime state-root identifiers verbatim in its NATIVE_STATE_ROOTS enum; byte parity with project.vendor.json forbids local edits."
     },
     {
+      "path": "plugins/lazydeepseek/shared/dashboard/adapters/telemetry.mjs",
+      "text": "LazyQoder",
+      "count": 1,
+      "classification": "stable-machine-id",
+      "reason": "Byte-pinned shared telemetry maps each family runtime identifier to its native state directory; this key selects the sibling's recorded cost history."
+    },
+    {
       "path": "plugins/lazydeepseek/shared/dashboard/ui/DESIGN.md",
       "text": "LazyQoder",
       "count": 2,
