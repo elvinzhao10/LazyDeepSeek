@@ -2,7 +2,7 @@
 
 ## 2026-10-27 platform audit
 
-Latest upstream dsh is 0.2.1-rc.3 (2026-10-23). The package now targets rc.3 and replaces legacy subagent fields with 13 Agent Presets, preserving persona hashes and role tool allowlists in isolated rc.3 Agent composition checks. A scoped jobs facade exposes only `job_output`, and a scoped mask reconciles late global tools without changing the parent. Temporary profile boots do not establish current host readiness. The current dashboard manifest pins 91 files at tree 9aa188df; the project manifest pins 31 files at tree 16561f3c. No live efficiency savings are claimed.
+Latest upstream dsh is 0.2.1-rc.3 (2026-10-23). The package now targets rc.3 and replaces legacy subagent fields with 13 Agent Presets, preserving persona hashes and role tool allowlists in isolated rc.3 Agent composition checks. A scoped jobs facade exposes only `job_output`, and a scoped mask reconciles late global tools without changing the parent. Temporary profile boots do not establish current host readiness. At the 2026-10-27 audit, the dashboard manifest pinned 91 files at tree 9aa188df and the project manifest pinned 31 files at tree 16561f3c. The current release pins are recorded in [shared/dashboard.vendor.json](shared/dashboard.vendor.json) and [shared/project.vendor.json](shared/project.vendor.json). No live efficiency savings are claimed.
 
 ## [1.4.0] - Shared dashboard surface and honest capability labels
 
