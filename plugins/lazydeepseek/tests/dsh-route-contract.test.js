@@ -26,7 +26,7 @@ test('repository root is the dsh package boundary with the pinned identity', () 
   assert.equal(pkg.name, 'lazydeepseek');
   assert.equal(pkg.version, '1.4.0');
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml');
-  assert.equal(pkg.peerDependencies['@deepseek-ai/dsh'], '0.2.0-rc.2');
+  assert.equal(pkg.peerDependencies['@deepseek-ai/dsh'], '0.2.1-rc.3');
   assert.equal(pkg.scripts, undefined, 'no install-time build scripts: git-spec installs must not depend on allowBuilds');
   assert.match(patch, /name: '\.\/lib\/index\.mjs'/);
   assert.match(patch, /'@deepseek-ai\/dsh-hooks-claude-code'/);

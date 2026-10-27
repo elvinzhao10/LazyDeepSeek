@@ -132,6 +132,20 @@
       "count": 1,
       "classification": "source-identity",
       "reason": "Byte-pinned vendored family module lists all six LazySeries runtime state-root identifiers verbatim in its NATIVE_STATE_ROOTS enum; byte parity with project.vendor.json forbids local edits."
+    },
+    {
+      "path": "plugins/lazydeepseek/shared/dashboard/ui/DESIGN.md",
+      "text": "LazyQoder",
+      "count": 2,
+      "classification": "source-identity",
+      "reason": "Shared family design documents the sibling product and its accent."
+    },
+    {
+      "path": "plugins/lazydeepseek/shared/dashboard/ui/tokens.css",
+      "text": "LazyQoder",
+      "count": 3,
+      "classification": "stable-machine-id",
+      "reason": "Shared dashboard selectors identify the sibling product accent."
     }
   ],
   "stableIdentityFiles": [

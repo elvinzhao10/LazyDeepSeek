@@ -6,16 +6,14 @@ source: agents/lazydeepseek-explorer.md
 phase: mounted-native (package configuration; live dispatch pending)
 reasoning: low
 source_tools: [Read, Bash, TaskOutput]
-toolFilter:
+allowed_tools:
   allow: [read, bash, job_output]
   unmapped_source_tools: []
 ---
 
 # lazydeepseek-explorer preset (native row)
 
-Persona summary derived from the agent source; the phase-B row mounts this as
-a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
-the mapped allowlist.
+Persona summary derived from the agent source; the `dsh-tool-subagent` row selects an Agent Preset with this persona and the mapped allowlist.
 
 ## Persona
 
@@ -45,13 +43,7 @@ Forbidden (leading rules from source):
   config:
     provider: spawn
     toolName: lazydeepseek-explorer
-    persona: |
-      You are a codebase search specialist. Your job is to find files and code, return absolute paths with
-      (full persona: presets/lazydeepseek-explorer.md)
-    toolFilter:
-      allow: [read, bash, job_output]
+    agentPreset: lazydeepseek-explorer
 ```
 
-Source of truth: `agents/lazydeepseek-explorer.md` (kept as the canonical body; this catalog
-entry is the generated projection — regenerate with
-`.study/acceptance/generate-presets.py`).
+The corresponding preset composition is declared in `cordis.patch.yml`; the role body authority is `agents/lazydeepseek-explorer.md`.

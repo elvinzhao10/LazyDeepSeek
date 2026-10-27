@@ -144,8 +144,8 @@ try:
         raise ValueError("dsh package manifest must identify lazydeepseek version 1.4.0")
     if work_manifest.get("dsh", {}).get("bundle", {}).get("patch") != "./cordis.patch.yml":
         raise ValueError("package dsh.bundle.patch must be ./cordis.patch.yml")
-    if work_manifest.get("peerDependencies", {}).get("@deepseek-ai/dsh") != "0.2.0-rc.2":
-        raise ValueError("package must pin @deepseek-ai/dsh exactly at 0.2.0-rc.2")
+    if work_manifest.get("peerDependencies", {}).get("@deepseek-ai/dsh") != "0.2.1-rc.3":
+        raise ValueError("package must pin @deepseek-ai/dsh exactly at 0.2.1-rc.3")
 
     route_contract = load_object(
         plugin_root / "contracts" / "dsh-route-contract.v1.json",

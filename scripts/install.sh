@@ -149,8 +149,8 @@ if (pkg.dsh?.bundle?.patch !== "./cordis.patch.yml") {
     console.error("package dsh.bundle.patch must be ./cordis.patch.yml");
     process.exit(1);
 }
-if (pkg.peerDependencies?.["@deepseek-ai/dsh"] !== "0.2.0-rc.2") {
-    console.error("peerDependencies[@deepseek-ai/dsh] must be exactly 0.2.0-rc.2");
+if (pkg.peerDependencies?.["@deepseek-ai/dsh"] !== "0.2.1-rc.3") {
+    console.error("peerDependencies[@deepseek-ai/dsh] must be exactly 0.2.1-rc.3");
     process.exit(1);
 }
 for (const script of ["prepare", "preinstall", "postinstall", "install"]) {
@@ -217,7 +217,7 @@ if [ "$(uname -s)" = "Darwin" ] && command -v pbcopy >/dev/null 2>&1; then
     fi
 fi
 info "Steps:"
-info "  1. Confirm the pinned host: dsh --version must print 0.2.0-rc.2."
+info "  1. Confirm the pinned host: dsh --version must print 0.2.1-rc.3."
 info "  2. Run the plugin add command for the chosen profile (the URL is the"
 info "     repository${CLIPBOARD_NOTE}; append #<commit-sha> to pin)."
 info "  3. Confirm our rows compose: dsh --profile <name> --dump-config must"

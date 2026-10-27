@@ -6,16 +6,14 @@ source: agents/lazydeepseek-orchestrator.md
 phase: mounted-native (package configuration; live dispatch pending)
 reasoning: high
 source_tools: [Read, Bash, Edit, Write, Agent, TaskOutput, TodoWrite]
-toolFilter:
+allowed_tools:
   allow: [read, bash, edit, write, subagent, job_output, todo_write]
   unmapped_source_tools: []
 ---
 
 # lazydeepseek-orchestrator preset (native row)
 
-Persona summary derived from the agent source; the phase-B row mounts this as
-a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
-the mapped allowlist.
+Persona summary derived from the agent source; the `dsh-tool-subagent` row selects an Agent Preset with this persona and the mapped allowlist.
 
 ## Persona
 
@@ -45,13 +43,7 @@ Forbidden (leading rules from source):
   config:
     provider: spawn
     toolName: lazydeepseek-orchestrator
-    persona: |
-      You are Sisyphus, the root workflow coordinator. You own the full lifecycle: reading the plan from `
-      (full persona: presets/lazydeepseek-orchestrator.md)
-    toolFilter:
-      allow: [read, bash, edit, write, subagent, job_output, todo_write]
+    agentPreset: lazydeepseek-orchestrator
 ```
 
-Source of truth: `agents/lazydeepseek-orchestrator.md` (kept as the canonical body; this catalog
-entry is the generated projection — regenerate with
-`.study/acceptance/generate-presets.py`).
+The corresponding preset composition is declared in `cordis.patch.yml`; the role body authority is `agents/lazydeepseek-orchestrator.md`.

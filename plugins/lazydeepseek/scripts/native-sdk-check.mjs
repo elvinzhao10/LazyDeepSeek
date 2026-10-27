@@ -2,11 +2,13 @@
 import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 const sdkRoot = process.argv[2];
 if (!sdkRoot) throw new Error('pass the absolute installed dsh package root; this check does not inspect user configuration');
 const sdk = resolve(sdkRoot, 'node_modules');
-for (const pkg of ['dsh-tool-subagent', 'dsh-hooks-claude-code']) assert.equal(JSON.parse(readFileSync(resolve(sdk, '@deepseek-ai', pkg, 'package.json'), 'utf8')).version, '0.2.0-rc.2');
+const expectedVersion = process.argv[3] ?? JSON.parse(readFileSync(new URL('../../../package.json', import.meta.url), 'utf8')).peerDependencies['@deepseek-ai/dsh'];
+for (const pkg of ['dsh-tool-subagent', 'dsh-hooks-claude-code']) assert.equal(JSON.parse(readFileSync(resolve(sdk, '@deepseek-ai', pkg, 'package.json'), 'utf8')).version, expectedVersion);
 const yaml = await import(pathToFileURL(resolve(sdk, 'js-yaml/dist/js-yaml.mjs')));
 const { Config } = await import(pathToFileURL(resolve(sdk, '@deepseek-ai/dsh-tool-subagent/lib/index.js')));
 const jsType = new yaml.Type('tag:yaml.org,2002:js', { kind: 'scalar', construct: (text) => ({ __jsExpr: text }) });
@@ -18,10 +20,14 @@ const roleNames = rows.map((row) => row.config.toolName);
 const available = new Set(['read', 'bash', 'edit', 'write', 'job_output', 'todo_write', 'web_fetch', 'web_search', ...roleNames]);
 for (const row of rows) {
   Config(row.config);
+  assert.equal(row.config.agentPreset, row.config.toolName);
+  const preset = patch[0].insert.find(entry => entry.name === '@deepseek-ai/dsh-agent-preset' && entry.config.id === row.config.toolName);
+  assert.ok(preset, `missing preset ${row.config.toolName}`);
   const source = readFileSync(new URL(`../agents/${row.config.toolName}.md`, import.meta.url), 'utf8').replace(/^---\n[\s\S]*?\n---\n/, '');
-  assert.equal(row.config.persona, source.trimEnd() + '\n');
-  for (const tool of row.config.toolFilter.allow) assert.ok(available.has(tool), `unknown tool ${tool}`);
-  if (!row.config.toolName.endsWith('orchestrator')) assert.equal(row.config.toolFilter.allow.includes('subagent'), false);
+  assert.equal(preset.config.plugins.find(entry => entry.id === 'persona').config.prefix, source.trimEnd() + '\n');
+  const tools = preset.config.plugins.find(entry => entry.id === 'role-tools').config.allow;
+  for (const tool of tools) assert.ok(available.has(tool), `unknown tool ${tool}`);
+  if (!row.config.toolName.endsWith('orchestrator')) assert.equal(tools.includes('subagent'), false);
 }
 const bridge = readFileSync(resolve(sdk, '@deepseek-ai/dsh-hooks-claude-code/lib/index.js'), 'utf8');
 for (const event of ['SessionStart', 'UserPromptSubmit', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStart', 'SubagentStop']) assert.ok(bridge.includes(`"${event}"`));
@@ -51,4 +57,7 @@ try {
   else process.env.DSH_HOME = previousHome;
   rmSync(fixture, { recursive: true, force: true });
 }
-console.log(JSON.stringify({ sdk_version: '0.2.0-rc.2', native_roles: rows.length, bridge_events: 7, result: 'pass', scope: 'installed-sdk-package-config' }));
+for (const check of ['native-role-facade-check.mjs', 'native-role-presets-check.mjs']) {
+  process.stdout.write(execFileSync(process.execPath, [fileURLToPath(new URL(check, import.meta.url)), sdkRoot], { encoding: 'utf8' }));
+}
+console.log(JSON.stringify({ sdk_version: expectedVersion, native_roles: rows.length, bridge_events: 7, result: 'pass', scope: 'installed-sdk-package-config' }));
