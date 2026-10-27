@@ -1,8 +1,8 @@
 # LazyDeepSeek v1.4.0 - shared dashboard surface and honest capability labels
 
-## 2026-10-27 platform audit (unreleased)
+## 2026-10-27 platform audit
 
-Latest upstream dsh is 0.2.1-rc.3 (2026-10-23). The package now targets rc.3 and replaces legacy subagent fields with 13 Agent Presets, preserving persona hashes and role tool allowlists in isolated rc.3 Agent composition checks. A scoped jobs facade exposes only `job_output`, and a scoped mask reconciles late global tools without changing the parent. Temporary profile boots do not establish current host readiness. The dashboard's 85-file b525d678 tree passed coordinated family checks. No live efficiency savings are claimed.
+Latest upstream dsh is 0.2.1-rc.3 (2026-10-23). The package now targets rc.3 and replaces legacy subagent fields with 13 Agent Presets, preserving persona hashes and role tool allowlists in isolated rc.3 Agent composition checks. A scoped jobs facade exposes only `job_output`, and a scoped mask reconciles late global tools without changing the parent. Temporary profile boots do not establish current host readiness. The current dashboard manifest pins 91 files at tree 9aa188df; the project manifest pins 31 files at tree 16561f3c. No live efficiency savings are claimed.
 
 A documentation and surface release across the LazySeries siblings. It vendors
 the family's shared dashboard core and documents the DeepSeek Harness-native
@@ -73,10 +73,9 @@ branch commit that delivers it.
   suite: edits stay pending until an exact revision is consumed, a distinct
   independent verifier proves them, queue persistence never executes work, and
   the owned loopback lifecycle emits signed receipts.
-- The status-dashboard MCP server exposes six tools: the four status views
-  plus `dashboard_service` (start, inspect, stop, or return the local browser
-  dashboard entry) and `copy_task_context` (copy a validated native producer
-  context without executing or consuming it).
+- The status-dashboard MCP server exposes seven tools: four status views,
+  `dashboard_service` for the local browser entry, `copy_task_context` for
+  validated producer context, and `project` for the project platform.
 - The dashboard-host adapter suite, MCP test script, route contract,
   publication regression, package verification, product-naming check and the
   Node.js 20 supported-floor spot were re-run for this release.

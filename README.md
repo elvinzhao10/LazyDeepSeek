@@ -64,7 +64,7 @@ token-saving or cost claim is made.
 | v1.4.0 dashboard | Shared dashboard core vendored, native adapter with authenticated loopback service, seven-tool status-dashboard MCP, honest capability labels. |
 | v1.4.0 historical completion | Previously repinned families at `bb696092` with the redesigned project dashboard (dark-first, sidebar shell, in-place navigation), per-repo isolation and refreshed capability observations. |
 
-The current vendored dashboard manifest records 85 files and tree `b525d6786c8a2108a01f5c800a57e54faa36de50834381e57040815d9e0c948b`; coordinated family checks verified this tree.
+The current dashboard manifest records 91 files at tree `9aa188df1b58f204c481d1001435762e3a005ce5f9708a5e7a618935a5b090cd`.
 
 ## Shared dashboard surface
 
