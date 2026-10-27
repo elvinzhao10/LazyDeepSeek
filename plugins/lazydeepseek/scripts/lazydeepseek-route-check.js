@@ -15,7 +15,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const EXPECTED_VERSION = '1.3.5';
+const EXPECTED_VERSION = '1.4.0';
 const MCP_SERVERS = ['run-ledger', 'verification', 'status-dashboard', 'context-graph', 'code-intel', 'docs'];
 
 function fail(code, message) {
@@ -33,7 +33,7 @@ function main() {
   if (pkg.name !== 'lazydeepseek') return fail('ROUTE_PACKAGE_NAME', `expected package name 'lazydeepseek', got ${pkg.name}`);
   if (pkg.version !== EXPECTED_VERSION) return fail('ROUTE_PACKAGE_VERSION', `expected version ${EXPECTED_VERSION}, got ${pkg.version}`);
   if (pkg.dsh?.bundle?.patch !== './cordis.patch.yml') return fail('ROUTE_DSH_KEY', "package.json dsh.bundle.patch must be './cordis.patch.yml'");
-  if (pkg.peerDependencies?.['@deepseek-ai/dsh'] !== '0.2.0-rc.2') return fail('ROUTE_PEER_PIN', "peerDependencies['@deepseek-ai/dsh'] must be exactly '0.2.0-rc.2'");
+  if (pkg.peerDependencies?.['@deepseek-ai/dsh'] !== '0.2.1-rc.3') return fail('ROUTE_PEER_PIN', "peerDependencies['@deepseek-ai/dsh'] must be exactly '0.2.1-rc.3'");
   const buildScripts = ['prepare', 'preinstall', 'postinstall', 'install'].filter((s) => pkg.scripts && pkg.scripts[s]);
   if (buildScripts.length > 0) return fail('ROUTE_BUILD_SCRIPTS', `install-time build scripts present (${buildScripts.join(', ')}); git-spec installs must not depend on pnpm allowBuilds`);
   if (!fs.existsSync(path.join(repoRoot, 'lib', 'index.mjs'))) return fail('ROUTE_PREBUILT_LIB', 'prebuilt lib/index.mjs missing (committed build is the install payload)');

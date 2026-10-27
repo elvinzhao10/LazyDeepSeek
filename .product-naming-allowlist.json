@@ -118,6 +118,41 @@
       "count": 6,
       "classification": "source-identity",
       "reason": "Dated official-source platform comparison names actual sibling packages and native hosts; exact file and count scope."
+    },
+    {
+      "path": "plugins/lazydeepseek/shared/project/contract.mjs",
+      "text": "LazyQoder",
+      "count": 1,
+      "classification": "source-identity",
+      "reason": "Byte-pinned vendored family contract lists all six LazySeries runtime identifiers verbatim; byte parity with project.vendor.json forbids local edits."
+    },
+    {
+      "path": "plugins/lazydeepseek/shared/project/artifacts/index.mjs",
+      "text": "LazyQoder",
+      "count": 1,
+      "classification": "source-identity",
+      "reason": "Byte-pinned vendored family module lists all six LazySeries runtime state-root identifiers verbatim in its NATIVE_STATE_ROOTS enum; byte parity with project.vendor.json forbids local edits."
+    },
+    {
+      "path": "plugins/lazydeepseek/shared/dashboard/adapters/telemetry.mjs",
+      "text": "LazyQoder",
+      "count": 1,
+      "classification": "stable-machine-id",
+      "reason": "Byte-pinned shared telemetry maps each family runtime identifier to its native state directory; this key selects the sibling's recorded cost history."
+    },
+    {
+      "path": "plugins/lazydeepseek/shared/dashboard/ui/DESIGN.md",
+      "text": "LazyQoder",
+      "count": 2,
+      "classification": "source-identity",
+      "reason": "Shared family design documents the sibling product and its accent."
+    },
+    {
+      "path": "plugins/lazydeepseek/shared/dashboard/ui/tokens.css",
+      "text": "LazyQoder",
+      "count": 3,
+      "classification": "stable-machine-id",
+      "reason": "Shared dashboard selectors identify the sibling product accent."
     }
   ],
   "stableIdentityFiles": [

@@ -23,7 +23,7 @@ function mutate(relativePath, transform) {
   return root;
 }
 
-test('v1.3.5 release versions are classified with one current root release note', () => {
+test('v1.4.0 release versions are classified with one current root release note', () => {
   assert.deepEqual(classify(ROOT).failures, []);
 });
 
@@ -46,7 +46,7 @@ for (const [name, relativePath, transform, failure] of [
     assert.notEqual(changed, text, 'missing-section mutation must change the fixture');
     return changed;
   }, 'MISSING_RELEASE_NOTE_SECTION Rollback'],
-  ['package/runtime mismatch', 'package.json', text => text.replace('"version": "1.3.5"', '"version": "1.3.0"'), 'CURRENT_VERSION_DRIFT'],
+  ['package/runtime mismatch', 'package.json', text => text.replace('"version": "1.4.0"', '"version": "1.3.0"'), 'CURRENT_VERSION_DRIFT'],
   ['superseded versioned release note', 'RELEASE_NOTES.md', text => text, 'VERSIONED_RELEASE_NOTE_PRESENT'],
 ]) {
   test(`classifier rejects ${name} in a copy`, () => {

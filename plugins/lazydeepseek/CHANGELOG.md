@@ -1,5 +1,16 @@
 # LazyDeepSeek Plugin Changelog
 
+## 2026-10-27 platform audit
+
+Latest upstream dsh is 0.2.1-rc.3 (2026-10-23). The package now targets rc.3 and replaces legacy subagent fields with 13 Agent Presets, preserving persona hashes and role tool allowlists in isolated rc.3 Agent composition checks. A scoped jobs facade exposes only `job_output`, and a scoped mask reconciles late global tools without changing the parent. Temporary profile boots do not establish current host readiness. At the 2026-10-27 audit, the dashboard manifest pinned 91 files at tree 9aa188df and the project manifest pinned 31 files at tree 16561f3c. The current release pins are recorded in [shared/dashboard.vendor.json](shared/dashboard.vendor.json) and [shared/project.vendor.json](shared/project.vendor.json). No live efficiency savings are claimed.
+
+## [1.4.0] - Shared dashboard surface and honest capability labels
+
+- Vendor the family's shared dashboard core with hash-pinned metadata; vendored bytes are never edited per package.
+- Add the DeepSeek Harness-native dashboard-host adapter: authenticated loopback service, browser entry, transactional edits with exact-revision consumption and distinct verifier proof, queue persistence without execution.
+- Extend status-dashboard MCP to seven tools, including `dashboard_service`, `copy_task_context`, and `project`.
+- Report honest capability labels; embedding, chat handoff and wake stay unobserved and host readiness stays pending. Synthesized hook events remain non-native; the dashboard service does not change that boundary, and distribution stays git-spec/GitHub-only.
+
 ## [1.3.5] - Runtime verification and platform clarity
 
 - Execute real runtime-floor exercises and check optional LSP requirements separately.

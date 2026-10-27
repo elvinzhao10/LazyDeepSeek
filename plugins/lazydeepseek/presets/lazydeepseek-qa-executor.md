@@ -6,16 +6,14 @@ source: agents/lazydeepseek-qa-executor.md
 phase: mounted-native (package configuration; live dispatch pending)
 reasoning: medium
 source_tools: [Read, Bash, TodoWrite]
-toolFilter:
+allowed_tools:
   allow: [read, bash, todo_write]
   unmapped_source_tools: []
 ---
 
 # lazydeepseek-qa-executor preset (native row)
 
-Persona summary derived from the agent source; the phase-B row mounts this as
-a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
-the mapped allowlist.
+Persona summary derived from the agent source; the `dsh-tool-subagent` row selects an Agent Preset with this persona and the mapped allowlist.
 
 ## Persona
 
@@ -45,13 +43,7 @@ Forbidden (leading rules from source):
   config:
     provider: spawn
     toolName: lazydeepseek-qa-executor
-    persona: |
-      You are a manual QA executor. You run the application, execute real test scenarios, and capture arti
-      (full persona: presets/lazydeepseek-qa-executor.md)
-    toolFilter:
-      allow: [read, bash, todo_write]
+    agentPreset: lazydeepseek-qa-executor
 ```
 
-Source of truth: `agents/lazydeepseek-qa-executor.md` (kept as the canonical body; this catalog
-entry is the generated projection — regenerate with
-`.study/acceptance/generate-presets.py`).
+The corresponding preset composition is declared in `cordis.patch.yml`; the role body authority is `agents/lazydeepseek-qa-executor.md`.

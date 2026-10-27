@@ -9,7 +9,7 @@ it does not claim that any host has loaded the package. See
 ## Install route
 
 DeepSeek Harness installs plugins into profiles through the `dsh plugin`
-verb set (there is no marketplace):
+verb set:
 
 1. Git-spec install (default): `dsh plugin --profile <name> add
    <repository-url>#<full-commit-sha>`. The GitHub release tarball is the
@@ -47,7 +47,7 @@ real skill/command and all six MCP connections.
 | --- | --- | --- |
 | `skills/lazy-*/SKILL.md` | 19 + 10 command-only projections | Generated bundle mounted through the native skill provider; current model invocation and interactive visibility require observation |
 | `commands/lazy-*.md` | 20 | Registered service commands forward exact arguments and unregister on unload; interactive slash acceptance remains pending. Lifecycle guidance: `lazy-onboard`, `lazy-update`, `lazy-offboard`. |
-| `agents/lazydeepseek-*.md` | 13 | Full canonical personas in native `dsh-tool-subagent` rows with tool allowlists |
+| `agents/lazydeepseek-*.md` | 13 | Native subagent rows select Agent Presets with canonical personas and tool allowlists |
 | Generated `hooks.dsh.json` | 7 bridged / 9 declared | SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop, SubagentStart, SubagentStop bridge natively. PermissionRequest and PostToolUseFailure are degraded synthesis. |
 | `cordis.patch.yml` MCP rows | 6 servers | `dsh-mcp-client` stdio rows; tools appear as `mcp__<server>__<tool>` when connected |
 
@@ -71,11 +71,9 @@ are unsupported. Child start/stop events are advisory and cannot complete work.
 
 ## Project memory and routing
 
-DeepSeek Harness has no rules-injection mechanism, no daemon/serve/prewarm CLI, and no
-IDE plan directories. LazyDeepSeek therefore maps:
+DeepSeek Harness discovers workspace and user instruction files. LazyDeepSeek maps:
 
-- **Project memory** → `AGENTS.md` (workspace scope; `~/.dsh/AGENTS.md` for
-  user scope). `lazy-init-deep` maintains a managed block.
+- **Project memory** → `AGENTS.md` (workspace scope; `$DSH_HOME/AGENTS.md` and the shared `$DSH_AGENTS_HOME/AGENTS.md`, defaulting to `~/.dsh` and `~/.agents`, for user scope). `lazy-init-deep` maintains a managed block.
 - **Model routing** → policy metadata and read-only recommendations. Native
   role rows inherit host defaults; frontmatter is not an effective override.
 - **Planning / execution / review** → `lazy-ulw-plan` (plan),

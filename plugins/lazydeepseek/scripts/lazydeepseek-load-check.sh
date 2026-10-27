@@ -82,7 +82,7 @@ EXPECTED_HOOK_EVENTS = (
     "SubagentStop",
 )
 EXPECTED_MCP_SERVERS = 6
-EXPECTED_VERSION = "1.3.5"
+EXPECTED_VERSION = "1.4.0"
 LAZYDEEPSEEK_HOOK_EVENTS = set(EXPECTED_HOOK_EVENTS)
 
 def result(state, label, detail):
@@ -246,10 +246,10 @@ if manifest is not None:
     else:
         result("PASS", "package dsh key", "bundle patch declared (cordis.patch.yml)")
     peer = manifest.get("peerDependencies", {}).get("@deepseek-ai/dsh")
-    if peer != "0.2.0-rc.2":
-        result("FAIL", "dsh peer pin", f"expected exact '0.2.0-rc.2', got {peer!r}")
+    if peer != "0.2.1-rc.3":
+        result("FAIL", "dsh peer pin", f"expected exact '0.2.1-rc.3', got {peer!r}")
     else:
-        result("PASS", "dsh peer pin", "0.2.0-rc.2 (exact)")
+        result("PASS", "dsh peer pin", "0.2.1-rc.3 (exact)")
     build_scripts = [s for s in ("prepare", "preinstall", "postinstall", "install") if s in (manifest.get("scripts") or {})]
     if build_scripts:
         result("FAIL", "install-time scripts", f"present ({', '.join(build_scripts)}); git-spec installs must not depend on allowBuilds")
@@ -266,6 +266,9 @@ try:
         "bundled skills": "bundledSkillDir:" in patch_text,
         "native ralph adoption": "id: tool-ralph" in patch_text and "disabled: false" in patch_text,
     }
+    removed_role_fields = __import__("re").search(r"(?m)^        (?:persona|toolFilter):", patch_text)
+    if removed_role_fields:
+        result("FAIL", "native subagent compatibility", "legacy persona/toolFilter fields are rejected by the pinned SDK; migrate roles to Agent Presets")
     patch_servers = [m.group(1) for m in __import__("re").finditer(r"serverName:\s*(\S+)", patch_text)]
     rows["MCP rows (6)"] = sorted(patch_servers) == sorted(
         ["run-ledger", "verification", "status-dashboard", "context-graph", "code-intel", "docs"]
@@ -422,7 +425,7 @@ else:
 
 if failed:
     print("PACKAGE_READINESS=failed")
-    print("Package readiness failed. Reinstall the full plugin or correct the named package file.")
+    print("Package readiness failed. Resolve the named compatibility or package defect before installation.")
     sys.exit(1)
 
 print("PACKAGE_READINESS=full")

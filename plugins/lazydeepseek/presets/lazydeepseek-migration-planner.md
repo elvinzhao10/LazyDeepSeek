@@ -6,16 +6,14 @@ source: agents/lazydeepseek-migration-planner.md
 phase: mounted-native (package configuration; live dispatch pending)
 reasoning: high
 source_tools: [Read, Bash, WebFetch, WebSearch, Write]
-toolFilter:
+allowed_tools:
   allow: [read, bash, web_fetch, web_search, write]
   unmapped_source_tools: []
 ---
 
 # lazydeepseek-migration-planner preset (native row)
 
-Persona summary derived from the agent source; the phase-B row mounts this as
-a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
-the mapped allowlist.
+Persona summary derived from the agent source; the `dsh-tool-subagent` row selects an Agent Preset with this persona and the mapped allowlist.
 
 ## Persona
 
@@ -44,13 +42,7 @@ Forbidden (leading rules from source):
   config:
     provider: spawn
     toolName: lazydeepseek-migration-planner
-    persona: |
-      Create host-adapter plans for porting earlier host implementation agent/skill/tool semantics to futu
-      (full persona: presets/lazydeepseek-migration-planner.md)
-    toolFilter:
-      allow: [read, bash, web_fetch, web_search, write]
+    agentPreset: lazydeepseek-migration-planner
 ```
 
-Source of truth: `agents/lazydeepseek-migration-planner.md` (kept as the canonical body; this catalog
-entry is the generated projection — regenerate with
-`.study/acceptance/generate-presets.py`).
+The corresponding preset composition is declared in `cordis.patch.yml`; the role body authority is `agents/lazydeepseek-migration-planner.md`.

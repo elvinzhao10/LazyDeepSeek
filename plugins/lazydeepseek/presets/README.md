@@ -1,8 +1,6 @@
 # LazyDeepSeek native role projections
 
-Thirteen `dsh-tool-subagent` rows are mounted by `cordis.patch.yml` with full
-canonical personas and native filters. Installed 0.2.0-rc.2 schema validation
-passes; fresh-session dispatch and effective model settings remain pending.
+Thirteen `dsh-tool-subagent` rows select Agent Presets in `cordis.patch.yml`. Isolated rc.3 Agent composition checks verify the canonical persona hashes and tool allowlists; fresh-session dispatch and effective model settings remain pending.
 The role body authority is `agents/lazydeepseek-*.md`. Catalog examples are
 documentation; the bundle patch is the actual mount surface.
 
@@ -22,5 +20,4 @@ documentation; the bundle patch is the actual mount surface.
 | `lazydeepseek-security-auditor` | native row (package) | see `presets/lazydeepseek-security-auditor.md` |
 | `lazydeepseek-verifier` | native row (package) | see `presets/lazydeepseek-verifier.md` |
 
-Regenerate: `python3 .study/acceptance/generate-presets.py` (deterministic;
-sources are the canonical agent bodies).
+The role bodies come from the canonical agent files. Verify the bundle against the role contract and isolated rc.3 SDK before changing them.

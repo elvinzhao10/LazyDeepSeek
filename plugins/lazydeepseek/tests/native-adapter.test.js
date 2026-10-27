@@ -14,6 +14,20 @@ function fixture(t) {
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
   return dir;
 }
+test('package excludes nested installed dependencies while retaining payload', (t) => {
+  const dir = fixture(t);
+  fs.copyFileSync(join(root, 'package.json'), join(dir, 'package.json'));
+  for (const path of ['plugins/lazydeepseek/tooling/node_modules/example', 'plugins/lazydeepseek/tooling/lsp/python/node_modules/example', 'plugins/lazydeepseek/skills/example', 'lib']) {
+    fs.mkdirSync(join(dir, path), { recursive: true });
+    fs.writeFileSync(join(dir, path, 'fixture.txt'), 'fixture');
+  }
+  const result = spawnSync('npm', ['pack', '--dry-run', '--ignore-scripts', '--json'], { cwd: dir, encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr);
+  const paths = JSON.parse(result.stdout)[0].files.map(file => file.path);
+  assert.ok(paths.includes('plugins/lazydeepseek/skills/example/fixture.txt'));
+  assert.ok(paths.includes('lib/fixture.txt'));
+  assert.equal(paths.some(path => path.includes('/node_modules/')), false);
+});
 test('bridge forwards seven events and leaves synthesized events outside native rows', () => {
   const hooks = buildHooksConfig(root).hooks;
   assert.deepEqual(Object.keys(hooks), ['SessionStart', 'UserPromptSubmit', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStart', 'SubagentStop']);
@@ -106,9 +120,8 @@ test('bundle mounts all canonical full personas and native tool names', () => {
   assert.equal(roles.length, 13);
   assert.equal(new Set(roles).size, 13);
   for (const role of roles) {
-    const persona = fs.readFileSync(join(root, 'plugins/lazydeepseek/agents', `${role}.md`), 'utf8').replace(/^---\n[\s\S]*?\n---\n/, '');
-    const projected = persona.split('\n').slice(0, -1).map((line) => line ? `          ${line}\n` : "\n").join('');
-    assert.ok(patch.includes(projected), `${role} full persona missing`);
+    assert.ok(patch.includes(`id: preset-${role}`));
+    assert.ok(patch.includes(`agentPreset: ${role}`));
     assert.ok(patch.includes(`toolName: ${role}`));
   }
   assert.equal((patch.match(/inject: \[lazydeepseekRuntime\]/g) || []).length, 8);

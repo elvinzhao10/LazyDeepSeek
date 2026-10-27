@@ -6,16 +6,14 @@ source: agents/lazydeepseek-gate-reviewer.md
 phase: mounted-native (package configuration; live dispatch pending)
 reasoning: max
 source_tools: [Read, Bash, TaskOutput]
-toolFilter:
+allowed_tools:
   allow: [read, bash, job_output]
   unmapped_source_tools: []
 ---
 
 # lazydeepseek-gate-reviewer preset (native row)
 
-Persona summary derived from the agent source; the phase-B row mounts this as
-a `dsh-tool-subagent` instance (provider `spawn`) with the persona text and
-the mapped allowlist.
+Persona summary derived from the agent source; the `dsh-tool-subagent` row selects an Agent Preset with this persona and the mapped allowlist.
 
 ## Persona
 
@@ -44,13 +42,7 @@ Forbidden (leading rules from source):
   config:
     provider: spawn
     toolName: lazydeepseek-gate-reviewer
-    persona: |
-      Final gate reviewer. Read-only. Assume the work has already failed — executors can be wrong, tests t
-      (full persona: presets/lazydeepseek-gate-reviewer.md)
-    toolFilter:
-      allow: [read, bash, job_output]
+    agentPreset: lazydeepseek-gate-reviewer
 ```
 
-Source of truth: `agents/lazydeepseek-gate-reviewer.md` (kept as the canonical body; this catalog
-entry is the generated projection — regenerate with
-`.study/acceptance/generate-presets.py`).
+The corresponding preset composition is declared in `cordis.patch.yml`; the role body authority is `agents/lazydeepseek-gate-reviewer.md`.

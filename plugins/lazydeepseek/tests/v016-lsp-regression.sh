@@ -32,6 +32,28 @@ printf 'export const answer: number = 42;\n' > "$TS_TARGET/source.ts"
 printf '[project]\nname = "fixture"\nversion = "0.0.0"\n' > "$PY_TARGET/pyproject.toml"
 printf 'answer: int = 42\n' > "$PY_TARGET/source.py"
 
+# Exercise the package-owned provider's Node floor without changing the host runtime.
+REAL_NODE="$(command -v node)"
+RUNTIME_BIN="$TMP/runtime-bin"
+mkdir "$RUNTIME_BIN"
+for version in 20.19.0 21.9.0 22.22.1 22.22.2 22.23.0 23.0.0 24.0.0; do
+    cat > "$RUNTIME_BIN/node" <<EOF
+#!/usr/bin/env bash
+exec "$REAL_NODE" -p 'Object.defineProperty(process.versions, "node", {value: "$version"});'"\$2"
+EOF
+    chmod +x "$RUNTIME_BIN/node"
+    for action in lsp-status lsp-install; do
+        case "$version:$action" in
+            20.*:*|21.*:*|22.22.1:*) expected=incompatible ;;
+            *:lsp-status) expected=missing ;;
+            *) continue ;;
+        esac
+        output="$(PATH="$RUNTIME_BIN:$PATH" bash "$LIFECYCLE" "$action" --target "$TS_TARGET" --tooling-root "$TMP/missing-root")"
+        printf '%s\n' "$output" | grep -Fxq "STATE: $expected" || fail "$action on Node $version: $output"
+    done
+done
+pass 'TypeScript provider Node runtime floor'
+
 fingerprint "$TS_TARGET" > "$TMP/ts-before"
 expect "missing provider is non-blocking" 0 bash "$LIFECYCLE" lsp-status --target "$TS_TARGET" --tooling-root "$TMP/missing-root"
 grep -Fxq 'STATE: missing' "$TMP/missing provider is non-blocking.out" || fail 'missing provider state'

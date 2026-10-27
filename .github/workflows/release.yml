@@ -43,6 +43,12 @@ jobs:
         working-directory: plugins/lazydeepseek/tooling
         run: npm ci --ignore-scripts --no-audit --fund=false
 
+      - name: Install isolated DeepSeek Harness SDK
+        run: npm install --prefix "$RUNNER_TEMP/dsh-sdk" --ignore-scripts --no-audit --no-fund @deepseek-ai/dsh@0.2.1-rc.3 @deepseek-ai/dsh-hooks-claude-code@0.2.1-rc.3 @deepseek-ai/dsh-mcp-client@0.2.1-rc.3 @deepseek-ai/dsh-tool-subagent@0.2.1-rc.3
+
+      - name: Verify native SDK composition
+        run: node plugins/lazydeepseek/scripts/native-sdk-check.mjs "$RUNNER_TEMP/dsh-sdk"
+
       - name: Validate release tag and package version
         run: |
           package_version="$(python3 -c 'import json; print(json.load(open("package.json"))["version"])')"
