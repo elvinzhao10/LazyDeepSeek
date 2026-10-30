@@ -44,10 +44,13 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --fund=false
 
       - name: Install isolated DeepSeek Harness SDK
-        run: npm install --prefix "$RUNNER_TEMP/dsh-sdk" --ignore-scripts --no-audit --no-fund @deepseek-ai/dsh@0.2.1-rc.3 @deepseek-ai/dsh-hooks-claude-code@0.2.1-rc.3 @deepseek-ai/dsh-mcp-client@0.2.1-rc.3 @deepseek-ai/dsh-tool-subagent@0.2.1-rc.3
+        run: npm install --prefix "$RUNNER_TEMP/dsh-sdk" --ignore-scripts --no-audit --no-fund @deepseek-ai/dsh@0.2.1-rc.5 @deepseek-ai/dsh-hooks-claude-code@0.2.1-rc.5 @deepseek-ai/dsh-mcp-client@0.2.1-rc.5 @deepseek-ai/dsh-tool-subagent@0.2.1-rc.5
 
       - name: Verify native SDK composition
         run: node plugins/lazydeepseek/scripts/native-sdk-check.mjs "$RUNNER_TEMP/dsh-sdk"
+
+      - name: Reject high-severity advisories in the resolved upstream SDK
+        run: npm audit --prefix "$RUNNER_TEMP/dsh-sdk" --omit=dev --audit-level=high
 
       - name: Validate release tag and package version
         run: |

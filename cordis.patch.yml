@@ -1,4 +1,4 @@
-# LazyDeepSeek v1.4.0 bundle patch for DeepSeek Harness (dsh) 0.2.1-rc.3.
+# LazyDeepSeek v1.4.0 bundle patch for DeepSeek Harness (dsh) 0.2.1-rc.5.
 #
 # Applied as ONE layer when the `lazydeepseek` bundle is added to a profile
 # (`dsh plugin --profile <name> add <git-spec|tarball|./dir>`). Rows address

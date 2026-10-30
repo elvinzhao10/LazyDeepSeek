@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 const sdkRoot = process.argv[2];
 if (!sdkRoot) throw new Error('pass an isolated installed dsh package root');
 const sdk = resolve(sdkRoot, 'node_modules/@deepseek-ai');
+const sdkVersion = JSON.parse(readFileSync(join(sdk, 'dsh/package.json'), 'utf8')).version;
 const load = path => import(pathToFileURL(join(sdk, path, 'lib/index.js')));
 const { Context } = await load('cordis');
 const { createScope } = await load('dsh-scope');
@@ -96,7 +97,7 @@ try {
     }
     await host.fiber.dispose();
   }
-  console.log('PASS: rc.3 scoped jobs facade, dynamic mask, native/PTC, registry default preservation and disposal');
+  console.log(`PASS: ${sdkVersion} scoped jobs facade, dynamic mask, native/PTC, registry default preservation and disposal`);
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

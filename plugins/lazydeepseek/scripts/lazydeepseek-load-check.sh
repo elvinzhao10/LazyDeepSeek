@@ -246,10 +246,10 @@ if manifest is not None:
     else:
         result("PASS", "package dsh key", "bundle patch declared (cordis.patch.yml)")
     peer = manifest.get("peerDependencies", {}).get("@deepseek-ai/dsh")
-    if peer != "0.2.1-rc.3":
-        result("FAIL", "dsh peer pin", f"expected exact '0.2.1-rc.3', got {peer!r}")
+    if peer != "0.2.1-rc.5":
+        result("FAIL", "dsh peer pin", f"expected exact '0.2.1-rc.5', got {peer!r}")
     else:
-        result("PASS", "dsh peer pin", "0.2.1-rc.3 (exact)")
+        result("PASS", "dsh peer pin", "0.2.1-rc.5 (exact)")
     build_scripts = [s for s in ("prepare", "preinstall", "postinstall", "install") if s in (manifest.get("scripts") or {})]
     if build_scripts:
         result("FAIL", "install-time scripts", f"present ({', '.join(build_scripts)}); git-spec installs must not depend on allowBuilds")

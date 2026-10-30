@@ -24,7 +24,7 @@ printf '%s\n' \
     '  "name": "lazydeepseek",' \
     '  "version": "1.4.0",' \
     '  "dsh": {"bundle": {"patch": "./cordis.patch.yml"}},' \
-    '  "peerDependencies": {"@deepseek-ai/dsh": "0.2.1-rc.3"}' \
+    '  "peerDependencies": {"@deepseek-ai/dsh": "0.2.1-rc.5"}' \
     '}' > "$PACKAGE_SOURCE_ROOT/package.json"
 cp "$REPOSITORY_ROOT/cordis.patch.yml" "$PACKAGE_SOURCE_ROOT/cordis.patch.yml"
 cp "$REPOSITORY_ROOT/lib/index.mjs" "$PACKAGE_SOURCE_ROOT/lib/index.mjs"

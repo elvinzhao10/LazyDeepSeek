@@ -7,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 const sdkRoot = process.argv[2];
 if (!sdkRoot) throw new Error('pass an isolated installed dsh package root');
 const sdk = resolve(sdkRoot, 'node_modules/@deepseek-ai');
+const sdkVersion = JSON.parse(readFileSync(join(sdk, 'dsh/package.json'), 'utf8')).version;
 const load = path => import(pathToFileURL(join(sdk, path, 'lib/index.js')));
 const { Context } = await load('cordis');
 const { default: Loader } = await load('cordis-plugin-loader');
@@ -55,7 +56,7 @@ try {
     assert.deepEqual(names, [...role.allow].sort(), `${role.name} tool visibility`);
     await handle.dispose();
   }
-  console.log(`PASS: ${contract.roles.length} rc.3 child Agent compositions preserve persona hashes and tool visibility`);
+  console.log(`PASS: ${contract.roles.length} ${sdkVersion} child Agent compositions preserve persona hashes and tool visibility`);
 } finally {
   await ctx.fiber.dispose();
   rmSync(dir, { recursive: true, force: true });
