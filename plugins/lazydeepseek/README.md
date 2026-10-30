@@ -1,12 +1,24 @@
 # LazyDeepSeek Plugin
 
+## Unreleased 1.4.1 — verification, history and scale
+
+The combined former 1.4.1 and 1.4.2 scope is implemented in this development branch. Package metadata and the published baseline remain **1.4.0**; this PR does not publish a release. Live-host acceptance is **deferred by the maintainer as of 2026-10-30**, and remains pending.
+
+- Retain versioned verification scenarios, compare attempts by their source/criterion/plan subject, and promote an observed failure into an unverified regression scenario.
+- Bind rerun review to the exact plan, criterion and captured source. Pending, rejected, stale and used approvals cannot authorize another native attempt; independent verification remains required.
+- Inspect checkpoint/decision history through authenticated, paginated reads. Deduplicate identical runtime events with transactional recovery while retaining the original ledger and failed attempts.
+- Preserve first-review plan bytes, correct legacy review-state updates, and harden owned-process cleanup against PID reuse and exit races.
+- Reduce repeated replay and unnecessary review-source capture in measured local cases. These measurements do not establish whole-task latency, token or cost savings.
+
+See the [1.4.1 completion and validation record](docs/verification/1.4.1-completion.md) and [usage/contracts](docs/verification/1.4.1-verification-history.md).
+
 The current platform audit is linked from the repository README.
 
-The package targets DeepSeek Harness 0.2.1-rc.3. Thirteen role presets preserve the existing personas and tool allowlists in isolated SDK checks; package and live host readiness are distinct.
+The development adapter targets DeepSeek Harness 0.2.1-rc.5. Thirteen role presets preserve the existing personas and tool allowlists in isolated SDK checks; package and live host readiness are distinct.
 
-The status-dashboard declares seven tools, including `project`. The 85-file dashboard tree `b525d6786c8a2108a01f5c800a57e54faa36de50834381e57040815d9e0c948b` passed coordinated family checks.
+The status-dashboard declares seven tools, including `project`. The pinned 95-file dashboard and 32-file project trees pass coordinated family checks; consult `shared/dashboard.vendor.json` and `shared/project.vendor.json`.
 
-## v1.4.0 release candidate installation
+## v1.4.0 package installation
 
 **Node.js LTS 24 (recommended) or 22 (supported alternative)** and **Git** are recommended. The lifecycle also accepts Node.js LTS 20 for compatibility. Bootstrap `onboard` only
 from `https://github.com/elvinzhao10/LazyDeepSeek.git`, then use
@@ -459,3 +471,5 @@ that a host loaded it. Use the local `skills/` import plus manual MCP only as a
 receipt-scoped recovery route. The repository-local `.dsh/` directory is
 host-managed development state and is intentionally not part of the release
 package._
+
+The rc.5 SDK dependency graph has an unresolved high-severity advisory release hold; see [the completion record](docs/verification/1.4.1-completion.md#deepseek-release-hold).

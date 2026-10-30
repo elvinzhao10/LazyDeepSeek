@@ -81,3 +81,11 @@ boundary reference](reference/dependency-and-host-boundaries.md).
 For a complete source-family index, including hooks, loop state, helper
 libraries, provider lifecycle, and release checks, read the [runtime subsystem
 reference](reference/runtime-subsystems.md).
+
+## Development milestone
+
+[Combined verification, history and scale work](verification/1.4.1-verification-history.md) describes the local 1.4.1 development scope and acceptance boundaries.
+
+## Unreleased 1.4.1 documentation
+
+[Completion and validation](verification/1.4.1-completion.md) · [Verification/history usage](verification/1.4.1-verification-history.md) · [Platform audit](reference/platform-status-2026-10-30.md). Live-host testing is deferred by the maintainer; package readiness and host acceptance remain separate.

@@ -49,7 +49,7 @@ or screenshot is observed evidence; otherwise **HOST READINESS: PENDING**.
 
 | Host route | Safe package artifact | Required host observation |
 | --- | --- | --- |
-| **dsh git-spec install route (`dsh-plugin-git-sha`)** | The repository IS the package: root `package.json` (`dsh` key + exact `0.2.1-rc.3` peer pin), `cordis.patch.yml` rows, committed prebuilt `lib/` (no build scripts, so the pnpm allowBuilds gate never applies); local package validation via the load-check and route-check scripts. | Run the pinned git-spec install below; after installation, observe one real skill (plus one user-invocable command entry on an interactive surface) and all six MCP connections in a fresh session. |
+| **dsh git-spec install route (`dsh-plugin-git-sha`)** | The repository IS the package: root `package.json` (`dsh` key + exact `0.2.1-rc.5` peer pin), `cordis.patch.yml` rows, committed prebuilt `lib/` (no build scripts, so the pnpm allowBuilds gate never applies); local package validation via the load-check and route-check scripts. | Run the pinned git-spec install below; after installation, observe one real skill (plus one user-invocable command entry on an interactive surface) and all six MCP connections in a fresh session. |
 | **Manual fallback (`manual-skills-mcp-fallback`)** | Copy `plugins/lazydeepseek/skills/` into the project's `.agents/skills/` (rank 200), then configure six local MCP rows manually. | Use only after receipt-scoped removal of the full-plugin route. Observe one imported skill and each connector; commands, agent presets, and hooks remain excluded. |
 
 ## DeepSeek Harness git-spec install route (default)
@@ -61,7 +61,7 @@ alternate), or a local directory (development). The npm registry is not used
 for this package. One approved action at a time:
 
 1. **Preflight:** confirm `dsh --version` reports the pinned
-   `0.2.1-rc.3` and inspect the composed surface with
+   `0.2.1-rc.5` and inspect the composed surface with
    `dsh --profile <name> --dump-config`; this can initialize missing profile files, so do not call it as a read-only probe on an uninitialized profile. Record the current profile before adding the bundle. Confirm LazyDeepSeek
    rows after installation, not as a prerequisite for a new install.
 2. **Install:** after a separate approval, run the profile install with the

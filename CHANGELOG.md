@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased 1.4.1 — verification, history and scale
+
+The combined former 1.4.1 and 1.4.2 scope is implemented in this development branch. Package metadata and the published baseline remain **1.4.0**; this PR does not publish a release. Live-host acceptance is **deferred by the maintainer as of 2026-10-30**, and remains pending.
+
+- Retain versioned verification scenarios, compare attempts by their source/criterion/plan subject, and promote an observed failure into an unverified regression scenario.
+- Bind rerun review to the exact plan, criterion and captured source. Pending, rejected, stale and used approvals cannot authorize another native attempt; independent verification remains required.
+- Inspect checkpoint/decision history through authenticated, paginated reads. Deduplicate identical runtime events with transactional recovery while retaining the original ledger and failed attempts.
+- Preserve first-review plan bytes, correct legacy review-state updates, and harden owned-process cleanup against PID reuse and exit races.
+- Reduce repeated replay and unnecessary review-source capture in measured local cases. These measurements do not establish whole-task latency, token or cost savings.
+
+The development adapter targets DeepSeek Harness 0.2.1-rc.5. Real isolated SDK checks compose all 13 role presets and preserve personas, tool masks and the scoped jobs facade. SDK composition does not prove model delegation or a live installed host.
+
+See the [1.4.1 completion record](docs/verification/1.4.1-completion.md).
+
 ## 2026-10-27 platform audit
 
 Latest upstream dsh is 0.2.1-rc.3 (2026-10-23). The package now targets rc.3 and replaces legacy subagent fields with 13 Agent Presets, preserving persona hashes and role tool allowlists in isolated rc.3 Agent composition checks. A scoped jobs facade exposes only `job_output`, and a scoped mask reconciles late global tools without changing the parent. Temporary profile boots do not establish current host readiness. At the 2026-10-27 audit, the dashboard manifest pinned 91 files at tree 9aa188df and the project manifest pinned 31 files at tree 16561f3c. The current release pins are recorded in [plugins/lazydeepseek/shared/dashboard.vendor.json](plugins/lazydeepseek/shared/dashboard.vendor.json) and [plugins/lazydeepseek/shared/project.vendor.json](plugins/lazydeepseek/shared/project.vendor.json). No live efficiency savings are claimed.

@@ -1,5 +1,7 @@
 # DeepSeek Harness platform status — 2026-10-27
 
+Historical snapshot: see [the 2026-10-30 audit](platform-status-2026-10-30.md) for current documentation and compatibility changes.
+
 **Package compatibility target: rc.3. Host readiness: pending.** Latest public upstream is [dsh v0.2.1-rc.3](https://github.com/deepseek-ai/deepseek-harness/releases/tag/dsh-v0.2.1-rc.3), published 2026-10-23 at `1f81c04`; it is a prerelease. The 2026-10-18 decision against a prerelease is superseded by the request to adapt to the latest and by this compatibility work.
 
 ## Role migration and evidence
