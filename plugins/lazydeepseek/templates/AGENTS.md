@@ -1,6 +1,6 @@
 # AGENTS.md — LazyDeepSeek local onboarding
 
-The rc.3 package maps its 13 roles to Agent Presets. Package checks do not establish live host readiness; see the current platform audit before host actions.
+The rc.5 package maps its 13 roles to Agent Presets. Package checks do not establish live host readiness; see the current platform audit before host actions.
 
 This is the reusable `v1.0.3` consumer template, not a claim that a host loaded
 the plugin. Explicit user instructions and nearer project instructions take
@@ -24,7 +24,7 @@ or product `staging/`/`locks/` artifact is recoverable; never remove or replace
 caller workspace files.
 
 1. Detect or ask for the **dsh CLI** and confirm the pinned peer
-   `@deepseek-ai/dsh 0.2.1-rc.3` (`dsh --version`).
+   `@deepseek-ai/dsh 0.2.1-rc.5` (`dsh --version`).
 2. Resolve the absolute release/package root; never guess it from PATH.
 3. Run safe package checks only: from the release root, use
    `bash plugins/lazydeepseek/scripts/lazydeepseek-load-check.sh` and

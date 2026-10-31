@@ -26,7 +26,13 @@ test('repository root is the dsh package boundary with the pinned identity', () 
   assert.equal(pkg.name, 'lazydeepseek');
   assert.equal(pkg.version, '1.4.0');
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml');
-  assert.equal(pkg.peerDependencies['@deepseek-ai/dsh'], '0.2.1-rc.3');
+  assert.equal(pkg.peerDependencies['@deepseek-ai/dsh'], '0.2.1-rc.5');
+  assert.equal(pkg.engines.dsh, '0.2.1-rc.5');
+  assert.equal(pkg.dependencies['@deepseek-ai/dsh-hooks-claude-code'], '0.2.1-rc.5', 'the optional hook bridge is not provided by the base host');
+  for (const name of ['dsh-mcp-client', 'dsh-tool-jobs', 'dsh-agent-preset-registry', 'dsh-agent-preset', 'dsh-persona', 'dsh-tool-fs', 'dsh-tool-bash', 'dsh-tool-web', 'dsh-tool-todo', 'dsh-tool-subagent']) {
+    assert.equal(pkg.peerDependencies[`@deepseek-ai/${name}`], '0.2.1-rc.5', `${name} shares the native host instance`);
+    assert.equal(pkg.dependencies?.[`@deepseek-ai/${name}`], undefined, `${name} must not install a second host SDK tree`);
+  }
   assert.equal(pkg.scripts, undefined, 'no install-time build scripts: git-spec installs must not depend on allowBuilds');
   assert.match(patch, /name: '\.\/lib\/index\.mjs'/);
   assert.match(patch, /'@deepseek-ai\/dsh-hooks-claude-code'/);

@@ -1,5 +1,9 @@
 # LazyDeepSeek
 
+Verification and bounded execution require **Python 3.11 or newer**.
+
+Native bundle and dependency repair: use the [audited dsh runtime and native plugin guide](docs/reference/audited-dsh-runtime.md). The separate managed runtime pins patched dependencies; it does not modify an arbitrary global host. The original upstream advisory finding remains historical evidence.
+
 ![LazyDeepSeek](lazydeepseek-banner.png)
 
 [![Package 1.4.0](https://img.shields.io/badge/package-1.4.0-7ce8d1)](RELEASE_NOTES.md)
@@ -12,12 +16,26 @@ LazyDeepSeek helps you use structured, evidence-based workflows in **DeepSeek Ha
 and guidance; a host is only considered ready after it is observed in a fresh
 session.
 
-[Platform status](docs/reference/platform-status-2026-10-27.md) · [Get started](#recommended-install-with-ai-help) · [Host routes](#choose-one-route) ·
+[Platform status](docs/reference/platform-status-2026-10-30.md) · [Get started](#recommended-install-with-ai-help) · [Host routes](#choose-one-route) ·
 [1.4.0 notes](RELEASE_NOTES.md) · [Family](#lazyseries-family) · [Docs](docs/)
 
 > **Current package version: v1.4.0. HOST READINESS: PENDING.** Local checks and release
 > archives prove package behavior; a fresh host session must prove loading,
 > command/skill execution and MCP connections. The 13 native roles use rc.3 Agent Presets; isolated package checks do not prove a live host session.
+
+## Unreleased 1.4.1 — verification, history and scale
+
+Native dsh repair adds exact shared-host peers, the optional hook bridge/protocol, an explicit native Ralph group, a locked audited host runtime, and real isolated plugin installation checks. [Native runtime guide](docs/reference/audited-dsh-runtime.md).
+
+The combined former 1.4.1 and 1.4.2 scope is implemented in this development branch. Package metadata and the published baseline remain **1.4.0**; this PR does not publish a release. Live-host acceptance is **deferred by the maintainer as of 2026-10-30**, and remains pending.
+
+- Retain versioned verification scenarios, compare attempts by their source/criterion/plan subject, and promote an observed failure into an unverified regression scenario.
+- Bind rerun review to the exact plan, criterion and captured source. Pending, rejected, stale and used approvals cannot authorize another native attempt; independent verification remains required.
+- Inspect checkpoint/decision history through authenticated, paginated reads. Deduplicate identical runtime events with transactional recovery while retaining the original ledger and failed attempts.
+- Preserve first-review plan bytes, correct legacy review-state updates, and harden owned-process cleanup against PID reuse and exit races.
+- Reduce repeated replay and unnecessary review-source capture in measured local cases. These measurements do not establish whole-task latency, token or cost savings.
+
+See the [1.4.1 completion and validation record](docs/verification/1.4.1-completion.md) and [usage/contracts](docs/verification/1.4.1-verification-history.md).
 
 ## What's in 1.4.0
 
@@ -32,7 +50,7 @@ session.
 The `status-dashboard` MCP server exposes seven tools, including
 `dashboard_service`, `copy_task_context` and typed `project` operations.
 
-The native adapter targets DeepSeek Harness **0.2.1-rc.3** with 13 Agent Presets
+The native adapter targets DeepSeek Harness **0.2.1-rc.5** with 13 Agent Presets
 and scoped tool access. Distribution remains pinned git-spec/GitHub-only.
 
 The release builds on the existing planning, decision-memory and verification
@@ -45,7 +63,7 @@ boundaries; historical changes remain in `CHANGELOG.md`.
 After explicit project initialization, the dashboard provides **Overview,
 Project, Plans, Health, Execution, Git, Evidence and Research** in a collapsible
 sidebar. Contextual Details keep the selected item in view; maps support pan,
-zoom and an expanded modal. Theme and density preferences persist, and
+zoom and an expanded modal. Theme preferences persist, and
 navigation guards protect unsaved edits.
 
 Execution progress and verification are separate. Token charts, resource
@@ -153,7 +171,7 @@ in DeepSeek Harness after reviewing the source.
 
 ### Direct profile setup
 
-1. Confirm the pinned host: `dsh --version` reports exact `0.2.1-rc.3`.
+1. Confirm the pinned host: `dsh --version` reports exact `0.2.1-rc.5`.
 2. After approval, run the git-spec install with the repository URL pinned to
    a full commit sha (or the GitHub release tarball, or `./lazydeepseek` for a
    local development checkout). The npm registry is not used for this package.
@@ -280,7 +298,7 @@ acceptance evidence. These packages run independently.
 | [LazyQoder](https://github.com/elvinzhao10/LazyQoder) | Qoder CLI / IDE / app |
 | [LazyZCode](https://github.com/elvinzhao10/LazyZCode) | ZCode |
 | [LazyKimi](https://github.com/elvinzhao10/LazyKimi) | Kimi Code CLI · Kimi Work (experimental) |
-| [LazyDeepSeek](https://github.com/elvinzhao10/LazyDeepSeek) **← you are here** | DeepSeek Harness 0.2.1-rc.3 |
+| [LazyDeepSeek](https://github.com/elvinzhao10/LazyDeepSeek) **← you are here** | DeepSeek Harness 0.2.1-rc.5 |
 
 The family shares planning, evidence, decision-memory and completion contracts.
 The first shared verification core and a shared dashboard core are vendored in

@@ -245,13 +245,15 @@ async function mcpProject() {
   return root;
 }
 
-test('status-dashboard MCP project tool round trip runs under /bin/bash 3.2 including a no-port case', async () => {
+test('status-dashboard MCP project tool round trip runs under system Bash including a no-port case', async () => {
   const root = await mcpProject();
   const server = join(plugin, 'mcp/status-dashboard/server.sh');
   const environment = { ...process.env, CWD: root, LAZYDEEPSEEK_PLUGIN_ROOT: plugin,
     LAZYDEEPSEEK_MCP_MODE: 'orchestrated', ...pythonEnvironment };
   const bashVersion = spawnSync('/bin/bash', ['-c', 'echo "$BASH_VERSION"'], { encoding: 'utf8' });
-  assert.match(bashVersion.stdout, /^3\.2\./, 'the MCP session is driven by the macOS bash 3.2 interpreter');
+  assert.equal(bashVersion.status, 0, bashVersion.stderr?.toString());
+  assert.match(bashVersion.stdout, process.platform === 'darwin' ? /^3\.2\./ : /^(?:[3-9]|[1-9]\d+)\./,
+    'the MCP session uses macOS Bash 3.2 or the supported system Bash on other platforms');
   const rpc = (id, method, params) => JSON.stringify({ jsonrpc: '2.0', id, method, ...(params ? { params } : {}) });
   const session = (lines) => new Promise((resolve, reject) => {
     const child = spawn('/bin/bash', [server], { env: environment, stdio: ['pipe', 'pipe', 'pipe'] });

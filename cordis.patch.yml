@@ -1,4 +1,4 @@
-# LazyDeepSeek v1.4.0 bundle patch for DeepSeek Harness (dsh) 0.2.1-rc.3.
+# LazyDeepSeek v1.4.0 bundle patch for DeepSeek Harness (dsh) 0.2.1-rc.5.
 #
 # Applied as ONE layer when the `lazydeepseek` bundle is added to a profile
 # (`dsh plugin --profile <name> add <git-spec|tarball|./dir>`). Rows address
@@ -104,7 +104,7 @@
                 - No Agent tool — single-pass indexer; no Edit — fresh generation only.
                 - **thoughtLevel: low** — fast, cheap context generation for large repos.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -120,7 +120,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
     - id: preset-lazydeepseek-context-miner
       name: '@deepseek-ai/dsh-agent-preset'
       config:
@@ -193,7 +193,7 @@
                   - Read-only constraint preserved via the read-only tools allowlist
                   - `review-work` skill provides the agent with review-specific workflow context
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -209,7 +209,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
     - id: preset-lazydeepseek-explorer
       name: '@deepseek-ai/dsh-agent-preset'
       config:
@@ -323,7 +323,7 @@
                 - The dispatcher-bounded turn budget is ample for 1-2 thorough search waves without overspending on leaf agent turns.
                 - earlier host implementation's parallel-first tool strategy (fire 3+ independent calls in wave 1) applies directly — DeepSeek Harness supports parallel tool calls natively.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -339,7 +339,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
     - id: preset-lazydeepseek-gate-reviewer
       name: '@deepseek-ai/dsh-agent-preset'
       config:
@@ -416,7 +416,7 @@
                 - The `lazy-reviewer`, `lazy-remove-ai-slops`, and `lazy-programming` skills are mounted by the dispatcher and applied directly.
                 - **thoughtLevel: max** — deep, skeptical analysis in a dispatcher-bounded budget.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -432,7 +432,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
     - id: preset-lazydeepseek-implementer
       name: '@deepseek-ai/dsh-agent-preset'
       config:
@@ -544,7 +544,7 @@
                 - **skills** (programming, remove-ai-slops, git-master, debugging) provide the implementer with harness-native skill capabilities equivalent to earlier host implementation's skill loading.
                 - The dispatcher-bounded turn budget covers a read-understand-implement-verify-commit cycle without allowing unbounded exploration. Run in an isolated worktree when the host supports it.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -682,7 +682,7 @@
                 - The `.lazydeepseek/` memory files themselves are the persistent memory — the librarian re-reads them on every invocation.
                 - **thoughtLevel: low** — sufficient for structured memory updates without overthinking.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -700,7 +700,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
           - id: web
             name: '@deepseek-ai/dsh-tool-web'
             config:
@@ -785,7 +785,7 @@
                 - **Write** (not Edit) for adapter doc creation under `.lazydeepseek/adapters/`.
                 - **thoughtLevel: high** — thorough research + mapping + documentation.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -952,7 +952,7 @@
                 - **thoughtLevel: high** with run-state resume enables the orchestrator to persist across long-running work cycles, resuming from run state (state.json) on continuation turns.
                 - Model recommendations are task metadata, not proof that a host accepted a model, selected a concrete backing model, or charged a stated rate. Follow `docs/model-routing.md` for the supported DeepSeek Harness selection paths.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -983,7 +983,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
           - id: todo
             name: '@deepseek-ai/dsh-tool-todo'
             config:
@@ -1192,7 +1192,7 @@
                 - **TodoWrite/TodoRead** track plan generation progress phases internally.
                 - The read-only tools allowlist enforces the planner's constraint — plan files are written via the orchestrator or scaffold script.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -1210,7 +1210,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
           - id: web
             name: '@deepseek-ai/dsh-tool-web'
             config:
@@ -1315,7 +1315,7 @@
                 - The dispatcher-bounded turn budget with self-contained dispatches provides dedicated execution budget without carrying parent context bloat.
                 - No Agent tool — QA executes directly, never delegates.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -1563,7 +1563,7 @@
                   - The `lazy-programming` skill: criterion application for slop detection and code quality standards.
                 - The consolidating of three earlier host implementation agents into one multi-mode DeepSeek Harness agent is a native optimization — reducing agent count while preserving all review dimensions.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -1579,7 +1579,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
     - id: preset-lazydeepseek-security-auditor
       name: '@deepseek-ai/dsh-agent-preset'
       config:
@@ -1672,7 +1672,7 @@
                 - No Write/Edit in the allowlist — findings only.
                 - **thoughtLevel: high** — reasoning depth for thorough analysis.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -1688,7 +1688,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
     - id: preset-lazydeepseek-verifier
       name: '@deepseek-ai/dsh-agent-preset'
       config:
@@ -1842,7 +1842,7 @@
                 - The dispatcher-bounded turn budget is sufficient for thorough verification of a single task's DoneClaim without overstaying.
                 - The `lazy-verifier` skill is mounted by the dispatcher for the harness-native verification and loop-continuation methodology.
           - id: role-tools
-            name: ./lib/role-tools.mjs
+            name: lazydeepseek/lib/role-tools.mjs
             config:
               allow:
                 - read
@@ -1859,7 +1859,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: ./lib/job-output.mjs
+            name: lazydeepseek/lib/job-output.mjs
 
     - id: tool-subagent-lazydeepseek-context-indexer
       name: '@deepseek-ai/dsh-tool-subagent'
@@ -2060,11 +2060,21 @@
   config:
     bundledSkillDir: !!js lazydeepseekRuntime.path('skills')
 
-# Adopt the native Ralph loop as the primary fresh-agent engine (ratified Q3;
-# M0 probe P-14). The base ships the row disabled; our overlay enables it with
-# the family's round ceiling. `workflow` is already registered by dsh-base.
-- id: tool-ralph
-  disabled: false
-  config:
-    subagentProvider: spawn
-    maxRounds: 64
+# rc.5 ships Ralph in an optional bundle, not as a disabled base row.
+# Mount the same native workflow/tool group with a private engine scope.
+- insert:
+    - id: lazydeepseek-ralph
+      name: cordis:group
+      group: true
+      isolate:
+        workflowEngine: true
+      config:
+        - id: lazydeepseek-ralph-workflow
+          name: '@deepseek-ai/dsh-workflow-ptc'
+          config:
+            provider: spawn
+        - id: tool-ralph
+          name: '@deepseek-ai/dsh-tool-ralph'
+          config:
+            subagentProvider: spawn
+            maxRounds: 64

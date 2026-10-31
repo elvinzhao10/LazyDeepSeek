@@ -11,13 +11,13 @@
     "install_id": "lazydeepseek@dsh"
   },
   "dsh": {
-    "peer_pin": "@deepseek-ai/dsh 0.2.1-rc.3 (exact)",
-    "hooks_bridge": "@deepseek-ai/dsh-hooks-claude-code 0.2.1-rc.3",
+    "peer_pin": "@deepseek-ai/dsh 0.2.1-rc.5 (exact)",
+    "hooks_bridge": "@deepseek-ai/dsh-hooks-claude-code 0.2.1-rc.5",
     "entry": "lib/index.mjs (prebuilt, committed; no install-time build scripts)"
   },
   "artifacts": {
-    "package.json": "5475f77e936c1ca305a3e60d593f0777ff2f01addbe0f56c87cca7f30f802b8f",
-    "cordis.patch.yml": "4ef53cad976a71f8d1506185e9aaf0e64c2161f50ed5dba4023ec0c16520f319"
+    "package.json": "f64318650e4554e5680cdd42aa801f2dff1f787e6c1a6fd888e7000389c16b06",
+    "cordis.patch.yml": "38e8c88e0493ff3d83dee65046cea13b5e566d667bdac7a802a03ee63e6de0ce"
   },
   "payload": {
     "method": "Deterministic inventory: walk each payload root (skills, commands, agents, presets, hooks, mcp) recursively from the plugin root; reject symlinks and non-regular files; skip entries named .gitkeep, __pycache__ directories, and .pyc bytecode; include only regular files with st_nlink == 1. Record {path, sha256} per file with the POSIX path relative to plugins/lazydeepseek and sha256 over the file bytes. Append policy.files entries the same way. Sort records byte-wise (Buffer.compare) by path. file_count is the record count; inventory_sha256 is the SHA-256 of the UTF-8 JSON serialization of the sorted record array (JSON.stringify with default separators, no whitespace, insertion order = sorted path order).",
@@ -33,7 +33,7 @@
       ".mcp.json"
     ],
     "file_count": 89,
-    "inventory_sha256": "f153c661e1cbf064bd3ec507f1be7d613aa3aa72c05fdeb0b163e9ae033322ca"
+    "inventory_sha256": "7bb17217677ffde1064149698a2349df9fc5676b0a89e2363b7d2996661ef881"
   },
   "default_routes": {
     "dsh": "dsh-plugin-git-sha"

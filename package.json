@@ -1,7 +1,7 @@
 {
   "name": "lazydeepseek",
   "version": "1.4.0",
-  "description": "LazyDeepSeek — the DeepSeek Harness (dsh) member of the LazySeries family: skills, hooks, MCP servers, commands, agents and the Ralph/ULW loop ported from LazyZCode.",
+  "description": "LazyDeepSeek \u2014 the DeepSeek Harness (dsh) member of the LazySeries family: skills, hooks, MCP servers, commands, agents and the Ralph/ULW loop ported from LazyZCode.",
   "license": "MIT",
   "main": "lib/index.mjs",
   "files": [
@@ -27,20 +27,41 @@
     "mcp",
     "lazyseries"
   ],
-  "dependencies": {
-    "@deepseek-ai/dsh-hooks-claude-code": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-mcp-client": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-tool-jobs": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-agent-preset-registry": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-agent-preset": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-persona": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-tool-fs": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-tool-bash": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-tool-web": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-tool-todo": "0.2.1-rc.3",
-    "@deepseek-ai/dsh-tool-subagent": "0.2.1-rc.3"
-  },
   "peerDependencies": {
-    "@deepseek-ai/dsh": "0.2.1-rc.3"
+    "@deepseek-ai/dsh": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-mcp-client": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-jobs": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-agent-preset-registry": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-agent-preset": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-persona": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-fs": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-bash": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-web": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-todo": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-subagent": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-ralph": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-workflow-ptc": "0.2.1-rc.5"
+  },
+  "engines": {
+    "dsh": "0.2.1-rc.5"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-mcp-client": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-jobs": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-agent-preset-registry": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-agent-preset": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-persona": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-fs": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-bash": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-web": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-todo": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-subagent": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-ralph": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-workflow-ptc": "0.2.1-rc.5"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-hooks-claude-code": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-hook-protocol": "0.2.1-rc.5"
   }
 }

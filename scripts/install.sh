@@ -149,8 +149,8 @@ if (pkg.dsh?.bundle?.patch !== "./cordis.patch.yml") {
     console.error("package dsh.bundle.patch must be ./cordis.patch.yml");
     process.exit(1);
 }
-if (pkg.peerDependencies?.["@deepseek-ai/dsh"] !== "0.2.1-rc.3") {
-    console.error("peerDependencies[@deepseek-ai/dsh] must be exactly 0.2.1-rc.3");
+if (pkg.peerDependencies?.["@deepseek-ai/dsh"] !== "0.2.1-rc.5") {
+    console.error("peerDependencies[@deepseek-ai/dsh] must be exactly 0.2.1-rc.5");
     process.exit(1);
 }
 for (const script of ["prepare", "preinstall", "postinstall", "install"]) {
@@ -217,7 +217,7 @@ if [ "$(uname -s)" = "Darwin" ] && command -v pbcopy >/dev/null 2>&1; then
     fi
 fi
 info "Steps:"
-info "  1. Confirm the pinned host: dsh --version must print 0.2.1-rc.3."
+info "  1. Confirm the pinned host: dsh --version must print 0.2.1-rc.5."
 info "  2. Run the plugin add command for the chosen profile (the URL is the"
 info "     repository${CLIPBOARD_NOTE}; append #<commit-sha> to pin)."
 info "  3. Confirm our rows compose: dsh --profile <name> --dump-config must"
@@ -226,21 +226,10 @@ info "  4. Start a fresh session and verify: one real skill via the Skill tool,"
 info "     one command as a slash menu entry, and all six MCP connections."
 info ""
 
-# --- Optional development-only dump-config validation --------------------------------
-info "--- Optional: dsh composed-config validation (development-only) ---"
-
-if command -v dsh >/dev/null 2>&1; then
-    LAZYDEEPSEEK_VALIDATE_STATUS=0
-    LAZYDEEPSEEK_VALIDATE_OUTPUT="$(cd "$REPO_ROOT" && dsh --dump-config 2>&1)" || LAZYDEEPSEEK_VALIDATE_STATUS=$?
-    if [ "$LAZYDEEPSEEK_VALIDATE_STATUS" -eq 0 ]; then
-        info "dsh --dump-config exited 0 (base config composes on the installed host)."
-    else
-        info "NOTE: 'dsh --dump-config' exited $LAZYDEEPSEEK_VALIDATE_STATUS. This development-only check is best-effort; its absence or failure is not an install and not host proof. Continuing."
-    fi
-else
-    info "No 'dsh' binary on PATH; skipping the optional composed-config check."
-    info "(Normal on end-user machines — the CLI is not required to install.)"
-fi
+# Host profile inspection is an explicit action: --dump-config can initialize
+# a missing profile, so the package preflight must not execute it implicitly.
+info "Composed host inspection is deferred: select an existing profile explicitly."
+info "For an isolated native package check, see docs/reference/audited-dsh-runtime.md."
 info ""
 
 # --- Optional durable lifecycle onboard --------------------------------------
