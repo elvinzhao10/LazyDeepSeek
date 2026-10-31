@@ -1,0 +1,22 @@
+{
+  "name": "lazydeepseek-managed-dsh-runtime",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Audited DeepSeek Harness host runtime; separate from the native LazyDeepSeek plugin bundle",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-hooks-claude-code": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-mcp-client": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tool-subagent": "0.2.1-rc.5",
+    "pnpm": "11.13.1"
+  },
+  "overrides": {
+    "@modelcontextprotocol/client": "2.3.0",
+    "fflate": "0.8.3",
+    "undici": "8.12.2",
+    "zod": "4.6.7"
+  }
+}

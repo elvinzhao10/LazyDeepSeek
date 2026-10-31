@@ -2,6 +2,8 @@
 
 ## Unreleased 1.4.1 — verification, history and scale
 
+Native dsh repair adds exact shared-host peers, the optional hook bridge/protocol, an explicit native Ralph group, a locked audited host runtime, and real isolated plugin installation checks. [Native runtime guide](docs/reference/audited-dsh-runtime.md).
+
 The combined former 1.4.1 and 1.4.2 scope is implemented in this development branch. Package metadata and the published baseline remain **1.4.0**; this PR does not publish a release. Live-host acceptance is **deferred by the maintainer as of 2026-10-30**, and remains pending.
 
 - Retain versioned verification scenarios, compare attempts by their source/criterion/plan subject, and promote an observed failure into an unverified regression scenario.

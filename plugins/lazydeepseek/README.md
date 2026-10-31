@@ -472,4 +472,4 @@ receipt-scoped recovery route. The repository-local `.dsh/` directory is
 host-managed development state and is intentionally not part of the release
 package._
 
-The rc.5 SDK dependency graph has an unresolved high-severity advisory release hold; see [the completion record](docs/verification/1.4.1-completion.md#deepseek-release-hold).
+The managed dsh runtime repairs the known rc.5 dependency graph with audited root overrides; unmodified host installations are not implicitly patched. See [the completion record](docs/verification/1.4.1-completion.md#deepseek-dependency-resolution).

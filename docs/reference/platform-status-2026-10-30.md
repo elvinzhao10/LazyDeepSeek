@@ -21,3 +21,7 @@ This audit covers lifecycle/onboarding/update/offboard/recovery; project init/sy
 The local development changes retain direct handling for simple tasks. Existing named workflows and approval/verification requirements remain authoritative. No blanket speed, token or cost saving is claimed from workflow selection. The five Python-backed adapters omit review-content scanning only on internal producer paths with no existing review; public reads and all reviewed subjects retain fresh capture. No HEAD-only cache is introduced.
 
 **HOST READINESS: PENDING** wherever no fresh host/build/session receipt is observed. No host installation, trust/account change, provider call, credential change or publication was performed by this audit. The coordination report records exact test outcomes and unresolved contradictions. The previous dated audit remains historical context.
+
+## 2026-10-31 resolution
+
+The supported managed runtime now pins the patched graph with a reproducible lockfile and an enforced audit. Native bundle checks exercise the actual package-manager route. See [the runtime guide](audited-dsh-runtime.md); this supersedes the publication hold for that audited route, without claiming an arbitrary existing host or upstream release was repaired.

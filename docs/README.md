@@ -89,3 +89,5 @@ reference](reference/runtime-subsystems.md).
 ## Unreleased 1.4.1 documentation
 
 [Completion and validation](verification/1.4.1-completion.md) · [Verification/history usage](verification/1.4.1-verification-history.md) · [Platform audit](reference/platform-status-2026-10-30.md). Live-host testing is deferred by the maintainer; package readiness and host acceptance remain separate.
+
+[Native dsh bundle and audited runtime](reference/audited-dsh-runtime.md) covers locked host dependencies, exact peers, native installation checks and the separate live-host boundary.

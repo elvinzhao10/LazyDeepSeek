@@ -2,7 +2,7 @@
 
 Verification and bounded execution require **Python 3.11 or newer**.
 
-Development audit: rc.5 SDK composition passes, but its resolved upstream dependency graph has two high and two moderate affected packages. [Release hold and exact scope](docs/reference/platform-status-2026-10-30.md#upstream-dependency-finding--release-hold). This does not describe a scan or upgrade of your installed host.
+Native bundle and dependency repair: use the [audited dsh runtime and native plugin guide](docs/reference/audited-dsh-runtime.md). The separate managed runtime pins patched dependencies; it does not modify an arbitrary global host. The original upstream advisory finding remains historical evidence.
 
 ![LazyDeepSeek](lazydeepseek-banner.png)
 
@@ -24,6 +24,8 @@ session.
 > command/skill execution and MCP connections. The 13 native roles use rc.3 Agent Presets; isolated package checks do not prove a live host session.
 
 ## Unreleased 1.4.1 — verification, history and scale
+
+Native dsh repair adds exact shared-host peers, the optional hook bridge/protocol, an explicit native Ralph group, a locked audited host runtime, and real isolated plugin installation checks. [Native runtime guide](docs/reference/audited-dsh-runtime.md).
 
 The combined former 1.4.1 and 1.4.2 scope is implemented in this development branch. Package metadata and the published baseline remain **1.4.0**; this PR does not publish a release. Live-host acceptance is **deferred by the maintainer as of 2026-10-30**, and remains pending.
 

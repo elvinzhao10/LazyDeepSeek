@@ -47,7 +47,7 @@ try {
     assert.equal(roleRow.config.agentPreset, role.name);
     assert.equal(roleRow.config.maxDepth, role.maxDepth);
     assert.equal(createHash('sha256').update(preset.config.plugins.find(plugin => plugin.id === 'persona').config.prefix).digest('hex'), role.personaSha256);
-    const plugins = preset.config.plugins.map(plugin => ({ ...plugin, name: plugin.name.startsWith('./lib/') ? pathToFileURL(join(dir, plugin.name.split('/').at(-1))).href : plugin.name }));
+    const plugins = preset.config.plugins.map(plugin => ({ ...plugin, name: plugin.name.startsWith('lazydeepseek/lib/') ? pathToFileURL(join(dir, plugin.name.split('/').at(-1))).href : plugin.name }));
     await ctx.agentPresets.register({ id: role.name, plugins });
   }
   for (const role of contract.roles) {
