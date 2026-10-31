@@ -264,7 +264,12 @@ try:
         "shim entry": "name: './lib/index.mjs'" in patch_text,
         "hooks bridge": "'@deepseek-ai/dsh-hooks-claude-code'" in patch_text,
         "bundled skills": "bundledSkillDir:" in patch_text,
-        "native ralph adoption": "id: tool-ralph" in patch_text and "disabled: false" in patch_text,
+        "native ralph adoption": all(marker in patch_text for marker in (
+            "id: lazydeepseek-ralph", "name: cordis:group", "workflowEngine: true",
+            "name: '@deepseek-ai/dsh-workflow-ptc'", "provider: spawn",
+            "id: tool-ralph", "name: '@deepseek-ai/dsh-tool-ralph'",
+            "subagentProvider: spawn", "maxRounds: 64",
+        )),
     }
     removed_role_fields = __import__("re").search(r"(?m)^        (?:persona|toolFilter):", patch_text)
     if removed_role_fields:
