@@ -19,15 +19,15 @@ session.
 [1.4.1 native integration](docs/reference/native-integration-1.4.1.md) · [Platform status](docs/reference/platform-status-2026-10-30.md) · [Get started](#recommended-install-with-ai-help) · [Host routes](#choose-one-route) ·
 [1.4.1 notes](RELEASE_NOTES.md) · [Family](#lazyseries-family) · [Docs](docs/)
 
-> **Current package version: v1.4.1 (release candidate). HOST READINESS: PENDING.** Local checks and release
+> **Current package version: v1.4.1. HOST READINESS: PENDING.** Local checks and release
 > archives prove package behavior; a fresh host session must prove loading,
 > command/skill execution and MCP connections. The 13 native roles use rc.5 Agent Presets; isolated package checks do not prove a live host session.
 
-## 1.4.1 release candidate — verification, history and scale
+## 1.4.1 release — verification, history and scale
 
 Native dsh repair adds exact shared-host peers, the optional hook bridge/protocol, an explicit native Ralph group, a locked audited host runtime, and real isolated plugin installation checks. [Native runtime guide](docs/reference/audited-dsh-runtime.md).
 
-The combined former 1.4.1 and 1.4.2 scope is implemented in this development branch. Package metadata is prepared as **1.4.1**; the published baseline remains 1.4.0. This PR does not publish a release. Live-host acceptance is **deferred by the maintainer as of 2026-10-30**, and remains pending.
+Release **1.4.1** combines the former 1.4.1 and 1.4.2 verification, history and scale scope. Live-host acceptance is **deferred by the maintainer as of 2026-10-30**, and remains pending.
 
 - Retain versioned verification scenarios, compare attempts by their source/criterion/plan subject, and promote an observed failure into an unverified regression scenario.
 - Bind rerun review to the exact plan, criterion and captured source. Pending, rejected, stale and used approvals cannot authorize another native attempt; independent verification remains required.
