@@ -6,7 +6,7 @@ LazyDeepSeek deliberately aligns policy and package safety across hosts while ke
 
 ## v1.4.0 package evidence boundary
 
-The current v1.4.0 package targets the **DeepSeek Harness** host; no current
+The current v1.4.1 package targets the **DeepSeek Harness** host; no current
 host activation is claimed. The DeepSeek Harness git-spec install
 route (`dsh-plugin-git-sha`) is the default full-plugin route. The
 `manual-skills-mcp-fallback` route is recovery-only and mutually exclusive
