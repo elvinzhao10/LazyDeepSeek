@@ -263,7 +263,7 @@ expect_status hook-exit-propagates 1 env CWD="$TMP/workspace" CLAUDE_PLUGIN_ROOT
 expect_contains hook-exit-propagates 'UserPromptSubmit \(plain\) — exited 9'
 
 cp -R "$PLUGIN_ROOT" "$TMP/noisy-hook-plugin"
-printf '%s\n' '#!/usr/bin/env bash' 'printf "%s\\n" noisy-hook-output' > "$TMP/noisy-hook-plugin/scripts/hooks/user-prompt-submit.sh"
+printf '%s\n' '#!/usr/bin/env bash' 'cat >/dev/null' 'printf "%s\\n" noisy-hook-output' > "$TMP/noisy-hook-plugin/scripts/hooks/user-prompt-submit.sh"
 chmod +x "$TMP/noisy-hook-plugin/scripts/hooks/user-prompt-submit.sh"
 expect_status hook-empty-output-propagates 1 env CWD="$TMP/workspace" CLAUDE_PLUGIN_ROOT="$TMP/noisy-hook-plugin" bash "$TMP/noisy-hook-plugin/scripts/hook-pipeline-test.sh"
 expect_contains hook-empty-output-propagates 'UserPromptSubmit \(plain\) — expected empty stdout, got: noisy-hook-output'
