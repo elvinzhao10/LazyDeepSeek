@@ -39,3 +39,7 @@ After selecting and approving the exact Harness home and profile, put `tools/dsh
 The managed host graph and the installed plugin graph must both pass their audits. This repairs the supported managed-runtime route; it is not a claim that the upstream unmodified rc.5 package or an arbitrary user's installation has been patched. Keep the high-severity release guard enabled, and re-audit at installation/release time. Model-backed live acceptance remains separate and deferred until requested.
 
 Primary references: [native bundle packaging](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.1-rc.5/docs/user/develop/basic/publish.md), [native Agent Presets](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.1-rc.5/packages/preset/agent-preset/README.md), [npm root overrides](https://docs.npmjs.com/cli/v11/configuring-npm/package-json/#overrides).
+
+## Desktop 1.4.1 activation
+
+Desktop exclusively manages its `desktop` profile. Use its Plugins → Add Plugin control, then fully quit/reopen when prompted; do not edit private profile files or use the global CLI to force this profile. The native LazyDeepSeek panel shares the existing Harness subagent settings and revision fencing. Role-specific depth caps retain precedence. The orchestrator reuses native `job_list`, `job_kill`, `get_goal`, `create_goal` and `update_goal`; host authority checks and the portable verification ledger remain in force. No second scheduler is installed.

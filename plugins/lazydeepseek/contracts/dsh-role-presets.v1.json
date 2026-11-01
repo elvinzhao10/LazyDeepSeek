@@ -97,7 +97,12 @@
         "lazydeepseek-security-auditor",
         "lazydeepseek-verifier",
         "job_output",
-        "todo_write"
+        "todo_write",
+        "job_list",
+        "job_kill",
+        "get_goal",
+        "create_goal",
+        "update_goal"
       ],
       "personaSha256": "37bac500f6b1ec3f39c248e203e73b8dafcb1d5254e75a197d634c7069c7b8fb",
       "maxDepth": 2

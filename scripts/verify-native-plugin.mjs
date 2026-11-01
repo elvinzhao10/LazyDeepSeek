@@ -120,7 +120,7 @@ try {
   rmSync(mountedArtifact, { force: true });
   writeFileSync(probe, `import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync } from 'node:fs';
-export const inject = ['appReady', 'appExit', 'loader', 'commands', 'agentPresets', 'lazydeepseekRuntime'];
+export const inject = ['appReady', 'appExit', 'loader', 'commands', 'agentPresets', 'lazydeepseekRuntime', 'clientModules'];
 export function apply(ctx) {
   ctx.appReady.onReady(() => { void inspect(ctx).then(() => ctx.appExit(0), error => { console.error(error); ctx.appExit(1); }); });
 }
@@ -128,9 +128,11 @@ async function inspect(ctx) {
   const commands = ctx.commands.list(ctx).filter(row => row.name.startsWith('lazy-'));
   const presets = (await ctx.agentPresets.list()).filter(row => row.id.startsWith('lazydeepseek-') && row.id !== 'lazydeepseek-inherited');
   const entries = [...ctx.loader.entries()].map(entry => ({ id: entry.options.id, name: entry.options.name, state: entry.fiber?.state, disabled: entry.disabled }));
+  const clientEntries = ctx.clientModules.graph().entries.filter(row => row.id === 'lazydeepseek');
+  assert.equal(clientEntries.length, 1, 'one native client module');
   const hooks = JSON.parse(readFileSync(ctx.lazydeepseekRuntime.path('hooks.dsh.json'), 'utf8'));
   const compositions = ctx.agentPresets.inspectCompositions();
-  writeFileSync(${JSON.stringify(mountedArtifact)}, JSON.stringify({ commands, presets, compositions, entries, hookEvents: Object.keys(hooks.hooks) }, null, 2));
+  writeFileSync(${JSON.stringify(mountedArtifact)}, JSON.stringify({ commands, presets, compositions, entries, clientEntries, hookEvents: Object.keys(hooks.hooks) }, null, 2));
   assert.equal(commands.length, 20);
   assert.equal(presets.length, 13);
   assert.ok(presets.every(row => !row.broken), JSON.stringify(presets));
@@ -142,7 +144,7 @@ async function inspect(ctx) {
 }
 `);
   const overlay = join(temporary, 'inspect.yml');
-  writeFileSync(overlay, JSON.stringify([{ insert: [{ id: 'native-regression-inspector', name: probe }] }]));
+  writeFileSync(overlay, JSON.stringify([{ insert: [{ id: 'native-client-modules', name: '@deepseek-ai/dsh-client-modules' }, { id: 'native-regression-inspector', name: probe }] }]));
   writeFileSync(join(evidence, 'dsh-native-inspect.mjs'), readFileSync(probe));
   writeFileSync(join(evidence, 'dsh-native-overlay.json'), readFileSync(overlay));
   const boot = dsh('boot', ['--profile', 'native-regression', '--patch', overlay]);

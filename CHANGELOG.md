@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.1] — Unreleased
+
+Prepare the combined verification/history/scale release, align package/runtime versions, document current native app routes and preserve deferred live acceptance. DeepSeek Harness rc.5 loads the native bundle, Agent Presets, MCP/hook bridges and scoped Ralph. Native preset labels and a bilingual Plugins settings page reuse host components and the shared subagent settings document. The orchestrator exposes host-owned jobs and Goals; leaf role restrictions remain intact. Fully quit/reopen Desktop after installation.
+
 ## Unreleased 1.4.1 — verification, history and scale
 
 Native dsh repair adds exact shared-host peers, the optional hook bridge/protocol, an explicit native Ralph group, a locked audited host runtime, and real isolated plugin installation checks. [Native runtime guide](docs/reference/audited-dsh-runtime.md).

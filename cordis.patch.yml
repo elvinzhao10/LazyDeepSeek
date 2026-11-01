@@ -28,6 +28,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-context-indexer
+        name: "LazyDeepSeek · Context Indexer"
+        description: "Use when .lazydeepseek/context/ must be built or refreshed: project map, discovered commands, and structure index. Do not use for product-code changes or plan review."
+        order: 100
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -125,6 +128,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-context-miner
+        name: "LazyDeepSeek · Context Miner"
+        description: "Use as the context-mining lane of the 5-agent review: git history, docs, and cross-references the other lanes missed. Do not use for correctness review or implementation."
+        order: 101
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -214,6 +220,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-explorer
+        name: "LazyDeepSeek · Explorer"
+        description: "Use when code must be located: files, patterns, conventions, and cross-layer structures, answered precisely from a read-only search. Do not use for writing, editing files, or external research."
+        order: 102
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -344,6 +353,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-gate-reviewer
+        name: "LazyDeepSeek · Gate Reviewer"
+        description: "Use for the final approval gate: re-audit executor evidence, review reports, and QA artifacts before completion. Do not use for implementing fixes or routine code review."
+        order: 103
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -437,6 +449,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-implementer
+        name: "LazyDeepSeek · Implementer"
+        description: "Use for executing one bounded, atomic task from a plan: the smallest correct change, self-verification, evidence capture, and a DoneClaim. Do not use for orchestration, planning, or code review."
+        order: 104
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -569,6 +584,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-librarian
+        name: "LazyDeepSeek · Librarian"
+        description: "Use after accepted changes to update project memory and documentation: dsh.md, command index, parity ledger, known gaps, and risk register. Do not use for implementing product code or reviewing diffs."
+        order: 105
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -710,6 +728,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-migration-planner
+        name: "LazyDeepSeek · Migration Planner"
+        description: "Use when porting earlier host implementation semantics to another host must be planned component by component with risk assessment. Do not use for executing the migration or editing product code."
+        order: 106
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -811,6 +832,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-orchestrator
+        name: "LazyDeepSeek · Orchestrator"
+        description: "Use when a plan must be executed end to end: task selection, parallel implementer dispatch, evidence gating, merge decisions, and completion. Do not use for implementing product code directly or for single-file edits."
+        order: 107
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -972,6 +996,11 @@
                 - lazydeepseek-security-auditor
                 - lazydeepseek-verifier
                 - job_output
+                - job_list
+                - job_kill
+                - get_goal
+                - create_goal
+                - update_goal
                 - todo_write
           - id: fs
             name: '@deepseek-ai/dsh-tool-fs'
@@ -983,7 +1012,7 @@
           - id: bash
             name: '@deepseek-ai/dsh-tool-bash'
           - id: jobs
-            name: lazydeepseek/lib/job-output.mjs
+            name: '@deepseek-ai/dsh-tool-jobs'
           - id: todo
             name: '@deepseek-ai/dsh-tool-todo'
             config:
@@ -992,6 +1021,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-planner
+        name: "LazyDeepSeek · Planner"
+        description: "Use when a vague or large request must become ONE decision-complete work plan under .lazydeepseek/plans/ before any implementation. Do not use for executing, implementing, or editing code."
+        order: 108
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -1220,6 +1252,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-qa-executor
+        name: "LazyDeepSeek · Qa Executor"
+        description: "Use when the application must actually be run: execute test scenarios and capture real-surface evidence artifacts. Do not use for speculative analysis or product-code implementation."
+        order: 109
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -1338,6 +1373,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-reviewer
+        name: "LazyDeepSeek · Reviewer"
+        description: "Use for multi-angle plan and code review: overreach, missing tests/docs, slop, and execution risks, with PASS/FAIL verdicts. Do not use for implementing, editing, or running QA."
+        order: 110
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -1584,6 +1622,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-security-auditor
+        name: "LazyDeepSeek · Security Auditor"
+        description: "Use as the security lane of a review: secrets, unsafe commands, permission issues, overreach, and injection risks in diffs. Do not use for style, naming, or architecture feedback without a security angle."
+        order: 111
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'
@@ -1693,6 +1734,9 @@
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: lazydeepseek-verifier
+        name: "LazyDeepSeek · Verifier"
+        description: "Use when an implementer's DoneClaim must be independently confirmed from artifacts: reproduce tests, Manual-QA, adversarial probes, and return a verdict with confidence. Do not use for implementing or repairing code."
+        order: 112
         plugins:
           - id: persona
             name: '@deepseek-ai/dsh-persona'

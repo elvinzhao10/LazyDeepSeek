@@ -1,5 +1,5 @@
 #!/bin/bash
-# lazydeepseek-verify.sh — Master verification runner (v1.4.0)
+# lazydeepseek-verify.sh — Master verification runner (v1.4.1)
 #
 # Runs all health-check scripts in sequence and emits a compact JSON summary.
 # Exit code 0 when all_pass is true; exit code 1 otherwise.

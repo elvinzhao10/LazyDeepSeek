@@ -3,9 +3,10 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const RELEASE_VERSION = '1.4.0';
-const PREVIOUS_VERSION = '1.3.5';
+const RELEASE_VERSION = '1.4.1';
+const PREVIOUS_VERSION = '1.4.0';
 const VERSION_JSON_PATHS = [
+  ["plugins/lazydeepseek/contracts/lazydeepseek-machine-status.v2.schema.json", ["properties", "version", "const"]],
   ['package.json', ['version']],
   ['plugins/lazydeepseek/contracts/dsh-route-contract.v1.json', ['version']],
   ['plugins/lazydeepseek/tooling/package.json', ['version']],

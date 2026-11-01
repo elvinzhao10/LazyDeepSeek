@@ -38,6 +38,7 @@ try {
   for (const service of ['fs', 'workingDirectory', 'shell', 'shellEnv', 'web']) ctx.provide(service, {});
   const definition = name => ({ name, description: name, parameters: { type: 'object', properties: {} }, output: { schema: { type: 'string' }, render: () => [] }, execute: async () => '' });
   for (const role of contract.roles) ctx.tools.register(definition(role.name));
+  for (const tool of ['get_goal', 'create_goal', 'update_goal']) ctx.tools.register(definition(tool));
   ctx.tools.register(definition('forbidden'));
   await ctx.plugin(AgentRegistry); await ctx.plugin(AgentLoop, { agents: [] });
   await ctx.plugin(Presets, { default: 'inherited' });

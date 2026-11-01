@@ -17,12 +17,15 @@ const patch = yaml.load(readFileSync(new URL('../../../cordis.patch.yml', import
 const rows = patch[0].insert.filter((row) => row.name === '@deepseek-ai/dsh-tool-subagent');
 assert.equal(rows.length, 13);
 const roleNames = rows.map((row) => row.config.toolName);
-const available = new Set(['read', 'bash', 'edit', 'write', 'job_output', 'todo_write', 'web_fetch', 'web_search', ...roleNames]);
+const available = new Set(['read', 'bash', 'edit', 'write', 'job_output', 'job_list', 'job_kill', 'get_goal', 'create_goal', 'update_goal', 'todo_write', 'web_fetch', 'web_search', ...roleNames]);
 for (const row of rows) {
   Config(row.config);
   assert.equal(row.config.agentPreset, row.config.toolName);
   const preset = patch[0].insert.find(entry => entry.name === '@deepseek-ai/dsh-agent-preset' && entry.config.id === row.config.toolName);
   assert.ok(preset, `missing preset ${row.config.toolName}`);
+  assert.equal(typeof preset.config.name, "string");
+  assert.equal(typeof preset.config.description, "string");
+  assert.equal(typeof preset.config.order, "number");
   const source = readFileSync(new URL(`../agents/${row.config.toolName}.md`, import.meta.url), 'utf8').replace(/^---\n[\s\S]*?\n---\n/, '');
   assert.equal(preset.config.plugins.find(entry => entry.id === 'persona').config.prefix, source.trimEnd() + '\n');
   const tools = preset.config.plugins.find(entry => entry.id === 'role-tools').config.allow;

@@ -12,9 +12,9 @@ separate authorities.
 See [the current platform audit](docs/reference/platform-status-2026-10-30.md)
 for version-specific native features and legacy route limits.
 
-## Current documentation release: v1.4.0
+## Current documentation release: v1.4.1 (release candidate)
 
-The package version is v1.4.0; fresh DeepSeek Harness host readiness requires direct observation.
+The package version is v1.4.1 (unreleased); fresh DeepSeek Harness host readiness requires direct observation.
 This guide names current
 human-facing boundaries only and does not
 promote package evidence to host proof. The route IDs are
