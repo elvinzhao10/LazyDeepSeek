@@ -1,10 +1,14 @@
 # LazyDeepSeek Plugin Changelog
 
-## Unreleased 1.4.1 — verification, history and scale
+## [1.4.1] — Unreleased
+
+Prepare the combined verification/history/scale release, native adapter guidance and consistent runtime/MCP identities. See the root release notes and 1.4.1 integration guide. Model-driven host acceptance remains deferred.
+
+### Verification, history and scale
 
 Native dsh repair adds exact shared-host peers, the optional hook bridge/protocol, an explicit native Ralph group, a locked audited host runtime, and real isolated plugin installation checks. [Native runtime guide](docs/reference/audited-dsh-runtime.md).
 
-The combined former 1.4.1 and 1.4.2 scope is implemented in this development branch. Package metadata and the published baseline remain **1.4.0**; this PR does not publish a release. Live-host acceptance is **deferred by the maintainer as of 2026-10-30**, and remains pending.
+The combined former 1.4.1 and 1.4.2 scope is implemented in this development branch. Package metadata is prepared as **1.4.1**; the published baseline remains 1.4.0. This PR does not publish a release. Live-host acceptance is **deferred by the maintainer as of 2026-10-30**, and remains pending.
 
 - Retain versioned verification scenarios, compare attempts by their source/criterion/plan subject, and promote an observed failure into an unverified regression scenario.
 - Bind rerun review to the exact plan, criterion and captured source. Pending, rejected, stale and used approvals cannot authorize another native attempt; independent verification remains required.
