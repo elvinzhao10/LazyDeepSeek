@@ -95,3 +95,18 @@ for (const [language, command] of [['typescript', 'typescript-language-server'],
     assert.deepEqual(fallback.fallback_packages.toSorted(), Object.entries(provider.dependencies).map(([name, version]) => `${name}@${version}`).toSorted());
   });
 }
+
+for (const [capability, dependency] of [
+  ['local_search', '@vscode/ripgrep'],
+  ['structural_search', '@ast-grep/cli'],
+  ['architecture_exploration', '@colbymchenry/codegraph'],
+]) {
+  test(`${capability} fallback matches the locked tooling package`, () => {
+    const capabilities = JSON.parse(fs.readFileSync(path.join(root, 'tooling/capabilities.json'), 'utf8'));
+    const manifest = JSON.parse(fs.readFileSync(path.join(root, 'tooling/package.json'), 'utf8'));
+    const lock = JSON.parse(fs.readFileSync(path.join(root, 'tooling/package-lock.json'), 'utf8'));
+    const version = manifest.dependencies[dependency];
+    assert.equal(capabilities.capabilities[capability][0].fallback_package, `${dependency}@${version}`);
+    assert.equal(lock.packages[`node_modules/${dependency}`].version, version);
+  });
+}

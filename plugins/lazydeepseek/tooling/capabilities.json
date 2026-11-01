@@ -12,7 +12,7 @@
     "structural_search": [
       {
         "command": "sg",
-        "fallback_package": "@ast-grep/cli@0.50.0",
+        "fallback_package": "@ast-grep/cli@0.51.0",
         "provider_order": ["host", "owned"]
       }
     ],
