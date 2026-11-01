@@ -86,3 +86,12 @@ test('locked TypeScript provider supplies the tsserver API used by the language 
   // Then it supplies the API bridge required for semantic LSP operations.
   assert.equal(server, 'bin/tsserver');
 });
+
+for (const [language, command] of [['typescript', 'typescript-language-server'], ['python', 'basedpyright-langserver']]) {
+  test(`${language} fallback packages match the locked provider manifest`, () => {
+    const capabilities = JSON.parse(fs.readFileSync(path.join(root, 'tooling/capabilities.json'), 'utf8'));
+    const provider = JSON.parse(fs.readFileSync(path.join(root, 'tooling/lsp', language, 'package.json'), 'utf8'));
+    const fallback = capabilities.capabilities.semantic_navigation.find(entry => entry.command === command);
+    assert.deepEqual(fallback.fallback_packages.toSorted(), Object.entries(provider.dependencies).map(([name, version]) => `${name}@${version}`).toSorted());
+  });
+}
