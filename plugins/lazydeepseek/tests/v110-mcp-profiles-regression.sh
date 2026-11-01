@@ -52,7 +52,7 @@ root = Path(sys.argv[1])
 package = json.loads((root / "../../package.json").read_text(encoding="utf-8"))
 assert "userConfig" not in package
 assert "config" not in package
-assert package["peerDependencies"]["@deepseek-ai/dsh"] == "0.2.1-rc.3"
+assert package["peerDependencies"]["@deepseek-ai/dsh"] == "0.2.1-rc.5"
 PY
 then pass_case 'package boundary has no user-config surface and pins the host'; else fail_case 'package boundary has no user-config surface and pins the host'; fi
 

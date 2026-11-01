@@ -7,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 const sdkRoot = process.argv[2];
 if (!sdkRoot) throw new Error('pass an isolated installed dsh package root');
 const sdk = resolve(sdkRoot, 'node_modules/@deepseek-ai');
+const sdkVersion = JSON.parse(readFileSync(join(sdk, 'dsh/package.json'), 'utf8')).version;
 const load = path => import(pathToFileURL(join(sdk, path, 'lib/index.js')));
 const { Context } = await load('cordis');
 const { default: Loader } = await load('cordis-plugin-loader');
@@ -37,6 +38,7 @@ try {
   for (const service of ['fs', 'workingDirectory', 'shell', 'shellEnv', 'web']) ctx.provide(service, {});
   const definition = name => ({ name, description: name, parameters: { type: 'object', properties: {} }, output: { schema: { type: 'string' }, render: () => [] }, execute: async () => '' });
   for (const role of contract.roles) ctx.tools.register(definition(role.name));
+  for (const tool of ['get_goal', 'create_goal', 'update_goal']) ctx.tools.register(definition(tool));
   ctx.tools.register(definition('forbidden'));
   await ctx.plugin(AgentRegistry); await ctx.plugin(AgentLoop, { agents: [] });
   await ctx.plugin(Presets, { default: 'inherited' });
@@ -46,7 +48,7 @@ try {
     assert.equal(roleRow.config.agentPreset, role.name);
     assert.equal(roleRow.config.maxDepth, role.maxDepth);
     assert.equal(createHash('sha256').update(preset.config.plugins.find(plugin => plugin.id === 'persona').config.prefix).digest('hex'), role.personaSha256);
-    const plugins = preset.config.plugins.map(plugin => ({ ...plugin, name: plugin.name.startsWith('./lib/') ? pathToFileURL(join(dir, plugin.name.split('/').at(-1))).href : plugin.name }));
+    const plugins = preset.config.plugins.map(plugin => ({ ...plugin, name: plugin.name.startsWith('lazydeepseek/lib/') ? pathToFileURL(join(dir, plugin.name.split('/').at(-1))).href : plugin.name }));
     await ctx.agentPresets.register({ id: role.name, plugins });
   }
   for (const role of contract.roles) {
@@ -55,7 +57,7 @@ try {
     assert.deepEqual(names, [...role.allow].sort(), `${role.name} tool visibility`);
     await handle.dispose();
   }
-  console.log(`PASS: ${contract.roles.length} rc.3 child Agent compositions preserve persona hashes and tool visibility`);
+  console.log(`PASS: ${contract.roles.length} ${sdkVersion} child Agent compositions preserve persona hashes and tool visibility`);
 } finally {
   await ctx.fiber.dispose();
   rmSync(dir, { recursive: true, force: true });

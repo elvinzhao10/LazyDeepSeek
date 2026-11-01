@@ -8,7 +8,7 @@ This page explains the deployment boundary in code terms. A plugin package conta
 
 LazyDeepSeek v1.4.0 is prepared as a native DeepSeek Harness plugin: `plugins/lazydeepseek/`
 is the payload directory. The repository root is the npm-style package boundary: its `package.json` (`dsh` key plus the
-exact `0.2.1-rc.3` peer pin) and `cordis.patch.yml` rows, with the payload under
+exact `0.2.1-rc.5` peer pin) and `cordis.patch.yml` rows, with the payload under
 `plugins/lazydeepseek/`. The public repository is the source for pinned-SHA
 installation; fresh host readiness still requires observation. The supported route IDs
 are `dsh-plugin-git-sha` (the full-plugin route) and `manual-skills-mcp-fallback` (recovery only, mutually exclusive
@@ -66,7 +66,7 @@ The manual walkthrough remains canonical:
 
 Install LazyDeepSeek into a dsh profile through the `dsh plugin` verb set:
 
-1. Confirm the pinned host: `dsh --version` reports exact `0.2.1-rc.3`, and
+1. Confirm the pinned host: `dsh --version` reports exact `0.2.1-rc.5`, and
    `dsh --profile <name> --dump-config` composes cleanly.
 2. After approval, run the git-spec install for the repository pinned to a
    full commit sha (the printed form is
@@ -171,7 +171,7 @@ It prints `HOST_PREPARATION=not-applied`, `HOST_MUTATION=none`, and
 
 Automated package verification is defined by the product CI workflows (Ubuntu
 and macOS jobs). Supplied host observations are historical macOS reports; they
-do not establish a current v1.4.0 host session. A host that has not been
+do not establish a current v1.4.1 host session. A host that has not been
 observed in a fresh session remains **HOST READINESS: PENDING** regardless of
 package evidence.
 The fallback's exact non-mutating six-entry JSON — with absolute

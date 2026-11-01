@@ -24,9 +24,15 @@ test('repository root is the dsh package boundary with the pinned identity', () 
   const patch = fs.readFileSync(path.join(REPOSITORY_ROOT, 'cordis.patch.yml'), 'utf8');
 
   assert.equal(pkg.name, 'lazydeepseek');
-  assert.equal(pkg.version, '1.4.0');
+  assert.equal(pkg.version, '1.4.1');
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml');
-  assert.equal(pkg.peerDependencies['@deepseek-ai/dsh'], '0.2.1-rc.3');
+  assert.equal(pkg.peerDependencies['@deepseek-ai/dsh'], '0.2.1-rc.5');
+  assert.equal(pkg.engines.dsh, '0.2.1-rc.5');
+  assert.equal(pkg.dependencies['@deepseek-ai/dsh-hooks-claude-code'], '0.2.1-rc.5', 'the optional hook bridge is not provided by the base host');
+  for (const name of ['dsh-mcp-client', 'dsh-tool-jobs', 'dsh-agent-preset-registry', 'dsh-agent-preset', 'dsh-persona', 'dsh-tool-fs', 'dsh-tool-bash', 'dsh-tool-web', 'dsh-tool-todo', 'dsh-tool-subagent']) {
+    assert.equal(pkg.peerDependencies[`@deepseek-ai/${name}`], '0.2.1-rc.5', `${name} shares the native host instance`);
+    assert.equal(pkg.dependencies?.[`@deepseek-ai/${name}`], undefined, `${name} must not install a second host SDK tree`);
+  }
   assert.equal(pkg.scripts, undefined, 'no install-time build scripts: git-spec installs must not depend on allowBuilds');
   assert.match(patch, /name: '\.\/lib\/index\.mjs'/);
   assert.match(patch, /'@deepseek-ai\/dsh-hooks-claude-code'/);
@@ -60,7 +66,7 @@ test('validates the route boundary and the byte-equivalent canonical payload inv
   const result = validateDshRoutes(root);
 
   // Then: identity, install id, and the full payload inventory resolve.
-  assert.equal(result.version, '1.4.0');
+  assert.equal(result.version, '1.4.1');
   assert.equal(result.install_id, 'lazydeepseek@dsh');
   assert.equal(result.plugin, 'lazydeepseek');
   assert.ok(result.payload_inventory.includes('skills/lazy-programming/SKILL.md'));
@@ -74,7 +80,7 @@ test('validates the installed package boundary without release metadata', (t) =>
   const result = validateInstalledDshPackage(REPOSITORY_ROOT);
 
   // Then: the package identity and canonical payload remain verifiable.
-  assert.equal(result.version, '1.4.0');
+  assert.equal(result.version, '1.4.1');
   assert.ok(result.payload_inventory.includes('skills/lazy-programming/SKILL.md'));
 });
 
@@ -104,7 +110,7 @@ test('publishes an exact dsh-plugin-git-sha full-plugin receipt schema', () => {
   assert.deepEqual(mcp.required, ['run-ledger', 'verification', 'status-dashboard', 'context-graph', 'code-intel', 'docs']);
   assert.equal(schema.properties.source.properties.route.const, 'dsh-plugin-git-sha');
   assert.equal(schema.properties.source.properties.manifest.const, 'package.json');
-  assert.equal(schema.properties.source.properties.version.const, '1.4.0');
+  assert.equal(schema.properties.source.properties.version.const, '1.4.1');
   assert.equal(schema.properties.type.const, 'dsh-plugin-git-sha-full-plugin');
 });
 
@@ -150,7 +156,7 @@ test('route checker validates the checked-in tree and passes', () => {
 
 test('treats fallback as generated recovery and conflicts with the default route', () => {
   // Given: the full-plugin default route and the manual recovery route.
-  const releaseRoot = '/durable/LazyDeepSeek/releases/v1.4.0-aaaaaaaaaaaa';
+  const releaseRoot = '/durable/LazyDeepSeek/releases/v1.4.1-aaaaaaaaaaaa';
   const projectRoot = '/project';
   const routeInfo = validateDshRoutes(REPOSITORY_ROOT);
 

@@ -22,7 +22,7 @@ const CONTRACT_PATH = path.resolve(__dirname, '..', '..', 'contracts', 'dsh-rout
 const PLUGIN_DIR = 'plugins/lazydeepseek';
 const PACKAGE_MANIFEST_ARTIFACT = 'package.json';
 const BUNDLE_PATCH_ARTIFACT = 'cordis.patch.yml';
-const DSH_PEER_PIN = '0.2.1-rc.3';
+const DSH_PEER_PIN = '0.2.1-rc.5';
 const ROUTES = Object.freeze(['dsh-plugin-git-sha', 'dsh-plugin-tarball', 'dsh-plugin-local-dir', 'manual-skills-mcp-fallback']);
 
 function digest(bytes) {

@@ -1,5 +1,5 @@
 // TypeScript source of the prebuilt ESM adapter; keep implementation identical.
-// LazyDeepSeek v1.3.4 — DeepSeek Harness (dsh) plugin shim.
+// LazyDeepSeek v1.4.1 — DeepSeek Harness (dsh) plugin shim.
 //
 // Build rule: this file IS the shipped plugin entry (package.json "main").
 // The package ships prebuilt with no build scripts (git-spec installs must
@@ -79,7 +79,7 @@ export function buildHooksConfig(pkgRoot) {
     }));
   }
   return {
-    _lazydeepseek: `LazyDeepSeek v1.4.0 generated hook surface for the dsh-hooks-claude-code bridge. Seven events are bridged (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop, SubagentStart, SubagentStop); PermissionRequest and PostToolUseFailure do not exist on the bridge and are synthesized inside the PreToolUse/PostToolUse handlers (degraded; see contracts/dsh-hook-consumers.v1.json). Commands carry absolute paths baked at generation; Project binding uses the bridge-provided CLAUDE_PROJECT_DIR environment without inserting the raw project path into shell text. Hooks print EITHER strict JSON in the bridge shape ({"hookSpecificOutput": {"hookEventName": "<Event>", "additionalContext": "..."}}; the 0.2.0-rc.2 codec reads additionalContext ONLY from hookSpecificOutput) OR nothing on stdout; deny = exit 2 with stderr reason; diagnostics to stderr; no network I/O.`,
+    _lazydeepseek: `LazyDeepSeek v1.4.1 generated hook surface for the dsh-hooks-claude-code bridge. Seven events are bridged (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop, SubagentStart, SubagentStop); PermissionRequest and PostToolUseFailure do not exist on the bridge and are synthesized inside the PreToolUse/PostToolUse handlers (degraded; see contracts/dsh-hook-consumers.v1.json). Commands carry absolute paths baked at generation; Project binding uses the bridge-provided CLAUDE_PROJECT_DIR environment without inserting the raw project path into shell text. Hooks print EITHER strict JSON in the bridge shape ({"hookSpecificOutput": {"hookEventName": "<Event>", "additionalContext": "..."}}; the 0.2.0-rc.2 codec reads additionalContext ONLY from hookSpecificOutput) OR nothing on stdout; deny = exit 2 with stderr reason; diagnostics to stderr; no network I/O.`,
     hooks
   };
 }

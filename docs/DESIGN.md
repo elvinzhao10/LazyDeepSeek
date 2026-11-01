@@ -1,0 +1,5 @@
+# Native client panel design contract
+
+The LazyDeepSeek client contribution lives inside the existing Harness Plugins page. It uses the host's `plugins.item` slot, `SettingsForm`, `SettingsValueField`, shared `SettingsFormModel`, locale service and Config forms. The host owns typography, spacing, colors, light/dark themes, focus, scrolling, save/error/read-only states and responsive behavior; no custom CSS, framework copy or independent shell is introduced.
+
+The two fields edit the existing `subagent` namespace. They share the native Host values and revision checks with the official Subagent page. This is not a second settings file. The bundle compatibility label is static package information, not a live health assertion. Field drafts stay local until Save; Reset restores inheritance. Role-specific depth limits retain precedence. The host's existing components are the primitive showcase and the installed Desktop is the integration surface. Host-owned React tooling is not injected or repackaged by this library.
